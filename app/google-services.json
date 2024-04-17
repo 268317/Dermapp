@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "745911812258",
+    "project_id": "dermapp-18974",
+    "storage_bucket": "dermapp-18974.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745911812258:android:58a44b8cdd6d1f079a17fb",
+        "android_client_info": {
+          "package_name": "com.example.dermapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj8Ce_novInCtQ6eaSsCcunUZXYTh8ckM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
