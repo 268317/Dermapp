@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:title="Profile">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Logout"/>
+            </menu>
+        </item>
+
+    </group>
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:title="Appoitments">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_make"
+                    android:title="Make appointment"/>
+                <item
+                    android:id="@+id/nav_cancel"
+                    android:title="Cancel appointment"/>
+                <item
+                    android:id="@+id/nav_myAppointments"
+                    android:title="My appointments"/>
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:title="My Health">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_newReport"
+                    android:title="Add new report"/>
+                <item
+                    android:id="@+id/nav_myRecords"
+                    android:title="My medical records"/>
+                <item
+                    android:id="@+id/nav_myReports"
+                    android:title="My reports"/>
+                <item
+                    android:id="@+id/nav_myPrescriptions"
+                    android:title="My prescriptions"/>
+            </menu>
+        </item>
+
+    </group>
+
+    <item android:title="Messages">
+        <menu>
+            <item
+                android:id="@+id/nav_myMailbox"
+                android:title="My Mailbox"/>
+        </menu>
+
+    </item>
+
+</menu>

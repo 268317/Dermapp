@@ -46,8 +46,28 @@
             android:name=".ProfileDocActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".SignUpActivity"
             android:exported="false" />
+        <activity
+            android:name=".StartPatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartDocActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HeaderPatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MakeAppointmentPatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
