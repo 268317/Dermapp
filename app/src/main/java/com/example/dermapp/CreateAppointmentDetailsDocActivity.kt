@@ -31,9 +31,7 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
         textViewFirstNameAppointmentDoc = findViewById(R.id.textViewFirstNameAppointmentDoc)
         textViewLastNameAppointmentDoc = findViewById(R.id.textViewLastNameAppointmentDoc)
         textViewPeselAppointmentDoc = findViewById(R.id.textViewPeselAppointmentDoc)
-        textViewDiagnosisAppointmentDoc = findViewById(R.id.textViewDiagnosisAppointmentDoc)
         editTextMultiLineDiagnosisAppointmentDoc = findViewById(R.id.editTextTextMultiLineDiagnosisAppointmentDoc)
-        textViewRecommendationsAppointmentDoc = findViewById(R.id.textViewRecommendationsAppointmentDoc)
         editTextMultiLineRecommendationsAppointmentDoc = findViewById(R.id.editTextTextMultiLineRecommendationsAppointmentDoc)
 
 //        // Set example data to the TextViews (replace with actual data)

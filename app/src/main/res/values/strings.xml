@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Dermapp</string>
+    <string name="err_msg_enter_email">Please enter your email</string>
+    <string name="err_msg_enter_name">Please enter your name</string>
+    <string name="err_msg_enter_last_name">Please enter your last name</string>
+    <string name="err_msg_enter_password">Please enter your password</string>
+    <string name="err_msg_enter_reppassword">Please confirm your password</string>
+    <string name="err_msg_password_mismatch">Passwords mismatch</string>
+    <string name="register_success">You are registered successfully</string>
+    <string name="you_have_an_account">You have an account?</string>
+    <string name="dermapp">DERMAPP</string>
+    <string name="first_name">First Name</string>
+
 </resources>

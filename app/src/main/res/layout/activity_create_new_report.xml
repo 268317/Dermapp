@@ -32,6 +32,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
+                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -41,10 +42,10 @@
 
                     <LinearLayout
                         android:id="@+id/linearLayoutCreateNewReport"
-                        android:layout_width="match_parent"
-                        android:layout_height="800dp"
+                        android:layout_width="361dp"
+                        android:layout_height="610dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="60dp"
                         android:layout_marginEnd="24dp"
                         android:background="@drawable/white_background"
                         android:elevation="3dp"
@@ -73,13 +74,13 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:orientation="horizontal">
 
                             <CheckBox
                                 android:id="@+id/checkBoxItchingCreateNewReport"
                                 android:layout_width="100dp"
-                                android:layout_height="match_parent"
+                                android:layout_height="50dp"
                                 android:layout_weight="1"
                                 android:text="itching"
                                 android:textSize="16sp" />
@@ -87,7 +88,7 @@
                             <CheckBox
                                 android:id="@+id/checkBoxMoleChangesCreateNewReport"
                                 android:layout_width="100dp"
-                                android:layout_height="match_parent"
+                                android:layout_height="50dp"
                                 android:layout_weight="1"
                                 android:text="mole changes"
                                 android:textSize="16sp" />
@@ -95,13 +96,13 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:orientation="horizontal">
 
                             <CheckBox
                                 android:id="@+id/checkBoxRashCreateNewReport"
                                 android:layout_width="100dp"
-                                android:layout_height="match_parent"
+                                android:layout_height="55dp"
                                 android:layout_weight="1"
                                 android:text="rash"
                                 android:textSize="16sp" />
@@ -109,7 +110,7 @@
                             <CheckBox
                                 android:id="@+id/checkBoxDrynessCreateNewReport"
                                 android:layout_width="100dp"
-                                android:layout_height="match_parent"
+                                android:layout_height="55dp"
                                 android:layout_weight="1"
                                 android:text="dryness"
                                 android:textSize="16sp" />
@@ -117,7 +118,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:orientation="horizontal">
 
                             <CheckBox
@@ -139,7 +140,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:orientation="horizontal">
 
                             <CheckBox
@@ -161,7 +162,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:layout_margin="0dp"
                             android:orientation="horizontal">
 
@@ -184,7 +185,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="55dp"
+                            android:layout_height="45dp"
                             android:layout_margin="0dp"
                             android:orientation="horizontal">
 
@@ -205,31 +206,22 @@
                                 android:textSize="16sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view1CreateNewReport"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="251dp"
+                            android:layout_height="130dp"
                             android:layout_margin="10dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="140dp"
                                 android:layout_weight="1">
 
                                 <EditText
                                     android:id="@+id/enterOtherInfoCreateNewReport"
                                     android:layout_width="321dp"
-                                    android:layout_height="233dp"
+                                    android:layout_height="100dp"
                                     android:ems="10"
                                     android:gravity="start|top"
                                     android:hint="Enter other info"

@@ -33,6 +33,7 @@
                         android:id="@+id/topOrangeLayoutProfileDoc"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
+                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -40,23 +41,23 @@
 
                         <ImageView
                             android:id="@+id/imageAvatarProfileDoc"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.497"
+                            app:layout_constraintHorizontal_bias="0.498"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.295"
+                            app:layout_constraintVertical_bias="0.026"
                             app:srcCompat="@drawable/account_circle" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
                         android:id="@+id/whiteBackgroundProfileDoc"
-                        android:layout_width="match_parent"
-                        android:layout_height="530dp"
+                        android:layout_width="357dp"
+                        android:layout_height="376dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="250dp"
+                        android:layout_marginTop="200dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/white_background"
@@ -64,7 +65,7 @@
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintHorizontal_bias="0.333"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="1.0">
@@ -94,15 +95,6 @@
                                 android:textSize="18sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view1ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -127,15 +119,6 @@
                                 android:textAlignment="viewEnd"
                                 android:textSize="18sp" />
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view2ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -162,15 +145,6 @@
                                 android:textSize="18sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view3ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -195,15 +169,6 @@
                                 android:textAlignment="viewEnd"
                                 android:textSize="18sp" />
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view4ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -230,15 +195,6 @@
                                 android:textSize="18sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view5ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -264,15 +220,6 @@
                                 android:textSize="18sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view6ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -297,15 +244,6 @@
                                 android:textAlignment="viewEnd"
                                 android:textSize="18sp" />
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view7ProfileDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"

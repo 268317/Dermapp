@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="radioButton2" type="id" />
+    <item name="guideline17" type="id" />
+    <item name="guideline9" type="id" />
+    <item name="guideline8" type="id" />
+    <item name="guideline6" type="id" />
+    <item name="guideline13" type="id" />
+    <item name="guideline7" type="id" />
+    <item name="TextName" type="id" />
+    <item name="guideline14" type="id" />
+    <item name="guideline12" type="id" />
+    <item name="TextLastName" type="id" />
+    <item name="TextEmail" type="id" />
+    <item name="editTextTextPassword" type="id" />
+    <item name="guideline15" type="id" />
+    <item name="editTextTextPassword2" type="id" />
+    <item name="editTextDateOfBirth" type="id" />
+    <item name="radioButton1" type="id" />
+    <item name="guideline16" type="id" />
+    <item name="radioGroup" type="id" />
+    <item name="logInTextButton" type="id" />
+    <item name="buttonSignUp" type="id" />
+    <item name="guideline10" type="id" />
+    <item name="group" type="id" />
+</resources>

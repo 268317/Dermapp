@@ -30,8 +30,9 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="600dp"
+                        android:layout_width="414dp"
+                        android:layout_height="500dp"
+                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +43,9 @@
                     <LinearLayout
                         android:id="@+id/linearLayoutNewMessageDoc"
                         android:layout_width="match_parent"
-                        android:layout_height="800dp"
+                        android:layout_height="610dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="60dp"
                         android:layout_marginEnd="24dp"
                         android:background="@drawable/white_background"
                         android:elevation="3dp"
@@ -56,7 +57,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="65dp"
+                            android:layout_height="55dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
@@ -78,6 +79,7 @@
                                     android:textSize="20sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -86,7 +88,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="65dp"
+                            android:layout_height="55dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
@@ -116,7 +118,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="65dp"
+                            android:layout_height="55dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
@@ -144,18 +146,9 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view1NewMessageDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="375dp"
+                            android:layout_height="280dp"
                             android:layout_margin="10dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
@@ -168,7 +161,7 @@
                                 <EditText
                                     android:id="@+id/enterYourMessageNewMessageDoc"
                                     android:layout_width="318dp"
-                                    android:layout_height="355dp"
+                                    android:layout_height="280dp"
                                     android:ems="10"
                                     android:gravity="start|top"
                                     android:hint="Enter your message"
@@ -182,15 +175,6 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view2NewMessageDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"

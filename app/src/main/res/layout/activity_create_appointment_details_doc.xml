@@ -33,6 +33,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
+                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -43,9 +44,9 @@
                     <LinearLayout
                         android:id="@+id/linearLayoutAppointmentDoc"
                         android:layout_width="match_parent"
-                        android:layout_height="790dp"
+                        android:layout_height="610dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="60dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/white_background"
@@ -196,36 +197,15 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view5AppointmentDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewDiagnosisAppointmentDoc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Diagnosis"
-                                android:textAlignment="center"
-                                android:textColor="#FF9800"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
+                            android:orientation="horizontal" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
+                            android:layout_height="140dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
 
@@ -237,7 +217,7 @@
                                 <EditText
                                     android:id="@+id/editTextTextMultiLineDiagnosisAppointmentDoc"
                                     android:layout_width="351dp"
-                                    android:layout_height="149dp"
+                                    android:layout_height="130dp"
                                     android:ems="10"
                                     android:gravity="start|top"
                                     android:hint="Diagnosis"
@@ -254,36 +234,15 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view6AppointmentDoc"
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewRecommendationsAppointmentDoc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Recommendations"
-                                android:textAlignment="center"
-                                android:textColor="#FF9800"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
+                            android:orientation="horizontal" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="140dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
 
@@ -295,7 +254,7 @@
                                 <EditText
                                     android:id="@+id/editTextTextMultiLineRecommendationsAppointmentDoc"
                                     android:layout_width="341dp"
-                                    android:layout_height="206dp"
+                                    android:layout_height="130dp"
                                     android:layout_weight="1"
                                     android:ems="10"
                                     android:gravity="start|top"

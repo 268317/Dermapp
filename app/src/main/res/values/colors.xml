@@ -15,4 +15,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FFD3951E</color>
     <color name="light_gray">#D3CFC9</color>
+
+    <color name="colorSnackBarSuccess">#03A9F4</color>
+    <color name="colorSnackBarError">#EB1B63</color>
+
 </resources>

@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/header_back_pat" />
+            layout="@layout/header_back" />
 
     <TextView
         android:id="@+id/textViewMakeAnAppointment"

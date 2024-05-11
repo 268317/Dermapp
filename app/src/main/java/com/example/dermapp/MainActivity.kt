@@ -1,55 +1,112 @@
 package com.example.dermapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var userNameInput: EditText
-    private lateinit var userPasswordInput: EditText
-    private lateinit var logInButton: Button
-    private lateinit var signUpButton: Button
-    @SuppressLint("MissingInflatedId")
+
+/**
+ * Aktywność obsługująca logowanie użytkownika za pomocą Firebase Authentication.
+ */
+class MainActivity : BaseActivity() {
+
+    private var inputEmail: EditText? = null
+    private var inputPassword: EditText? = null
+    private var loginButton: Button? = null
+    private var signUpButton: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
-        userNameInput = findViewById(R.id.editTextEmailAddress)
-        userPasswordInput = findViewById(R.id.editTextPassword)
-        logInButton = findViewById(R.id.LogInButton)
+        // Inicjalizacja pól wejściowych i przycisku logowania
+        inputEmail = findViewById(R.id.editTextEmailAddress)
+        inputPassword = findViewById(R.id.editTextPassword)
+        loginButton = findViewById(R.id.LogInButton)
         signUpButton = findViewById(R.id.SignUpButton)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Ustawienie nasłuchiwania kliknięć przycisku logowania
+        loginButton?.setOnClickListener{
+            logInRegisteredUser()
         }
 
-        signUpButton.setOnClickListener {
-            openSignUpActivity()
+        signUpButton?.setOnClickListener{
+            goToSignIn()
         }
 
-        logInButton.setOnClickListener {
-            logInActivity()
+    }
+
+
+    /**
+     * Metoda walidująca wprowadzone dane logowania.
+     * @return True, jeśli dane są poprawne, w przeciwnym razie False.
+     */
+    private fun validateLoginDetails(): Boolean {
+
+        return when{
+            TextUtils.isEmpty(inputEmail?.text.toString().trim{ it <= ' '}) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
+                false
+            }
+
+            TextUtils.isEmpty(inputPassword?.text.toString().trim{ it <= ' '}) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
+                false
+            }
+
+            else -> {
+                showErrorSnackBar("Your details are valid",false)
+                true
+            }
+        }
+
+
+    }
+
+    /**
+     * Metoda logowania zarejestrowanego użytkownika za pomocą Firebase Authentication.
+     */
+    private fun logInRegisteredUser(){
+
+
+        if(validateLoginDetails()){
+            val email = inputEmail?.text.toString().trim { it<= ' '}
+            val password = inputPassword?.text.toString().trim { it<= ' '}
+
+            // Logowanie za pomocą FirebaseAuth
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener{task ->
+                    if(task.isSuccessful){
+                        showErrorSnackBar("You are logged in successfully.", false)
+                        goToNextActivity()
+                        finish()
+
+                    } else{
+                        showErrorSnackBar(task.exception!!.message.toString(),true)
+                    }
+                }
         }
     }
-    private fun openSignUpActivity(){
+
+    /**
+     * Metoda przechodzenia do głównej aktywności po pomyślnym zalogowaniu i przekazanie uid do głównej aktywności.
+     */
+    private fun goToNextActivity() {
+
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.email.toString()
+
+        val intent = Intent(this, ProfileDocActivity::class.java)
+        intent.putExtra("uID",uid)
+        startActivity(intent)
+    }
+
+    private fun goToSignIn() {
         val intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
-    }
+   }
 
-    private fun logInActivity(){
-        val email = userNameInput.text.toString()
-        val password = userPasswordInput.text.toString()
-        val intent = Intent(this, StartPatActivity::class.java)
-        startActivity(intent)
-    }
 }

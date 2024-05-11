@@ -8,7 +8,16 @@
     android:background="#f5f5f5"
     tools:context=".AppointmentDetailsPatActivity">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/header_back"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -33,6 +42,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
+                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -43,9 +53,9 @@
                     <LinearLayout
                         android:id="@+id/linearLayoutAppointmentPat"
                         android:layout_width="match_parent"
-                        android:layout_height="790dp"
+                        android:layout_height="610dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="60dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/white_background"
@@ -93,15 +103,6 @@
                                 android:textSize="16sp" />
 
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view1AppointmentPat"
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -196,18 +197,9 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view2AppointmentPat"
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
@@ -225,13 +217,13 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="130dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="150dp"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1">
 
                                 <TextView
@@ -248,18 +240,9 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:id="@+id/view3AppointmentPat"
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
@@ -277,7 +260,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="130dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
 

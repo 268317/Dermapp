@@ -17,7 +17,7 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/header_pat" />
+            layout="@layout/header_main" />
 
         <TextView
             android:id="@+id/textViewUpcomingAppointments"
@@ -150,7 +150,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/nav_view"
-        app:headerLayout="@layout/header_pat"
+        app:headerLayout="@layout/header_main"
         app:menu="@menu/patient_menu"
         android:layout_gravity="start"
         />
