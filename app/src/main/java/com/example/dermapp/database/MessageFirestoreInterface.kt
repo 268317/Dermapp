@@ -1,8 +1,8 @@
 package com.example.dermapp.database
 
 interface MessageFirestoreInterface {
-    fun addMessage(message: Message)
-    fun updateMessage(messageId: String, updatedMessage: Map<String, Any>)
-    fun deleteMessage(messageId: String)
-    fun getMessage(messageId: String)
+    suspend fun addMessage(message: Message)
+    suspend fun updateMessage(messageId: String, updatedMessage: Message)
+    suspend fun deleteMessage(messageId: String)
+    suspend fun getMessage(messageId: String): Message?
 }

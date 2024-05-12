@@ -69,8 +69,6 @@ class MainActivity : BaseActivity() {
      * Metoda logowania zarejestrowanego użytkownika za pomocą Firebase Authentication.
      */
     private fun logInRegisteredUser(){
-
-
         if(validateLoginDetails()){
             val email = inputEmail?.text.toString().trim { it<= ' '}
             val password = inputPassword?.text.toString().trim { it<= ' '}

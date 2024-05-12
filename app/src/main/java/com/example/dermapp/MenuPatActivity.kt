@@ -12,7 +12,6 @@ import com.google.android.material.navigation.NavigationView
 
 class MenuPatActivity : AppCompatActivity() {
     private lateinit var navView: NavigationView
-
     private lateinit var backButton: ImageButton
 
     @SuppressLint("MissingInflatedId")
@@ -29,3 +28,6 @@ class MenuPatActivity : AppCompatActivity() {
 
     }
 }
+
+//wylogowywanie
+//

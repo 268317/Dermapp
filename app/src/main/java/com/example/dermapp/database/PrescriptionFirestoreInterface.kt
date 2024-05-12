@@ -1,8 +1,8 @@
 package com.example.dermapp.database
 
 interface PrescriptionFirestoreInterface {
-    fun addPrescription(prescription: Prescription)
-    fun updatePrescription(prescriptionId: String, updatedPrescription: Map<String, Any>)
-    fun deletePrescription(prescriptionId: String)
-    fun getPrescription(prescriptionId: String)
+    suspend fun addPrescription(prescription: Prescription)
+    suspend fun updatePrescription(prescriptionId: String, updatedPrescription: Prescription)
+    suspend fun deletePrescription(prescriptionId: String)
+    suspend fun getPrescription(prescriptionId: String):Prescription?
 }

@@ -1,8 +1,8 @@
 package com.example.dermapp.database
 
 interface AppUserFirestoreInterface {
-        fun addUser(user: AppUser)
-        fun updateUser(userId: String, updatedUser: Map<String, Any>)
-        fun deleteUser(userId: String)
-        fun getUser(userId: String)
+        suspend fun addAppUser(appUser: AppUser)
+        suspend fun updateAppUser(appUserId: String, updatedAppUser: AppUser)
+        suspend fun deleteAppUser(appUserId: String)
+        suspend fun getAppUser(appUserId: String): AppUser?
     }

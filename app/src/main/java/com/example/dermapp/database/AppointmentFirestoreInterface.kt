@@ -1,9 +1,9 @@
 package com.example.dermapp.database
 
 interface AppointmentFirestoreInterface {
-    fun addAppointment(appointment: Appointment)
-    fun updateAppointment(appointmentId: String, updatedAppointment: Map<String, Any>)
-    fun deleteAppointment(appointmentId: String)
-    fun getAppointment(appointmentId: String)
+    suspend fun addAppointment(appointment: Appointment)
+    suspend fun updateAppointment(appointmentId: String, updatedAppointment: Appointment)
+    suspend fun deleteAppointment(appointmentId: String)
+    suspend fun getAppointment(appointmentId: String): Appointment?
 
 }

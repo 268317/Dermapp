@@ -5,7 +5,7 @@ import com.google.type.DateTime
 import java.util.Date
 
 open class Message(
-    @get:PropertyName("messageId") @set:PropertyName("prescriptionId") open var prescriptionId: String = "",
+    @get:PropertyName("messageId") @set:PropertyName("messageId") open var messageId: String = "",
     @get:PropertyName("conversationId") @set:PropertyName("conversationId") open var conversationId: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") open var doctorId: String = "",
     @get:PropertyName("patientPesel") @set:PropertyName("patientPesel") open var patientPesel: String = "",

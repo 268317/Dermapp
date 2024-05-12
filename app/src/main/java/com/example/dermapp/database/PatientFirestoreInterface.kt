@@ -1,8 +1,8 @@
 package com.example.dermapp.database
 
 interface PatientFirestoreInterface {
-    fun addPatient(patient: Patient)
-    fun updatePatient(patientId: String, updatedPatient: Map<String, Any>)
-    fun deletePatient(patientId: String)
-    fun getPatient(patientId: String)
+    suspend fun addPatient(patient: Patient)
+    suspend fun updatePatient(pesel: String, updatedPatient: Patient)
+    suspend fun deletePatient(pesel: String)
+    suspend fun getPatient(pesel: String): Patient?
 }

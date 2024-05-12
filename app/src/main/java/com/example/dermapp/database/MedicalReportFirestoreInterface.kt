@@ -1,8 +1,8 @@
 package com.example.dermapp.database
 
 interface MedicalReportFirestoreInterface {
-    fun addMedicalReport(medicalReport: MedicalReport)
-    fun updateMedicalReport(medicalReportId: String, updatedMedicalReport: Map<String, Any>)
-    fun deleteMedicalReport(medicalReportId: String)
-    fun getMedicalReport(medicalReportId: String)
+    suspend fun addMedicalReport(medicalReport: MedicalReport)
+    suspend fun updateMedicalReport(medicalReportId: String, updatedMedicalReport: MedicalRecord)
+    suspend fun deleteMedicalReport(medicalReportId: String)
+    suspend fun getMedicalReport(medicalReportId: String): MedicalReport?
 }
