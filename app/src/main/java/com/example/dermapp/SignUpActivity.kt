@@ -240,6 +240,12 @@ class SignUpActivity : BaseActivity() {
                         if (isPatient) {
                             val patient = Patient(email, password, firstName, lastName, birthday, role, pesel)
                             patient.pesel = pesel
+                            user.userId = uid
+                            user.lastName = lastName
+                            user.email = email
+                            user.birthDate = birthday
+                            user.password = password
+                            user.role = role
                             FirebaseFirestore.getInstance().collection("patients").document(uid)
                                 .set(patient)
                                 .addOnSuccessListener {
@@ -251,6 +257,13 @@ class SignUpActivity : BaseActivity() {
                         } else if (isDoctor) {
                             val doctor = Doctor(email, password, firstName, lastName, birthday, role, doctorId)
                             doctor.doctorId = doctorId
+                            user.userId = uid // Przypisz UID użytkownika do obiektu użytkownika
+                            user.firstName = firstName
+                            user.lastName = lastName
+                            user.email = email
+                            user.birthDate = birthday
+                            user.password = password
+                            user.role = role
                             FirebaseFirestore.getInstance().collection("doctors").document(uid)
                                 .set(doctor)
                                 .addOnSuccessListener {
@@ -267,9 +280,6 @@ class SignUpActivity : BaseActivity() {
                 }
         }
     }
-
-
-
     fun userRegistrationSuccess() {
         Toast.makeText(
             this@SignUpActivity,

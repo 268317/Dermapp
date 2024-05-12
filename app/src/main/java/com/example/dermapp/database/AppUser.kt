@@ -10,4 +10,3 @@ open class AppUser(
     @get:PropertyName("lastName") @set:PropertyName("lastName") open var lastName: String = "",
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
     @get:PropertyName("role") @set:PropertyName("role") open var role: String = "")
-

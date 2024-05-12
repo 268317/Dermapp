@@ -65,12 +65,5 @@ class CreateNewReportActivity : AppCompatActivity() {
                 selectedSymptoms.remove("Itching")
             }
         }
-
-        // Implement similar logic for other checkboxes...
-
-        // Example: Get other info from EditText when needed
-        val otherInfo = enterOtherInfoEditText.text.toString()
-
-        // Use selectedSymptoms and otherInfo as needed in your report creation logic
     }
 }

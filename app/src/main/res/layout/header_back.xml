@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:background="@drawable/back"
     android:gravity="bottom"
+    android:orientation="vertical"
     android:padding="10dp">
 
     <ImageButton
         android:id="@+id/arrowButton"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/arrow_left"
-        android:background="@android:color/transparent">
-    </ImageButton>
+        android:background="@android:color/transparent"
+        android:src="@drawable/arrow_left"></ImageButton>
 
 </LinearLayout>

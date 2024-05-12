@@ -34,18 +34,5 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
         editTextMultiLineDiagnosisAppointmentDoc = findViewById(R.id.editTextTextMultiLineDiagnosisAppointmentDoc)
         editTextMultiLineRecommendationsAppointmentDoc = findViewById(R.id.editTextTextMultiLineRecommendationsAppointmentDoc)
 
-//        // Set example data to the TextViews (replace with actual data)
-//        textViewAppointmentDateDoc.text = "Appointment date:"
-//        textViewDateAppointmentDoc.text = "DD MONTH YYYY, 00:00"
-//        textViewPatientAppointmentDoc.text = "Patient:"
-//        textViewFirstNameAppointmentDoc.text = "First name:"
-//        textViewLastNameAppointmentDoc.text = "Last name:"
-//        textViewPeselAppointmentDoc.text = "PESEL:"
-//        textViewDiagnosisAppointmentDoc.text = "Diagnosis"
-//        textViewRecommendationsAppointmentDoc.text = "Recommendations"
-//
-//        // Set example text to the EditTexts (replace with actual text)
-//        editTextMultiLineDiagnosisAppointmentDoc.setText("Diagnosis details go here...")
-//        editTextMultiLineRecommendationsAppointmentDoc.setText("Recommendation details go here...")
     }
 }

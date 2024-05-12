@@ -36,9 +36,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="414dp"
-                        android:layout_height="500dp"
-                        android:layout_marginTop="0dp"
+                        android:layout_width="416dp"
+                        android:layout_height="438dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -73,67 +72,6 @@
                                 android:layout_weight="1">
 
                                 <EditText
-                                    android:id="@+id/editTextEnterPatientNameNewMessageDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:ems="10"
-                                    android:hint="Enter Patient name"
-                                    android:inputType="text"
-                                    android:textAlignment="center"
-                                    android:textColorHint="#989595"
-                                    android:textSize="20sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="55dp"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
-
-                                <EditText
-                                    android:id="@+id/editTextEnterPatientLastNameNewMessageDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:ems="10"
-                                    android:hint="Enter Patient last name"
-                                    android:inputType="text"
-                                    android:textAlignment="center"
-                                    android:textColorHint="#989595"
-                                    android:textSize="20sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="55dp"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
-
-                                <EditText
                                     android:id="@+id/editTextEnterPatientPeselNewMessageDoc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -154,7 +92,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="280dp"
+                            android:layout_height="423dp"
                             android:layout_margin="10dp"
                             android:background="@drawable/grey_background"
                             android:orientation="horizontal">
@@ -166,8 +104,8 @@
 
                                 <EditText
                                     android:id="@+id/enterYourMessageNewMessageDoc"
-                                    android:layout_width="318dp"
-                                    android:layout_height="280dp"
+                                    android:layout_width="317dp"
+                                    android:layout_height="385dp"
                                     android:ems="10"
                                     android:gravity="start|top"
                                     android:hint="Enter your message"
