@@ -1,5 +1,4 @@
 package com.example.dermapp
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -99,7 +98,7 @@ class MainActivity : BaseActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.email.toString()
 
-        val intent = Intent(this, ProfileDocActivity::class.java)
+        val intent = Intent(this, AppointmentDetailsPatActivity::class.java)
         intent.putExtra("uID",uid)
         startActivity(intent)
     }

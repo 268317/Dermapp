@@ -17,6 +17,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/backHeader"
+                layout="@layout/header_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -32,7 +38,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="0dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +51,7 @@
                         android:layout_width="361dp"
                         android:layout_height="610dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="60dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="24dp"
                         android:background="@drawable/white_background"
                         android:elevation="3dp"

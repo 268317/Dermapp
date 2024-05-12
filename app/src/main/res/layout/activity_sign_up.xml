@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -164,7 +163,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="145dp" />
+        app:layout_constraintGuide_begin="127dp" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -172,21 +171,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="195dp" />
+        app:layout_constraintGuide_begin="177dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="453dp" />
+        app:layout_constraintGuide_begin="394dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="503dp" />
+        app:layout_constraintGuide_begin="453dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline17"
@@ -246,5 +245,31 @@
             android:layout_marginStart="8dp"/>
 
     </RadioGroup>
+
+    <EditText
+        android:id="@+id/textPesel"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="PESEL"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        android:autofillHints=""
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/textDoctorId"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Doctor ID"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintTop_toTopOf="@+id/guideline16"
+        android:autofillHints=""
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

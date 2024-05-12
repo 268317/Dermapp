@@ -10,5 +10,13 @@
     <string name="you_have_an_account">You have an account?</string>
     <string name="dermapp">DERMAPP</string>
     <string name="first_name">First Name</string>
+    <string name="name_header">Name</string>
+    <string name="welcome">Welcome</string>
+    <string name="err_msg_invalid_email">Invalid email\n</string>
+    <string name="err_msg_invalid_password">Password should contain at least 8 characters.</string>
+    <string name="err_msg_invalid_pesel">Invalid pesel!</string>
+    <string name="err_msg_pesel_length">Invalid pesel!\n</string>
+    <string name="err_msg_invalid_name">Invalid name!\n</string>
+    <string name="err_msg_invalid_last_name">Invalid las name!\n</string>
 
 </resources>

@@ -17,6 +17,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/backHeader"
+                layout="@layout/header_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -33,7 +39,7 @@
                         android:id="@+id/constraintLayoutProfilePat"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="0dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
@@ -73,7 +79,7 @@
                         android:layout_width="364dp"
                         android:layout_height="340dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="230dp"
+                        android:layout_marginTop="200dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/white_background"
@@ -88,14 +94,14 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/textViewFirstNameProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="First Name:"
                                 android:textColor="#FF9800"
@@ -104,7 +110,7 @@
                             <TextView
                                 android:id="@+id/textViewEnteredFirstNameProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="First Name"
                                 android:textAlignment="viewEnd"
@@ -113,14 +119,14 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/textViewLastNameProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="Last Name:"
                                 android:textColor="#FF9800"
@@ -129,7 +135,7 @@
                             <TextView
                                 android:id="@+id/textViewEnteredLastNameProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="First Name"
                                 android:textAlignment="viewEnd"
@@ -139,14 +145,14 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/textViewEmailProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="E-mail:"
                                 android:textColor="#FF9800"
@@ -155,7 +161,7 @@
                             <TextView
                                 android:id="@+id/textViewEnteredEmailProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="E-mail"
                                 android:textAlignment="viewEnd"
@@ -164,23 +170,23 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/textViewBirthProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:text="Date of birth:"
+                                android:text="Birth date:"
                                 android:textColor="#FF9800"
                                 android:textSize="20sp" />
 
                             <TextView
                                 android:id="@+id/textViewEnteredBirthProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="Date of birth"
                                 android:textAlignment="viewEnd"
@@ -189,14 +195,14 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/textViewPeselProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="PESEL:"
                                 android:textColor="#FF9800"
@@ -205,59 +211,9 @@
                             <TextView
                                 android:id="@+id/textViewEnteredPeselProfilePat"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="PESEL"
-                                android:textAlignment="viewEnd"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewAddressProfilePat"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Address:"
-                                android:textColor="#FF9800"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/textViewEnteredAddressProfilePat"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Address"
-                                android:textAlignment="viewEnd"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewPhoneProfilePat"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Phone number:"
-                                android:textColor="#FF9800"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/textViewEnteredPhonePat"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Phone number"
                                 android:textAlignment="viewEnd"
                                 android:textSize="18sp" />
                         </LinearLayout>

@@ -15,9 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/header_main" />
+       <include
+            android:id="@+id/includeHeader"
+            layout="@layout/header_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/textViewUpcomingAppointments"
@@ -150,7 +152,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/nav_view"
-        app:headerLayout="@layout/header_main"
+        app:headerLayout="@layout/header_name"
         app:menu="@menu/patient_menu"
         android:layout_gravity="start"
         />

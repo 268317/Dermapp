@@ -9,12 +9,16 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.dermapp.database.AppUser
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
 class StartPatActivity : AppCompatActivity(){
@@ -38,7 +42,7 @@ class StartPatActivity : AppCompatActivity(){
         bookButton = findViewById(R.id.bookButton)
         drawerLayout = findViewById(R.id.drawer_layout)
 
-        val header = findViewById<LinearLayout>(R.id.include)
+        val header = findViewById<LinearLayout>(R.id.includeHeader)
         menuButton = header.findViewById(R.id.menuButton)
 
         menuButton.setOnClickListener {
@@ -108,6 +112,29 @@ class StartPatActivity : AppCompatActivity(){
                 }
                 else -> false
             }
+        }
+
+        // Pobierz UID aktualnie zalogowanego użytkownika
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        // Utwórz odwołanie do dokumentu użytkownika w Firestore
+        val userRef = FirebaseFirestore.getInstance().collection("users").document(currentUserUid!!)
+
+        // Pobierz dane użytkownika z Firestore
+        userRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                // Konwertuj dane na obiekt użytkownika
+                val user = documentSnapshot.toObject(AppUser::class.java)
+
+                // Sprawdź, czy udało się pobrać dane użytkownika
+                user?.let {
+                    // Ustaw imię użytkownika w nagłówku
+                    val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
+                    headerNameTextView.text = user.firstName
+                }
+            }
+        }.addOnFailureListener { exception ->
+            // Obsłuż błędy pobierania danych z Firestore
         }
     }
 

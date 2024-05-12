@@ -4,22 +4,20 @@ import com.example.dermapp.SignUpActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-class FirestoreClass {
+class FirestoreDatabaseOperations {
 
     private val mFireStore = FirebaseFirestore.getInstance()
 
 
-    fun registerUser(activity: SignUpActivity, userInfo: User){
+    fun registerUser(activity: SignUpActivity, userInfo: AppUser){
 
         mFireStore.collection("users")
-            .document(userInfo.id)
+            .document(userInfo.email)
             .set(userInfo, SetOptions.merge())
             .addOnSuccessListener {
                 activity.userRegistrationSuccess()
-
             }
             .addOnFailureListener{
-
             }
     }
 }

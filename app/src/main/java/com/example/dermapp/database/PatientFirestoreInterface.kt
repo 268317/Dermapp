@@ -1,4 +1,4 @@
 package com.example.dermapp.database
 
-interface FirestoreInterface {
+interface PatientFirestoreInterface {
 }

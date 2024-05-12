@@ -11,9 +11,11 @@
     tools:context=".MakeAppointmentPatActivity"
     tools:openDrawer="start">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/header_back" />
+    <include
+        android:id="@+id/backHeader"
+        layout="@layout/header_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/textViewMakeAnAppointment"

@@ -16,7 +16,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_make_appointment_pat)
 
-        val header = findViewById<LinearLayout>(R.id.include)
+        val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
         backButton.setOnClickListener {
