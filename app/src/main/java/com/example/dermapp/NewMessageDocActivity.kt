@@ -18,8 +18,6 @@ class NewMessageDocActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_message_doc)
 
         // Initialize EditTexts
-        enterPatientNameEditText = findViewById(R.id.editTextEnterPatientNameNewMessageDoc)
-        enterPatientLastNameEditText = findViewById(R.id.editTextEnterPatientLastNameNewMessageDoc)
         enterPatientPeselEditText = findViewById(R.id.editTextEnterPatientPeselNewMessageDoc)
         enterYourMessageEditText = findViewById(R.id.enterYourMessageNewMessageDoc)
 

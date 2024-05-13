@@ -214,8 +214,7 @@ class SignUpActivity : BaseActivity() {
                     if (task.isSuccessful) {
                         val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
                         val uid: String = firebaseUser?.uid ?: ""
-
-                        user.userId = uid // Przypisz UID użytkownika do obiektu użytkownika
+                        user.appUserId = uid
                         user.firstName = firstName
                         user.lastName = lastName
                         user.email = email
@@ -239,13 +238,13 @@ class SignUpActivity : BaseActivity() {
 
                         if (isPatient) {
                             val patient = Patient(email, password, firstName, lastName, birthday, role, pesel)
+                            patient.appUserId = uid
                             patient.pesel = pesel
-                            user.userId = uid
-                            user.lastName = lastName
-                            user.email = email
-                            user.birthDate = birthday
-                            user.password = password
-                            user.role = role
+                            patient.lastName = lastName
+                            patient.email = email
+                            patient.birthDate = birthday
+                            patient.password = password
+                            patient.role = role
                             FirebaseFirestore.getInstance().collection("patients").document(uid)
                                 .set(patient)
                                 .addOnSuccessListener {
@@ -257,13 +256,12 @@ class SignUpActivity : BaseActivity() {
                         } else if (isDoctor) {
                             val doctor = Doctor(email, password, firstName, lastName, birthday, role, doctorId)
                             doctor.doctorId = doctorId
-                            user.userId = uid // Przypisz UID użytkownika do obiektu użytkownika
-                            user.firstName = firstName
-                            user.lastName = lastName
-                            user.email = email
-                            user.birthDate = birthday
-                            user.password = password
-                            user.role = role
+                            doctor.firstName = firstName
+                            doctor.lastName = lastName
+                            doctor.email = email
+                            doctor.birthDate = birthday
+                            doctor.password = password
+                            doctor.role = role
                             FirebaseFirestore.getInstance().collection("doctors").document(uid)
                                 .set(doctor)
                                 .addOnSuccessListener {

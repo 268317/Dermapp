@@ -18,8 +18,6 @@ class NewMessagePatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_message_pat)
 
         // Initialize EditTexts
-        enterDoctorNameEditText = findViewById(R.id.editTextEnterDoctorNameNewMessagePat)
-        enterDoctorLastNameEditText = findViewById(R.id.editTexEnterDoctorLastNameNewMessagePat)
         enterDoctorIdEditText = findViewById(R.id.editTextEnterDoctorIdNewMessagePat)
         enterYourMessageEditText = findViewById(R.id.enterYourMessageNewMessagePat)
 
