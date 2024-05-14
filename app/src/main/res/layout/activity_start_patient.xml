@@ -34,7 +34,7 @@
             android:id="@+id/textViewMakeAnAppointment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Make an appointment"
+            android:text="My reports"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/guideline19"
             app:layout_constraintTop_toTopOf="@+id/guideline22" />
@@ -43,70 +43,10 @@
             android:id="@+id/textViewAddRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add new medical record"
+            android:text="My prescriptions"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/guideline19"
             app:layout_constraintTop_toTopOf="@+id/guideline24" />
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextViewDoctor"
-            android:layout_width="300dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rounded_gray_background"
-            android:completionThreshold="0"
-            android:hint="Doctor"
-            android:paddingStart="16dp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/guideline20"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toBottomOf="@+id/textViewMakeAnAppointment" />
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextViewLocalization"
-            android:layout_width="300dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_gray_background"
-            android:completionThreshold="0"
-            android:fontFamily="sans-serif"
-            android:hint="Localization"
-            android:paddingStart="16dp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/guideline20"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextViewDoctor" />
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextDate"
-            android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_gray_background"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Date"
-            android:inputType="date"
-            android:paddingStart="16dp"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toStartOf="@+id/autoCompleteTextViewLocalization"
-            app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextViewLocalization" />
-
-        <Button
-            android:id="@+id/bookButton"
-            android:layout_width="120dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_orange_background"
-            android:clickable="true"
-            android:focusable="false"
-            android:fontFamily="sans-serif"
-            android:hint="Book"
-            android:textColor="@color/white"
-            android:textColorHint="#FFFFFF"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="@+id/autoCompleteTextViewLocalization"
-            app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextViewLocalization" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -152,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/nav_view"
-        app:headerLayout="@layout/header_name"
+        app:headerLayout="@layout/header_menu"
         app:menu="@menu/patient_menu"
         android:layout_gravity="start"
         />

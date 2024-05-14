@@ -1,5 +1,6 @@
 package com.example.dermapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
@@ -22,10 +23,19 @@ class CreateNewReportActivity : AppCompatActivity() {
     private lateinit var enterOtherInfoEditText: EditText
     private lateinit var addPhotoTextView: TextView
     private lateinit var addPhotoImageView: ImageView
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_report)
+
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
+        }
 
         // Initialize UI elements
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
@@ -52,6 +62,8 @@ class CreateNewReportActivity : AppCompatActivity() {
             // Implement photo adding logic here
             Toast.makeText(this, "Add photo clicked", Toast.LENGTH_SHORT).show()
         }
+
+
     }
 
     private fun handleCheckboxes() {

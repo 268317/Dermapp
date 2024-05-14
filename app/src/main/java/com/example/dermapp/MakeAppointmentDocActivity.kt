@@ -13,10 +13,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import java.util.Calendar
 
-class MakeAppointmentPatActivity : AppCompatActivity() {
+class MakeAppointmentDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var textDate: AutoCompleteTextView
-    private lateinit var autoDoc: AutoCompleteTextView
+    private lateinit var autoPat: AutoCompleteTextView
     private lateinit var autoLoc: AutoCompleteTextView
     private lateinit var bookButton: Button
     @SuppressLint("MissingInflatedId")
@@ -26,7 +26,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_make_appointment_pat)
 
         textDate = findViewById(R.id.autoCompleteTextDate)
-        autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
+        autoPat = findViewById(R.id.autoCompleteTextViewPat)
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
 
@@ -42,11 +42,11 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
             openCalendar()
         }
 
-        val docOptions = arrayOf("Doc 1", "Doc 2", "Doc 3", "Doc 4") // Chwilowe opcje doc
+        val docOptions = arrayOf("Pat 1", "Pat 2", "Pat 3", "Pat 4") // Chwilowe opcje doc
         val locOptions = arrayOf("Loc 1", "Loc 2", "Loc 3", "Loc 4") // Chwilowe opcje loc
 
         val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, docOptions)
-        autoDoc.setAdapter(docAdapter)
+        autoPat.setAdapter(docAdapter)
 
         val locAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locOptions)
         autoLoc.setAdapter(locAdapter)
@@ -73,7 +73,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
     }
 
     private fun bookAppointment() {
-        val doctor = autoDoc.text.toString()
+        val patient = autoPat.text.toString()
         val location = autoLoc.text.toString()
         val date = textDate.text.toString()
 

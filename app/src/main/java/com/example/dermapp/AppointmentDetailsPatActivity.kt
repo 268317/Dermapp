@@ -1,6 +1,9 @@
 package com.example.dermapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dermapp.database.AppUser
@@ -20,10 +23,19 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var textViewMultiDiagnosisAppointmentPat: TextView
     private lateinit var textViewRecommendationAppointmentPat: TextView
     private lateinit var textViewMultiRecommendationAppointmentPat: TextView
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_pat)
+
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
+        }
 
         // Initialize UI elements
         textViewAppointmentDatePat = findViewById(R.id.textViewAppointmentDatePat)

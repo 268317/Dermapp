@@ -14,6 +14,7 @@ class MenuPatActivity : AppCompatActivity() {
     private lateinit var navView: NavigationView
     private lateinit var backButton: ImageButton
 
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

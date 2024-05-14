@@ -14,9 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/backHeader">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +41,6 @@
                         android:id="@+id/constraintLayoutEditProfilePat"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:layout_marginTop="40dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="380dp"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="200dp"
+                        android:layout_marginTop="180dp"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/white_background"
@@ -89,7 +90,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="text"
-                                android:text="Edit name" />
+                                android:hint="Edit name" />
 
                         </LinearLayout>
 
@@ -106,7 +107,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="text"
-                                android:text="Edit last name" />
+                                android:hint="Edit last name" />
                         </LinearLayout>
 
 
@@ -119,11 +120,11 @@
                             <EditText
                                 android:id="@+id/editMailPat"
                                 android:layout_width="match_parent"
-                                android:layout_height="55dp"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="text"
-                                android:text="Edit e-mail" />
+                                android:hint="Edit e-mail" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -139,7 +140,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="text"
-                                android:text="Edit address" />
+                                android:hint="Edit address" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -155,7 +156,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="text"
-                                android:text="Edit phone number" />
+                                android:hint="Edit phone number" />
                         </LinearLayout>
 
                     </LinearLayout>

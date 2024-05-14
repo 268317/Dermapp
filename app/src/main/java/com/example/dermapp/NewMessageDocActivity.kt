@@ -1,8 +1,11 @@
 package com.example.dermapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -12,10 +15,19 @@ class NewMessageDocActivity : AppCompatActivity() {
     private lateinit var enterPatientLastNameEditText: EditText
     private lateinit var enterPatientPeselEditText: EditText
     private lateinit var enterYourMessageEditText: EditText
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message_doc)
+
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartDocActivity::class.java)
+            startActivity(intent)
+        }
 
         // Initialize EditTexts
         enterPatientPeselEditText = findViewById(R.id.editTextEnterPatientPeselNewMessageDoc)

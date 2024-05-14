@@ -1,16 +1,28 @@
 package com.example.dermapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-class MessagesPatActivity : AppCompatActivity() {
+class MessagesActivity : AppCompatActivity() {
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_messages_pat)
+        setContentView(R.layout.activity_messages)
+
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
+        }
 
         // Retrieve views
         val imageViewAddMessagesPat = findViewById<ImageView>(R.id.imageViewAddMessagesPat)

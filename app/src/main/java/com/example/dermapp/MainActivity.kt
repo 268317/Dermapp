@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
@@ -92,13 +93,34 @@ class MainActivity : BaseActivity() {
      * Metoda przechodzenia do głównej aktywności po pomyślnym zalogowaniu i przekazanie uid do głównej aktywności.
      */
     private fun goToNextActivity() {
-
         val user = FirebaseAuth.getInstance().currentUser
-        val uid = user?.email.toString()
+        val uid = user?.uid ?:""
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("patients").document(uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val intent = Intent(this, StartPatActivity::class.java)
+                        intent.putExtra("uID", uid)
+                        startActivity(intent)
+                    } else {
+                        FirebaseFirestore.getInstance().collection("doctors").document(uid)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                if (document.exists()) {
+                                    val intent = Intent(this, StartDocActivity::class.java)
+                                    intent.putExtra("uID", uid)
+                                    startActivity(intent)
+                                } else {
+                                    val intent = Intent(this, MessagesActivity::class.java)
+                                    intent.putExtra("uID", uid)
+                                    startActivity(intent)
+                                }
+                            }
+                    }
+                }
+        }
 
-        val intent = Intent(this, AppointmentDetailsPatActivity::class.java)
-        intent.putExtra("uID",uid)
-        startActivity(intent)
     }
 
     private fun goToSignIn() {

@@ -8,6 +8,9 @@
 
             <menu>
                 <item
+                    android:id="@+id/nav_myProfile"
+                    android:title="My profile"/>
+                <item
                     android:id="@+id/nav_logout"
                     android:title="Logout"/>
             </menu>
@@ -25,9 +28,6 @@
                     android:id="@+id/nav_make"
                     android:title="Make appointment"/>
                 <item
-                    android:id="@+id/nav_cancel"
-                    android:title="Cancel appointment"/>
-                <item
                     android:id="@+id/nav_myAppointments"
                     android:title="My appointments"/>
             </menu>
@@ -44,9 +44,6 @@
                     android:id="@+id/nav_newReport"
                     android:title="Add new report"/>
                 <item
-                    android:id="@+id/nav_myRecords"
-                    android:title="My medical records"/>
-                <item
                     android:id="@+id/nav_myReports"
                     android:title="My reports"/>
                 <item
@@ -61,7 +58,7 @@
         <menu>
             <item
                 android:id="@+id/nav_myMailbox"
-                android:title="My Mailbox"/>
+                android:title="Mailbox"/>
         </menu>
 
     </item>

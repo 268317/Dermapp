@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D3951E"
+    android:background="@color/orange_light"
     android:foregroundTint="@color/light_gray"
     tools:context=".MainActivity">
 
@@ -48,7 +48,7 @@
         android:drawableTint="@color/white"
         android:foregroundTint="@color/white"
         android:text="Log In"
-        android:textColor="#D3951E"
+        android:textColor="@color/orange_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4"

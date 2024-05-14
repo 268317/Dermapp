@@ -245,6 +245,7 @@ class SignUpActivity : BaseActivity() {
                             patient.birthDate = birthday
                             patient.password = password
                             patient.role = role
+                            patient.firstName = firstName
                             FirebaseFirestore.getInstance().collection("patients").document(uid)
                                 .set(patient)
                                 .addOnSuccessListener {

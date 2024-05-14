@@ -14,6 +14,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FFD3951E</color>
+    <color name="orange_light">#FF9800</color>
     <color name="light_gray">#D3CFC9</color>
 
     <color name="colorSnackBarSuccess">#03A9F4</color>

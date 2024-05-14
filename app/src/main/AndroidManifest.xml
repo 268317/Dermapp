@@ -34,7 +34,7 @@
             android:name=".NewMessageDocActivity"
             android:exported="false" />
         <activity
-            android:name=".MessagesPatActivity"
+            android:name=".MessagesActivity"
             android:exported="false" />
         <activity
             android:name=".MessagesDocActivity"
