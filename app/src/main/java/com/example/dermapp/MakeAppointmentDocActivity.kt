@@ -23,7 +23,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_make_appointment_pat)
+        setContentView(R.layout.activity_make_appointment_doc)
 
         textDate = findViewById(R.id.autoCompleteTextDate)
         autoPat = findViewById(R.id.autoCompleteTextViewPat)

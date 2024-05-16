@@ -7,13 +7,13 @@
 
     <TextView
         android:id="@+id/SignUp_textView"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/you_have_an_account"
-        app:layout_constraintBottom_toTopOf="@+id/guideline17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline13" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonSignUp" />
 
     <TextView
         android:id="@+id/AppName_textView"
@@ -123,6 +123,7 @@
         android:id="@+id/buttonSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
         android:height="50dp"
         android:background="@color/orange_light"
         android:backgroundTint="@color/orange_light"
@@ -133,7 +134,7 @@
         app:iconTint="@color/orange_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDateOfBirth"
         app:rippleColor="@color/orange_light" />
 
     <RadioGroup
@@ -205,21 +206,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="453dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="685dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="575dp" />
-
-
 
     <TextView
         android:id="@+id/logInTextButton"
@@ -237,26 +223,24 @@
         android:id="@+id/textPesel"
         android:layout_width="140dp"
         android:layout_height="50dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="PESEL"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/TextEmail"
-        app:layout_constraintTop_toTopOf="@+id/guideline16"
-        android:autofillHints=""
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
     <EditText
         android:id="@+id/textDoctorId"
         android:layout_width="140dp"
         android:layout_height="50dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="Doctor ID"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/TextEmail"
-        app:layout_constraintTop_toTopOf="@+id/guideline16"
-        android:autofillHints=""
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
