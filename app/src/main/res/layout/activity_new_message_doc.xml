@@ -71,21 +71,19 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
 
-                                <EditText
-                                    android:id="@+id/editTextEnterPatientPeselNewMessageDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:ems="10"
-                                    android:hint="Enter Patient PESEL"
-                                    android:inputType="text"
-                                    android:textAlignment="center"
-                                    android:textColorHint="#989595"
-                                    android:textSize="20sp"
+                                <AutoCompleteTextView
+                                    android:id="@+id/autoCompleteTextViewPatient"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="35dp"
+                                    android:background="@drawable/rounded_gray_background"
+                                    android:completionThreshold="0"
+                                    android:hint="Patient"
+                                    android:paddingStart="16dp"
+                                    android:textColor="@android:color/black"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    app:layout_constraintStart_toStartOf="parent" />
+
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
                         </LinearLayout>
@@ -104,13 +102,14 @@
 
                                 <EditText
                                     android:id="@+id/enterYourMessageNewMessageDoc"
-                                    android:layout_width="317dp"
-                                    android:layout_height="385dp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
                                     android:ems="10"
+                                    android:paddingStart="16dp"
+                                    android:layout_marginTop="10dp"
                                     android:gravity="start|top"
                                     android:hint="Enter your message"
                                     android:inputType="textMultiLine"
-                                    android:textAlignment="center"
                                     android:textColorHint="#989595"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"

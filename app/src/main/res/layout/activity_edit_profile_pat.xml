@@ -144,7 +144,7 @@
                                     android:layout_height="55dp"
                                     android:layout_weight="1"
                                     android:ems="10"
-                                    android:hint="Edit Password"
+                                    android:hint="New Password"
                                     android:inputType="textPassword" />
                             </LinearLayout>
 
@@ -160,7 +160,7 @@
                                     android:layout_height="55dp"
                                     android:layout_weight="1"
                                     android:ems="10"
-                                    android:hint="Edit Password (repeat)"
+                                    android:hint="New Password (repeat)"
                                     android:inputType="textPassword" />
                             </LinearLayout>
 

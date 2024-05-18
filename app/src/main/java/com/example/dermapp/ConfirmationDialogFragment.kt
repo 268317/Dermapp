@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 class ConfirmationDialogFragment : DialogFragment() {
 
     interface ConfirmationDialogListener {
-        fun onConfirmButtonClicked(password: String)
+        fun onConfirmButtonClicked(password: String, dialog: DialogFragment)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -24,7 +24,7 @@ class ConfirmationDialogFragment : DialogFragment() {
             .setPositiveButton("Confirm") { _, _ ->
                 val password = passwordEditText.text.toString()
                 val listener = activity as ConfirmationDialogListener?
-                listener?.onConfirmButtonClicked(password)
+                listener?.onConfirmButtonClicked(password, this)
             }
             .setNegativeButton("Cancel") { _, _ ->
                 dialog?.cancel()

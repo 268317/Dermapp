@@ -39,9 +39,9 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout3"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:layout_marginTop="0dp"
                         android:background="@drawable/top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -49,234 +49,285 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCreateNewReport"
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="610dp"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="24dp"
-                        android:background="@drawable/white_background"
-                        android:elevation="3dp"
-                        android:orientation="vertical"
+                        android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutCreateNewReport"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_margin="10dp"
-                            android:orientation="horizontal">
+                            android:layout_height="610dp"
+                            android:layout_marginBottom="30dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="24dp"
+                            android:background="@drawable/white_background"
+                            android:elevation="3dp"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/textViewCheckSymptomsCreateNewReport"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Check symptoms"
-                                android:textAlignment="center"
-                                android:textColor="#FF9800"
-                                android:textSize="24sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxItchingCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="50dp"
-                                android:layout_weight="1"
-                                android:text="itching"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxMoleChangesCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="50dp"
-                                android:layout_weight="1"
-                                android:text="mole changes"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxRashCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="55dp"
-                                android:layout_weight="1"
-                                android:text="rash"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxDrynessCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="55dp"
-                                android:layout_weight="1"
-                                android:text="dryness"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxPimplesCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="pimples"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxSevereAcneCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="severe acne"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxBlackheadsCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="blackheads"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxWartsCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="warts"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_margin="0dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxRednessCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="redness"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxDiscolorationCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="discoloration"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_margin="0dp"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/checkBoxSeborrhoeaCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="seborrhoea"
-                                android:textSize="16sp" />
-
-                            <CheckBox
-                                android:id="@+id/checkBoxNewMoleCreateNewReport"
-                                android:layout_width="100dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="new mole"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="130dp"
-                            android:layout_margin="10dp"
-                            android:background="@drawable/grey_background"
-                            android:orientation="horizontal">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="140dp"
-                                android:layout_weight="1">
+                                android:layout_height="55dp"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal">
 
-                                <EditText
-                                    android:id="@+id/enterOtherInfoCreateNewReport"
+                                <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="100dp"
-                                    android:ems="10"
-                                    android:gravity="start|top"
-                                    android:hint="Enter other info"
-                                    android:inputType="textMultiLine"
-                                    android:textColorHint="#989595"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
+
+                                    <AutoCompleteTextView
+                                        android:id="@+id/autoCompleteTextViewDoctor"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="35dp"
+                                        android:background="@drawable/rounded_gray_background"
+                                        android:completionThreshold="0"
+                                        android:hint="Doctor"
+                                        android:paddingStart="16dp"
+                                        android:textColor="@android:color/black"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/textViewCheckSymptomsCreateNewReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Check symptoms"
+                                    android:textAlignment="center"
+                                    android:textColor="#FF9800"
+                                    android:textSize="24sp" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxItchingCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:text="itching"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxMoleChangesCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:text="mole changes"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxRashCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="55dp"
+                                    android:layout_weight="1"
+                                    android:text="rash"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxDrynessCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="55dp"
+                                    android:layout_weight="1"
+                                    android:text="dryness"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxPimplesCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="pimples"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxSevereAcneCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="severe acne"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxBlackheadsCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="blackheads"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxWartsCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="warts"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_margin="0dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxRednessCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="redness"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxDiscolorationCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="discoloration"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_margin="0dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxSeborrhoeaCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="seborrhoea"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxNewMoleCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="new mole"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                android:layout_margin="10dp"
+                                android:background="@drawable/grey_background"
+                                android:orientation="horizontal">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="140dp"
+                                    android:layout_weight="1">
+
+                                    <EditText
+                                        android:id="@+id/enterOtherInfoCreateNewReport"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:ems="10"
+                                        android:gravity="start|top"
+                                        android:hint="Enter other info"
+                                        android:paddingStart="16dp"
+                                        android:inputType="textMultiLine"
+                                        android:textColorHint="#989595"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/view2CreateNewReport"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="10dp"
+                                android:background="#FF9800"
+                                tools:layout_editor_absoluteX="22dp"
+                                tools:layout_editor_absoluteY="337dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/textViewAddPhotoCreateNewReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="Add photo"
+                                    android:textAlignment="textEnd"
+                                    android:textColor="#FF9800"
+                                    android:textSize="20sp" />
+
+                                <ImageView
+                                    android:id="@+id/imageAddPhotoCreateNewReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    app:srcCompat="@drawable/add_a_photo" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/buttonUpdateProfilePat"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="24dp"
+                                android:background="@drawable/button_background"
+                                android:text="Send report"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
-
-                        <View
-                            android:id="@+id/view2CreateNewReport"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="10dp"
-                            android:background="#FF9800"
-                            tools:layout_editor_absoluteX="22dp"
-                            tools:layout_editor_absoluteY="337dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="70dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/textViewAddPhotoCreateNewReport"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="Add photo"
-                                android:textAlignment="textEnd"
-                                android:textColor="#FF9800"
-                                android:textSize="20sp" />
-
-                            <ImageView
-                                android:id="@+id/imageAddPhotoCreateNewReport"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                app:srcCompat="@drawable/add_a_photo" />
-                        </LinearLayout>
-
-                    </LinearLayout>
+                    </ScrollView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

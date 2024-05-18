@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Patient
 import com.google.firebase.auth.EmailAuthProvider
@@ -43,8 +44,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
         updateProfileButton = findViewById(R.id.buttonUpdateProfilePat)
         updateProfileButton.setOnClickListener {
-            val confirmationDialog = ConfirmationDialogFragment()
-            confirmationDialog.show(supportFragmentManager, "ConfirmationDialog")
+            if (validateRegisterDetails()) {
+                val confirmationDialog = ConfirmationDialogFragment()
+                confirmationDialog.show(supportFragmentManager, "ConfirmationDialog")
+            }
         }
 
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -69,20 +72,21 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
-    override fun onConfirmButtonClicked(password: String) {
+    override fun onConfirmButtonClicked(password: String, dialog: DialogFragment) {
+        dialog.dismiss()
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
             val credential = EmailAuthProvider.getCredential(currentUser.email!!, password)
             currentUser.reauthenticate(credential)
                 .addOnSuccessListener {
                     updateUser()
+                    val intent = Intent(this, ProfilePatActivity::class.java)
+                    startActivity(intent)
                 }
                 .addOnFailureListener { e ->
-                    showErrorSnackBar("Wrong password", false)
+                    showErrorSnackBar("Wrong password", true)
                 }
         }
-        val intent = Intent(this, ProfilePatActivity::class.java)
-        startActivity(intent)
     }
 
     private fun validateRegisterDetails(): Boolean {
@@ -92,45 +96,53 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         val firstNameText: EditText = findViewById(R.id.editNamePat)
         val lastNameText: EditText = findViewById(R.id.editLastNamePat)
         val emailText: EditText = findViewById(R.id.editMailPat)
+        val passwordText: EditText = findViewById(R.id.editPasswordPat)
+        val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
+
+        val firstName = firstNameText.text.toString().trim { it <= ' ' }
+        val lastName = lastNameText.text.toString().trim { it <= ' ' }
+        val email = emailText.text.toString().trim { it <= ' ' }
+        val password = passwordText.text.toString()
+        val passwordRepeat = passwordRepeatText.text.toString()
 
         return when {
-            TextUtils.isEmpty(firstNameText.text.toString().trim { it <= ' ' }) -> {
+            TextUtils.isEmpty(firstName) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_name), true)
                 false
             }
 
-            !firstNameText.text.toString().trim { it <= ' ' }.matches(namePattern.toRegex()) -> {
+            !firstName.matches(namePattern.toRegex()) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_invalid_name), true)
                 false
             }
 
-            TextUtils.isEmpty(lastNameText.text.toString().trim { it <= ' ' }) -> {
+            TextUtils.isEmpty(lastName) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name), true)
                 false
             }
 
-            !lastNameText.text.toString().trim { it <= ' ' }.matches(namePattern.toRegex()) -> {
+            !lastName.matches(namePattern.toRegex()) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_invalid_last_name), true)
                 false
             }
 
-            TextUtils.isEmpty(emailText.text.toString().trim { it <= ' ' }) -> {
+            TextUtils.isEmpty(email) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                 false
             }
 
-            !emailText.text.toString().trim { it <= ' ' }.matches(emailPattern.toRegex()) -> {
+            !email.matches(emailPattern.toRegex()) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_invalid_email), true)
                 false
             }
 
-            TextUtils.isEmpty(firstNameText.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_name), true)
+            (password != "" && password.length < 8) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_password), true)
                 false
             }
 
-            TextUtils.isEmpty(lastNameText.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name), true)
+            password != passwordRepeat -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_password_mismatch), true)
                 false
             }
 
@@ -138,82 +150,47 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+
     private fun updateUser() {
-        if (validateRegisterDetails()) {
             val firstNameText: EditText = findViewById(R.id.editNamePat)
             val lastNameText: EditText = findViewById(R.id.editLastNamePat)
             val emailText: EditText = findViewById(R.id.editMailPat)
             val passwordText: EditText = findViewById(R.id.editPasswordPat)
-            val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
+            //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
 
             val firstName = firstNameText.text.toString().trim()
             val lastName = lastNameText.text.toString().trim()
             val email = emailText.text.toString().trim()
             val password = passwordText.text.toString().trim()
-            val passwordRepeat = passwordRepeatText.text.toString().trim()
-
-            var isPasswordChanging = true
-
-            if (password.isNotEmpty() && password != "Edit Password") {
-                if (password.length < 8) {
-                    isPasswordChanging = false
-                    showErrorSnackBar(resources.getString(R.string.err_msg_invalid_password), true)
-                    return
-                }
-                if (password != passwordRepeat) {
-                    isPasswordChanging = false
-                    showErrorSnackBar(resources.getString(R.string.err_msg_password_mismatch), true)
-                    return
-                }
-                isPasswordChanging = true
-            }
+            //val passwordRepeat = passwordRepeatText.text.toString().trim()
 
             val currentUser = FirebaseAuth.getInstance().currentUser
 
             currentUser?.updateEmail(email)?.addOnCompleteListener { emailUpdateTask ->
-                    if (isPasswordChanging && emailUpdateTask.isSuccessful) {
-                        val userUpdates = hashMapOf<String, Any>(
-                            "firstName" to firstName,
-                            "lastName" to lastName,
-                            "email" to email,
-                            "password" to password
-                        )
-
-                        // AUTH UPDATE!!!!
-
-                        val currentUserUid = currentUser.uid
-
-                        FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
-                            .update(userUpdates)
-                            .addOnSuccessListener {
-                                showErrorSnackBar("Profile updated successfully.", false)
-                            }
-                            .addOnFailureListener { e ->
-                                showErrorSnackBar("Error updating profile: ${e.message}", true)
-                            }
-                    } else {
-                        val userUpdates = hashMapOf<String, Any>(
-                            "firstName" to firstName,
-                            "lastName" to lastName,
-                            "email" to email,
-                        )
-
-                        // AUTH UPDATE!!!!
-
-                        val currentUserUid = currentUser.uid
-
-                        FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
-                            .update(userUpdates)
-                            .addOnSuccessListener {
-                                showErrorSnackBar("Profile updated successfully.", false)
-                            }
-                            .addOnFailureListener { e ->
-                                showErrorSnackBar("Error updating profile: ${e.message}", true)
-                            }
+                if (emailUpdateTask.isSuccessful) {
+                    if (password != "") {
+                        currentUser.updatePassword(password)
                     }
 
+                    val currentUserUid = currentUser.uid
+
+                    val userUpdates = hashMapOf<String, Any>(
+                        "firstName" to firstName,
+                        "lastName" to lastName,
+                        "email" to email
+                    )
+
+                    FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
+                        .update(userUpdates)
+                        .addOnSuccessListener {
+                            showErrorSnackBar("Profile updated successfully.", false)
+                        }
+                        .addOnFailureListener { e ->
+                            showErrorSnackBar("Error updating profile: ${e.message}", true)
+                        }
+                }
+
             }
-        }
     }
 
 }

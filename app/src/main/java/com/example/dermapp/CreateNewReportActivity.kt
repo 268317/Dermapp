@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
+import com.example.dermapp.database.Doctor
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateNewReportActivity : AppCompatActivity() {
 
@@ -24,6 +26,7 @@ class CreateNewReportActivity : AppCompatActivity() {
     private lateinit var addPhotoTextView: TextView
     private lateinit var addPhotoImageView: ImageView
     private lateinit var backButton: ImageButton
+    private lateinit var autoDoc: AutoCompleteTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,7 @@ class CreateNewReportActivity : AppCompatActivity() {
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
         addPhotoTextView = findViewById(R.id.textViewAddPhotoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
+        autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
 
         // Handle checkbox states or other interactions
         handleCheckboxes()
@@ -61,6 +65,14 @@ class CreateNewReportActivity : AppCompatActivity() {
         addPhotoImageView.setOnClickListener {
             // Implement photo adding logic here
             Toast.makeText(this, "Add photo clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
+        doctorsCollection.get().addOnSuccessListener { doctorsResult ->
+            val doctorsList = doctorsResult.toObjects(Doctor::class.java)
+            val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
+            val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
+            autoDoc.setAdapter(docAdapter)
         }
 
 

@@ -30,7 +30,7 @@ class NewMessagePatActivity : AppCompatActivity() {
         }
 
         // Initialize EditTexts
-        enterDoctorIdEditText = findViewById(R.id.editTextEnterDoctorIdNewMessagePat)
+        enterDoctorIdEditText = findViewById(R.id.autoCompleteTextViewDoctor)
         enterYourMessageEditText = findViewById(R.id.enterYourMessageNewMessagePat)
 
         // Retrieve send ImageView

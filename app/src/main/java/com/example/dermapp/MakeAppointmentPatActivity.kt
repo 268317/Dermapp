@@ -11,6 +11,8 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.dermapp.database.Doctor
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
 class MakeAppointmentPatActivity : AppCompatActivity() {
@@ -42,11 +44,18 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
             openCalendar()
         }
 
-        val docOptions = arrayOf("Doc 1", "Doc 2", "Doc 3", "Doc 4") // Chwilowe opcje doc
+        val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
+        doctorsCollection.get().addOnSuccessListener { doctorsResult ->
+            val doctorsList = doctorsResult.toObjects(Doctor::class.java)
+            val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
+            val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
+            autoDoc.setAdapter(docAdapter)
+        }
+        //val docOptions = arrayOf("Doc 1", "Doc 2", "Doc 3", "Doc 4") // Chwilowe opcje doc
         val locOptions = arrayOf("Loc 1", "Loc 2", "Loc 3", "Loc 4") // Chwilowe opcje loc
 
-        val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, docOptions)
-        autoDoc.setAdapter(docAdapter)
+        //val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, docOptions)
+        //autoDoc.setAdapter(docAdapter)
 
         val locAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locOptions)
         autoLoc.setAdapter(locAdapter)
