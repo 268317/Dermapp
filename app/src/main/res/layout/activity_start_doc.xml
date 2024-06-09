@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/textViewUpcomingAppointments"
+            android:id="@+id/textViewUpcomingAppointmentsPat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upcoming appointments"
@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="@+id/guideline21" />
 
         <TextView
-            android:id="@+id/textViewMakeAnAppointment"
+            android:id="@+id/textViewMyReportsPat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="My Mailbox"
@@ -40,7 +40,7 @@
             app:layout_constraintTop_toTopOf="@+id/guideline22" />
 
         <TextView
-            android:id="@+id/textViewAddRecord"
+            android:id="@+id/textViewMyPrescriptionsPat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reports"

@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dermapp.database.Doctor
+import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 

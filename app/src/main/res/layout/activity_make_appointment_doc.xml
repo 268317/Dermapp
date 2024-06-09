@@ -86,7 +86,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/textViewMakeAnAppointment"
+                                android:id="@+id/textViewMyReportsPat"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -114,7 +114,7 @@
                             android:textColor="@android:color/black"
                             app:layout_constraintEnd_toStartOf="@+id/guideline20"
                             app:layout_constraintStart_toStartOf="@+id/guideline19"
-                            app:layout_constraintTop_toBottomOf="@+id/textViewMakeAnAppointment" />
+                            app:layout_constraintTop_toBottomOf="@+id/textViewMyReportsPat" />
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCompleteTextViewLocalization"

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import com.example.dermapp.messages.MessagesPatActivity
+import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -112,7 +114,7 @@ class MainActivity : BaseActivity() {
                                     intent.putExtra("uID", uid)
                                     startActivity(intent)
                                 } else {
-                                    val intent = Intent(this, MessagesActivity::class.java)
+                                    val intent = Intent(this, MessagesPatActivity::class.java)
                                     intent.putExtra("uID", uid)
                                     startActivity(intent)
                                 }

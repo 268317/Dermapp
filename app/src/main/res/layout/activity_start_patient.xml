@@ -7,46 +7,77 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:fitsSystemWindows="true"
-    tools:context=".StartPatActivity"
+    tools:context=".startPatient.StartPatActivity"
     tools:openDrawer="start">
 
-    <!-- Główny widok -->
+    <!-- Main View -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-       <include
-            android:id="@+id/includeHeader"
-            layout="@layout/header_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewUpcomingAppointments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upcoming appointments"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline21" />
+            <include
+                android:id="@+id/includeHeader"
+                layout="@layout/header_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/textViewMakeAnAppointment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My reports"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline22" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewAddRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My prescriptions"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline24" />
+                <TextView
+                    android:id="@+id/textViewUpcomingAppointmentsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="bottom"
+                    android:text="Upcoming appointments"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartPatAppointment"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+
+                <TextView
+                    android:id="@+id/textViewMyReportsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="bottom"
+                    android:text="My reports"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartPatReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+
+                <TextView
+                    android:id="@+id/textViewMyPrescriptionsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="bottom"
+                    android:text="My prescriptions"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartPatPrescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+            </LinearLayout>
+        </LinearLayout>
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -87,7 +118,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Szufladka nawigacyjna -->
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -96,6 +127,5 @@
         app:menu="@menu/patient_menu"
         android:layout_gravity="start"
         />
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

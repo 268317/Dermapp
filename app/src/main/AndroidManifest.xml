@@ -31,7 +31,7 @@
             android:name=".NewMessageDocActivity"
             android:exported="false" />
         <activity
-            android:name=".MessagesActivity"
+            android:name=".messages.MessagesPatActivity"
             android:exported="false" />
         <activity
             android:name=".CreateAppointmentDetailsDocActivity"
@@ -46,7 +46,7 @@
             android:name=".ProfileDocActivity"
             android:exported="false" />
         <activity
-            android:name=".StartPatActivity"
+            android:name=".startPatient.StartPatActivity"
             android:exported="false" />
         <activity
             android:name=".StartDocActivity"

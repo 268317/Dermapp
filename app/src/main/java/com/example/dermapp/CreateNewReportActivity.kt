@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
 import com.example.dermapp.database.Doctor
+import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateNewReportActivity : AppCompatActivity() {

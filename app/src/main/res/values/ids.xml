@@ -23,4 +23,11 @@
     <item name="buttonSignUp" type="id" />
     <item name="guideline10" type="id" />
     <item name="group" type="id" />
+    <item name="linearLayoutMessagesPat" type="id" />
+    <item name="recyclerViewMessagesPat" type="id" />
+    <item name="view1MessagesPat" type="id" />
+    <item name="imageViewAddMessagesPat" type="id" />
+    <item name="backHeaderDoc" type="id" />
+    <item name="linearLayoutMessagesDoc" type="id" />
+    <item name="recyclerViewMessagesDoc" type="id" />
 </resources>

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.dermapp.database.AppUser
+import com.example.dermapp.messages.MessagesDocActivity
+import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -74,7 +76,7 @@ class StartDocActivity : AppCompatActivity(){
                     true
                 }
                 R.id.nav_myMailbox -> {
-                    val intent = Intent(this, MessagesActivity::class.java)
+                    val intent = Intent(this, MessagesDocActivity::class.java)
                     startActivity(intent)
                     true
                 }
