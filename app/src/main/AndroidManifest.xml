@@ -49,7 +49,7 @@
             android:name=".startPatient.StartPatActivity"
             android:exported="false" />
         <activity
-            android:name=".StartDocActivity"
+            android:name=".startDoctor.StartDocActivity"
             android:exported="false" />
         <activity
             android:name=".MakeAppointmentPatActivity"

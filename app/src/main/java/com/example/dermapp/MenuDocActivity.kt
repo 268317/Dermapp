@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.dermapp.startDoctor.StartDocActivity
 
 class MenuDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton

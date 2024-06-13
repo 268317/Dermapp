@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/constraintLayoutStartPatAppointments"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayoutStartDocPrescription"
     android:layout_width="250dp"
     android:layout_height="170dp"
     android:background="@drawable/rounded_gray_background">
@@ -11,50 +12,56 @@
         android:layout_gravity="center">
 
         <LinearLayout
-            android:id="@+id/linearLayoutStartPatAppointments"
+            android:id="@+id/linearLayoutStartDocPrescription"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/grey_background"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="40dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewDoctorStartPatAppointments"
-                    android:layout_width="115dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/textViewPatientStartDocPrescription"
+                    android:layout_width="119dp"
+                    android:layout_height="40dp"
                     android:gravity="center"
-                    android:text="Doctor name" />
+                    android:text="Patient name" />
 
                 <TextView
-                    android:id="@+id/textViewSurnameStartPatAppointments"
+                    android:id="@+id/textViewSurnameStartDocPrescription"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Surname"
+                    android:text="surname"
                     android:textAlignment="textStart" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textViewDateStartPatAppointments"
+                android:id="@+id/textViewDateStartDocPrescription"
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
+                android:layout_height="40dp"
                 android:gravity="center"
-                android:text="Date, time"
-                android:textSize="20sp" />
+                android:text="Date, time" />
 
             <Button
-                android:id="@+id/buttonDeleteAppointmentPat"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/buttonSeeDetailsStartDocPrescription"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_gray_background"
-                android:text="DELETE" />
+                android:background="@drawable/button_background"
+                android:gravity="center"
+                android:text="See details"
+                android:textColor="@color/white" />
+
         </LinearLayout>
 
     </RelativeLayout>

@@ -2,7 +2,6 @@ package com.example.dermapp.messages
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,12 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
-import com.example.dermapp.StartDocActivity
+import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.database.Patient
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class MessagesDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton

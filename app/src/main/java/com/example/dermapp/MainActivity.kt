@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import com.example.dermapp.messages.MessagesPatActivity
+import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

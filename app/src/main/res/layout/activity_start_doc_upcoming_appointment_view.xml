@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/constraintLayoutStartPatAppointments"
+    android:id="@+id/constraintLayoutStartDocAppointments"
     android:layout_width="250dp"
     android:layout_height="170dp"
     android:background="@drawable/rounded_gray_background">
@@ -11,7 +11,7 @@
         android:layout_gravity="center">
 
         <LinearLayout
-            android:id="@+id/linearLayoutStartPatAppointments"
+            android:id="@+id/linearLayoutStartDocAppointments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/grey_background"
@@ -23,14 +23,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewDoctorStartPatAppointments"
+                    android:id="@+id/textViewPatientStartDocAppointments"
                     android:layout_width="115dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="Doctor name" />
+                    android:text="Patient name" />
 
                 <TextView
-                    android:id="@+id/textViewSurnameStartPatAppointments"
+                    android:id="@+id/textViewSurnameStartDocAppointments"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -41,7 +41,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textViewDateStartPatAppointments"
+                android:id="@+id/textViewDateStartDocAppointments"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:gravity="center"
@@ -49,7 +49,7 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/buttonDeleteAppointmentPat"
+                android:id="@+id/buttonDeleteAppointmentDoc"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

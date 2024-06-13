@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.dermapp.messages.MessagesPatActivity
 import com.example.dermapp.startPatient.StartPatActivity
 
 class NewMessagePatActivity : AppCompatActivity() {
@@ -26,7 +27,7 @@ class NewMessagePatActivity : AppCompatActivity() {
         backButton = header.findViewById(R.id.arrowButton)
 
         backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
+            val intent = Intent(this, MessagesPatActivity::class.java)
             startActivity(intent)
         }
 

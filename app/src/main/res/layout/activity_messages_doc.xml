@@ -8,68 +8,76 @@
     android:background="#f5f5f5"
     tools:context=".messages.MessagesDocActivity">
 
-    <include
-        android:id="@+id/backHeaderDoc"
-        layout="@layout/header_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="45dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <include
+            android:id="@+id/backHeaderDoc"
+            layout="@layout/header_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBottomOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scrollView2Doc"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="411dp"
-                android:layout_height="642dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:background="@drawable/top_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:background="@drawable/top_background"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutMessagesDoc"
+                        android:layout_width="360dp"
+                        android:layout_height="649dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/white_background"
+                        android:elevation="3dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewMessagesDoc"
+                            android:layout_width="match_parent"
+                            android:layout_height="652dp"
+                            android:layout_gravity="center" />
+
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutMessagesDoc"
-                    android:layout_width="365dp"
-                    android:layout_height="588dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="@drawable/white_background"
-                    android:elevation="3dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewMessagesDoc"
-                        android:layout_width="match_parent"
-                        android:layout_height="590dp" />
-
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

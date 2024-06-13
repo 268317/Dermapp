@@ -14,13 +14,16 @@ class MyAdapterMessagesDoc (private val patientList: List<Patient>) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: MyViewHolderMessagesDoc, position: Int) {
-        val patient = patientList[position]
-        holder.firstNamePat.text = patient.firstName
-        holder.lastNamePat.text = patient.lastName
-        holder.peselPat.text = patient.pesel
-        holder.mailPat.text = patient.email
-        holder.addressPat.text = patient.address
-        holder.phonePat.text = patient.phone
+        val doctor = patientList[position]
+        holder.firstNamePat.text = doctor.firstName
+        holder.lastNamePat.text = doctor.lastName
+        holder.peselPat.text = doctor.pesel
+        holder.mailPat.text = doctor.email
+        holder.addressPat.text = doctor.address
+        holder.phonePat.text = doctor.phone
+//        holder.imagePatMail.text = doctor.imageViewPatMessagesDoc3)
+//        holder.imagePatLocalization.text = doctor.imageViewPatMessagesDoc4)
+//        holder.imagePatPhone.text = doctor.imageViewPatMessagesDoc5)
     }
 
     override fun getItemCount(): Int {

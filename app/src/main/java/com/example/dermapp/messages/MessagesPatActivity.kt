@@ -26,29 +26,6 @@ class MessagesPatActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewMessagesPat)
         val items: MutableList<Doctor> = ArrayList()
 
-//        // Firebase database reference
-//        val database = FirebaseDatabase.getInstance()
-//        val doctorsRef = database.getReference("doctors")
-//
-//        // Retrieve data from Firebase
-//        doctorsRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                items.clear()
-//                for (doctorSnapshot in snapshot.children) {
-//                    val doctor = doctorSnapshot.getValue(Doctor::class.java)
-//                    if (doctor != null) {
-//                        items.add(doctor)
-//                    }
-//                }
-//                recyclerView.adapter?.notifyDataSetChanged()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.w("MessagesPatActivity", "loadDoctors:onCancelled", error.toException())
-//                showToast("Failed to load doctors.")
-//            }
-//        })
-
         items.add(
             Doctor(
                 email = "doctor1@gmail.com",
@@ -57,7 +34,7 @@ class MessagesPatActivity : AppCompatActivity() {
                 address = "Warsaw",
                 phone = "123456789",
                 doctorId = "1234"
-                )
+            )
         )
 
         items.add(
@@ -90,20 +67,9 @@ class MessagesPatActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        // Retrieve views
-//        val imageViewAddMessagesPat = findViewById<ImageView>(R.id.imageViewAddMessagesPat)
-//
-//        // Set click listener for adding messages
-//        imageViewAddMessagesPat.setOnClickListener {
-//            // Implement your logic for adding new messages
-//            showToast("Add new message clicked")
-//        }
-
-        // Set layout manager and adapter for RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MyAdapterMessagesPat(items)
+        recyclerView.adapter = MyAdapterMessagesPat(this, items)
 
-        // Apply window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.recyclerViewMessagesPat)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -116,12 +82,10 @@ class MessagesPatActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(textViewId)
 
         imageView.setOnClickListener {
-            // Handle click on doctor image
             showToast("Clicked on $doctorName's image")
         }
 
         textView.setOnClickListener {
-            // Handle click on doctor name
             showToast("Clicked on $doctorName's name")
         }
     }

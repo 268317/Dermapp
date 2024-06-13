@@ -1,12 +1,15 @@
 package com.example.dermapp.messages
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dermapp.NewMessagePatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Doctor
 
-class MyAdapterMessagesPat (private val doctorsList: List<Doctor>) : RecyclerView.Adapter<MyViewHolderMessagesPat>()  {
+class MyAdapterMessagesPat(private val context: Context, private val doctorsList: List<Doctor>) : RecyclerView.Adapter<MyViewHolderMessagesPat>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesPat {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.messages_pat_view_activity, parent, false)
         return MyViewHolderMessagesPat(view)
@@ -20,9 +23,18 @@ class MyAdapterMessagesPat (private val doctorsList: List<Doctor>) : RecyclerVie
         holder.mailDoc.text = doctor.email
         holder.addressDoc.text = doctor.address
         holder.phoneDoc.text = doctor.phone
+
+        holder.newMessageButtonPat.setOnClickListener {
+            goToNewMessage()
+        }
     }
 
     override fun getItemCount(): Int {
         return doctorsList.size
+    }
+
+    private fun goToNewMessage() {
+        val intent = Intent(context, NewMessagePatActivity::class.java)
+        context.startActivity(intent)
     }
 }

@@ -31,6 +31,8 @@ class ProfilePatActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
         buttonEditProfilePat = findViewById(R.id.buttonEditProfilePat)
 
         buttonEditProfilePat.setOnClickListener {

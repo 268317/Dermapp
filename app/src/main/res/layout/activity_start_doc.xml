@@ -7,78 +7,109 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:fitsSystemWindows="true"
-    tools:context=".StartDocActivity"
+    tools:context=".startDoctor.StartDocActivity"
     tools:openDrawer="start">
 
-    <!-- Główny widok -->
+    <!-- Main View -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/includeHeader"
-            layout="@layout/header_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewUpcomingAppointmentsPat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upcoming appointments"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline21" />
+            <include
+                android:id="@+id/includeHeaderDoc"
+                layout="@layout/header_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/textViewMyReportsPat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Mailbox"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline22" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewMyPrescriptionsPat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reports"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline19"
-            app:layout_constraintTop_toTopOf="@+id/guideline24" />
+                <TextView
+                    android:id="@+id/textViewUpcomingAppointmentsDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="bottom"
+                    android:text="Upcoming appointments"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartDocAppointment"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+
+                <TextView
+                    android:id="@+id/textViewMyReportsDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="bottom"
+                    android:text="My reports"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartDocReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+
+                <TextView
+                    android:id="@+id/textViewMyPrescriptionsDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="bottom"
+                    android:text="My prescriptions"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartDocPrescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="horizontal" />
+            </LinearLayout>
+        </LinearLayout>
 
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline19"
+            android:id="@+id/guideline19Doc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="30dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline20"
+            android:id="@+id/guideline20Doc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="370dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline21"
+            android:id="@+id/guideline21Doc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="75dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline22"
+            android:id="@+id/guideline22Doc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="275dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline24"
+            android:id="@+id/guideline24Doc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
