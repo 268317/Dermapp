@@ -22,6 +22,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
     private lateinit var autoDoc: AutoCompleteTextView
     private lateinit var autoLoc: AutoCompleteTextView
     private lateinit var bookButton: Button
+    private lateinit var textTime: AutoCompleteTextView
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
+        textTime = findViewById(R.id.autoCompleteTextTime)
 
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
@@ -43,6 +45,10 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
         textDate.setOnClickListener{
             openCalendar()
+        }
+
+        textTime.setOnClickListener {
+            openTimePicker()
         }
 
         val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
@@ -61,7 +67,11 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         val locAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locOptions)
         autoLoc.setAdapter(locAdapter)
 
-        bookButton.setOnClickListener{
+        val timeOptions = arrayOf("10:15", "10:30", "10:45", "11:00")
+        val timeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeOptions)
+        textTime.setAdapter(timeAdapter)
+
+        bookButton.setOnClickListener {
             bookAppointment()
         }
 
@@ -79,14 +89,22 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
             textDate.setText("$formattedDay-$formattedMonth-$selectedYear")
         }, year, month, dayOfMonth)
 
+        datePickerDialog.datePicker.minDate = calendar.timeInMillis
         datePickerDialog.show()
+    }
+
+    private fun openTimePicker() {
+        val timeOptions = arrayOf("10:15", "10:30", "10:45", "11:00")
+        val timeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, timeOptions)
+        textTime.setAdapter(timeAdapter)
+        textTime.showDropDown()
     }
 
     private fun bookAppointment() {
         val doctor = autoDoc.text.toString()
         val location = autoLoc.text.toString()
         val date = textDate.text.toString()
-
+        val time = textTime.text.toString()
     }
 
 }

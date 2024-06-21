@@ -175,6 +175,8 @@ class SignUpActivity : BaseActivity() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        val maxDateCalendar = Calendar.getInstance()
+        maxDateCalendar.set(Calendar.YEAR, year - 18)
 
         val datePickerDialog =
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
@@ -183,6 +185,7 @@ class SignUpActivity : BaseActivity() {
                 editTextDateOfBirth.setText("$formattedDay-$formattedMonth-$selectedYear")
             }, year, month, dayOfMonth)
 
+        datePickerDialog.datePicker.maxDate = maxDateCalendar.timeInMillis
         datePickerDialog.show()
     }
 
