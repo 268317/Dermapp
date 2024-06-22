@@ -1,5 +1,6 @@
 package com.example.dermapp.messages
 
+import com.example.dermapp.database.Doctor
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.NewMessagePatActivity
 import com.example.dermapp.R
-import com.example.dermapp.database.Doctor
 
 class MyAdapterMessagesPat(private val context: Context, private val doctorsList: List<Doctor>) : RecyclerView.Adapter<MyViewHolderMessagesPat>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesPat {

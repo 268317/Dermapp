@@ -1,5 +1,6 @@
 package com.example.dermapp
 
+import com.example.dermapp.database.Doctor
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -11,7 +12,6 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
-import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Patient
 import com.example.dermapp.database.AppUser
 import com.google.firebase.auth.FirebaseAuth

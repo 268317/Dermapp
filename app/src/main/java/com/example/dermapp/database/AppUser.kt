@@ -11,4 +11,5 @@ open class AppUser(
     @get:PropertyName("address") @set:PropertyName("address") open var address: String = "",
     @get:PropertyName("phone") @set:PropertyName("phone") open var phone: String = "",
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
-    @get:PropertyName("role") @set:PropertyName("role") open var role: String = "")
+    @get:PropertyName("role") @set:PropertyName("role") open var role: String = "",
+    @get:PropertyName("avatar") @set:PropertyName("avatar") open var avatar: Int = 0)

@@ -1,5 +1,6 @@
 package com.example.dermapp.database
 
+import com.example.dermapp.database.Doctor
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore

@@ -2,8 +2,6 @@ package com.example.dermapp.database
 
 import com.google.firebase.firestore.PropertyName
 import com.google.type.DateTime
-import java.util.Date
-
 open class Conversation(
     @get:PropertyName("conversationId") @set:PropertyName("conversationId") open var conversationId: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") open var doctorId: String = "",

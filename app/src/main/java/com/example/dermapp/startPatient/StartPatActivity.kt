@@ -28,6 +28,7 @@ import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class StartPatActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -58,7 +59,7 @@ class StartPatActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Jan",
                 patientPesel = "Kowalski",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -66,7 +67,7 @@ class StartPatActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Adam",
                 patientPesel = "Nowak",
-                appointmentDate = "25.11.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -74,7 +75,7 @@ class StartPatActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Monika",
                 patientPesel = "Adamska",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -82,7 +83,7 @@ class StartPatActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Anna",
                 patientPesel = "Kwiatek",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 

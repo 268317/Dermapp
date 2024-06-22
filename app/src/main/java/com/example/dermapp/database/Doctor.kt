@@ -1,6 +1,6 @@
 package com.example.dermapp.database
 
-import com.google.firebase.firestore.PropertyName
+import com.google.firebase.database.PropertyName
 
 data class Doctor(
     @get:PropertyName("userId") @set:PropertyName("userId") override var appUserId: String = "",
@@ -12,4 +12,4 @@ data class Doctor(
     @get:PropertyName("phone") @set:PropertyName("phone") override var phone: String = "",
     @get:PropertyName("dateOfBirth") @set:PropertyName("dateOfBirth") override var birthDate: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") var doctorId: String = ""
-    ) : AppUser(appUserId, email, password, firstName, lastName, address, phone, birthDate)
+) : AppUser(appUserId, email, password, firstName, lastName, address, phone, birthDate)

@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -21,10 +22,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.ConfirmationDialogListener {
     private lateinit var backButton: ImageButton
     private lateinit var updateProfileButton: Button
+    private lateinit var profileImage: ImageView
+    private lateinit var profileImageButton: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_edit_profile_pat)
+
+        profileImageButton = findViewById(R.id.editProfileImagePat)
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

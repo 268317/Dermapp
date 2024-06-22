@@ -46,7 +46,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:id="@+id/imageAvatarProfileDoc"
+                            android:id="@+id/profileImagePat"
                             android:layout_width="150dp"
                             android:layout_height="150dp"
                             app:layout_constraintBottom_toBottomOf="parent"

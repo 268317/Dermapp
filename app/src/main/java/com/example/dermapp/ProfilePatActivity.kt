@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -14,14 +15,22 @@ import com.example.dermapp.database.Patient
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.net.URL
 
 class ProfilePatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var buttonEditProfilePat: Button
+    private lateinit var profileImage: ImageView
+    private lateinit var imageUrl: URL
+    private lateinit var myUrl: URL
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_profile_pat)
+
+        profileImage = findViewById<ImageView>(R.id.profileImagePat)
+
 
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
@@ -30,8 +39,6 @@ class ProfilePatActivity : AppCompatActivity() {
             val intent = Intent(this, StartPatActivity::class.java)
             startActivity(intent)
         }
-
-
 
         buttonEditProfilePat = findViewById(R.id.buttonEditProfilePat)
 

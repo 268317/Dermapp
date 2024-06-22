@@ -1,5 +1,6 @@
 package com.example.dermapp.messages
 
+import com.example.dermapp.database.Doctor
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 import com.example.dermapp.startPatient.StartPatActivity
-import com.example.dermapp.database.Doctor
 
 class MessagesPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton

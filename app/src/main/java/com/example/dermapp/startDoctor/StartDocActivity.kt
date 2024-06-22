@@ -25,12 +25,10 @@ import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Prescription
 import com.example.dermapp.messages.MessagesDocActivity
-import com.example.dermapp.startDoctor.MyAdapterStartDocAppointment
-import com.example.dermapp.startDoctor.MyAdapterStartDocPrescription
-import com.example.dermapp.startDoctor.MyAdapterStartDocReport
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class StartDocActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -61,7 +59,7 @@ class StartDocActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Jan",
                 patientPesel = "Kowalski",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -69,7 +67,7 @@ class StartDocActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Adam",
                 patientPesel = "Nowak",
-                appointmentDate = "25.11.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -77,7 +75,7 @@ class StartDocActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Monika",
                 patientPesel = "Adamska",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 
@@ -85,7 +83,7 @@ class StartDocActivity : AppCompatActivity() {
             Appointment(
                 doctorId = "Anna",
                 patientPesel = "Kwiatek",
-                appointmentDate = "10.06.2024"
+                appointmentDate = Date()
             )
         )
 
