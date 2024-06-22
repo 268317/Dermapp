@@ -3,7 +3,6 @@ package com.example.dermapp
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +18,7 @@ import com.example.dermapp.database.AvailableDates
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Location
 import com.example.dermapp.startPatient.StartPatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -182,7 +182,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
                 val appointment = Appointment(
                     doctorId = doctorId,
-                    patientPesel = "1234567890", // Placeholder for patient's PESEL, replace with actual logic to get patient data
+                    patientId = FirebaseAuth.getInstance().currentUser?.uid,
                     appointmentDate = appointmentDate,
                     localization = location,
                     diagnosis = "", // Set diagnosis if applicable
