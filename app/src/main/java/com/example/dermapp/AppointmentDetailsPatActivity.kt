@@ -45,10 +45,6 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         textViewFirstNameAppointmentPat = findViewById(R.id.textViewFirstNameAppointmentPat)
         textViewLastNameAppointmentPat = findViewById(R.id.textViewLastNameAppointmentPat)
         textViewDocIDAppointmentPat = findViewById(R.id.textViewDocIDAppointmentPat)
-        textViewDiagnosisAppointmentPat = findViewById(R.id.textViewDiagnosisAppointmentPat)
-        textViewMultiDiagnosisAppointmentPat = findViewById(R.id.textViewMultiDiagnosisAppointmentPat)
-        textViewRecommendationAppointmentPat = findViewById(R.id.textViewRecommendationAppointmentPat)
-        textViewMultiRecommendationAppointmentPat = findViewById(R.id.textViewMultiRecommendationAppointmentPat)
 
 
         // Set example data to the TextViews (replace with actual data)
