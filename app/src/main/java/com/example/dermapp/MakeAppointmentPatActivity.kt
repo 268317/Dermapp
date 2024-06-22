@@ -1,7 +1,12 @@
 package com.example.dermapp
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -173,6 +178,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
                 // Parsowanie daty i godziny z formatu tekstowego
                 val appointmentDate = dateFormat.parse(dateTime)
+                val appointmentTimeInMillis = appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
 
                 val appointment = Appointment(
                     doctorId = doctorId,
@@ -197,12 +203,17 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
 
+                                val generatedAppointmentId = documentReference.id
+
                                 // Aktualizacja pola isAvailable w kolekcji availableDates
                                 val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
                                 availableDatesRef
                                     .update("isAvailable", false)
                                     .addOnSuccessListener {
                                         Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
+
+                                        //Ustawienie powiadomienia
+                                        setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
                                         // Wyczyszczenie pól po udanym zapisaniu wizyty
                                         autoDoc.setText("")
@@ -240,5 +251,18 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         super.onDestroy()
         // Zatrzymanie wszystkich korutyn w zakresie, aby uniknąć wycieków pamięci
         coroutineScope.cancel()
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
+        val intent = Intent(this, ReminderBroadcast::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000 // 24 h przed wizyta
+
+        Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
     }
 }

@@ -168,7 +168,7 @@ class StartDocActivity : AppCompatActivity() {
             insets
         }
 
-        val header = findViewById<RelativeLayout>(R.id.includeHeader)
+        val header = findViewById<RelativeLayout>(R.id.includeHeaderDoc)
         menuButton = header.findViewById(R.id.menuButton)
 
         menuButton.setOnClickListener {
