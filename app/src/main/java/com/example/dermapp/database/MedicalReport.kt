@@ -2,7 +2,7 @@ package com.example.dermapp.database
 
 import com.google.firebase.firestore.PropertyName
 
-open class MedicalReport(
+data class MedicalReport(
     @get:PropertyName("medicalReportId") @set:PropertyName("medicalReportId") open var medicalReportId: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") open var doctorId: String = "",
     @get:PropertyName("patientPesel") @set:PropertyName("patientPesel") open var patientPesel: String = "",
@@ -19,5 +19,6 @@ open class MedicalReport(
     @get:PropertyName("severeAcne") @set:PropertyName("severeAcne") open var severeAcne: Boolean = false,
     @get:PropertyName("seborrhoea") @set:PropertyName("seborrhoea") open var seborrhoea: Boolean = false,
     @get:PropertyName("discoloration") @set:PropertyName("discoloration") open var discoloration: Boolean = false,
-    @get:PropertyName("otherInfo") @set:PropertyName("otherInfo") open var otherInfo: String = ""
+    @get:PropertyName("otherInfo") @set:PropertyName("otherInfo") open var otherInfo: String = "",
+    @get:PropertyName("attachmentUrl") @set:PropertyName("attachmentUrl") open var attachmentUrl: String = ""  // Nowe pole
 )
