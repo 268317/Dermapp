@@ -17,7 +17,9 @@ import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.*
 
 class MakeAppointmentPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
@@ -127,10 +129,14 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                     .await()
 
                 val availableDates = availableDatesCollection.toObjects(AvailableDates::class.java)
+
+                // Ustawienie formatera z odpowiednią strefą czasową
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
+
                 val dateTimes = availableDates.map { availableDate ->
-                    val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
-                    val dateTimeString = dateFormat.format(availableDate.datetime)
-                    "$dateTimeString (${availableDate.availableDateId})"
+                    // Formatowanie daty i godziny zgodnie z formaterem
+                    dateFormat.format(availableDate.datetime)
                 }.toTypedArray()
 
                 if (dateTimes.isNotEmpty()) {
@@ -160,54 +166,73 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         val dateTime = autoDateTime.text.toString()
 
         if (doctor.isNotEmpty() && location.isNotEmpty() && dateTime.isNotEmpty()) {
-            val appointment = Appointment(
-                doctorId = doctorId,
-                patientPesel = "1234567890", // Placeholder for patient's PESEL, replace with actual logic to get patient data
-                appointmentDate = SimpleDateFormat("dd-MM-yyyy HH:mm").parse(dateTime),
-                localization = location,
-                diagnosis = "", // Set diagnosis if applicable
-                recommendations = "" // Set recommendations if applicable
-            )
+            try {
+                // Utworzenie formatera z odpowiednią strefą czasową
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
 
-            // Save appointment to Firestore with auto-generated appointmentId
-            firestore.collection("appointment")
-                .add(appointment)
-                .addOnSuccessListener { documentReference ->
-                    val generatedAppointmentId = documentReference.id
+                // Parsowanie daty i godziny z formatu tekstowego
+                val appointmentDate = dateFormat.parse(dateTime)
 
-                    // Update appointmentId field with generated ID
-                    val updatedAppointment = appointment.copy(appointmentId = generatedAppointmentId)
+                val appointment = Appointment(
+                    doctorId = doctorId,
+                    patientPesel = "1234567890", // Placeholder for patient's PESEL, replace with actual logic to get patient data
+                    appointmentDate = appointmentDate,
+                    localization = location,
+                    diagnosis = "", // Set diagnosis if applicable
+                    recommendations = "" // Set recommendations if applicable
+                )
 
-                    // Set appointmentId in Firestore document
-                    documentReference.set(updatedAppointment)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
+                // Zapis wizyty do Firestore z automatycznie generowanym appointmentId
+                firestore.collection("appointment")
+                    .add(appointment)
+                    .addOnSuccessListener { documentReference ->
+                        val generatedAppointmentId = documentReference.id
 
-                            // Update isAvailable field in availableDates collection
-                            val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
-                            availableDatesRef
-                                .update("isAvailable", false)
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(this, "Failed to update availability: ${e.message}", Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(this, "Failed to set appointmentId: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to book appointment: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+                        // Aktualizacja appointmentId z wygenerowanym ID
+                        val updatedAppointment = appointment.copy(appointmentId = generatedAppointmentId)
+
+                        // Ustawienie appointmentId w dokumencie Firestore
+                        documentReference.set(updatedAppointment)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
+
+                                // Aktualizacja pola isAvailable w kolekcji availableDates
+                                val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
+                                availableDatesRef
+                                    .update("isAvailable", false)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
+
+                                        // Wyczyszczenie pól po udanym zapisaniu wizyty
+                                        autoDoc.setText("")
+                                        autoLoc.setText("")
+                                        autoDateTime.setText("")
+                                        selectedDoctorId = null
+                                        selectedLocationId = null
+                                        selectedDateTimeId = null
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(this, "Failed to update availability: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Failed to set appointmentId: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Failed to book appointment: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+
+            } catch (e: ParseException) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to parse date: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
 
         } else {
             Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
         }
     }
-
-
 
 
 
