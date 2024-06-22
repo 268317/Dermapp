@@ -21,4 +21,7 @@ data class MedicalReport(
     @get:PropertyName("discoloration") @set:PropertyName("discoloration") open var discoloration: Boolean = false,
     @get:PropertyName("otherInfo") @set:PropertyName("otherInfo") open var otherInfo: String = "",
     @get:PropertyName("attachmentUrl") @set:PropertyName("attachmentUrl") open var attachmentUrl: String = ""  // Nowe pole
-)
+) {
+    constructor() : this("", "", "", "", false, false, false, false, false,
+        false, false, false, false, false, false, false, "")
+}

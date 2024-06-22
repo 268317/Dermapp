@@ -1,5 +1,6 @@
 package com.example.dermapp.startPatient
 
+import MyAdapterStartPatReport
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentPatActivity
 import com.example.dermapp.ProfilePatActivity
 import com.example.dermapp.R
+import com.example.dermapp.ReportActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
@@ -30,7 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
 
-class StartPatActivity : AppCompatActivity() {
+class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClickListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuButton: ImageButton
     private lateinit var navView: NavigationView
@@ -40,6 +42,7 @@ class StartPatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_start_patient)
+
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -89,9 +92,11 @@ class StartPatActivity : AppCompatActivity() {
 
         reports.add(
             MedicalReport(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
+                medicalReportId = "1jstXDBrYMZppA30ZZjl",
+                doctorId = "12345",
+                patientPesel = "83627837264",
+                reportDate = "22-06-2024 17:55",
+                attachmentUrl = "content://media/external/images/media/1000035185"
             )
         )
 
@@ -148,7 +153,7 @@ class StartPatActivity : AppCompatActivity() {
 
         // Set layout manager and adapter for RecyclerView
         recyclerViewReports.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewReports.adapter = MyAdapterStartPatReport(reports)
+        recyclerViewReports.adapter = MyAdapterStartPatReport(reports, this)
 
         // Apply window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartPatReport)) { v, insets ->
@@ -239,5 +244,12 @@ class StartPatActivity : AppCompatActivity() {
         }.addOnFailureListener { exception ->
             // Obsłuż błędy pobierania danych z Firestore
         }
+    }
+
+    override fun onItemClick(medicalReportId: String) {
+        // Start ReportActivity and pass medicalReportId
+        val intent = Intent(this, ReportActivity::class.java)
+        intent.putExtra(ReportActivity.MEDICAL_REPORT_ID_EXTRA, medicalReportId)
+        startActivity(intent)
     }
 }
