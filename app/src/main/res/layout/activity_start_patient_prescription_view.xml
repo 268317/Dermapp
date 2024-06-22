@@ -22,28 +22,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewDoctorStartPatPrescription"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal">
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Doctor name" />
 
-                <TextView
-                    android:id="@+id/textViewDoctorStartPatPrescription"
-                    android:layout_width="119dp"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:text="Doctor name" />
-
-                <TextView
-                    android:id="@+id/textViewSurnameStartPatPrescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="surname"
-                    android:textAlignment="textStart" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textViewSurnameStartPatPrescription"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="surname"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textViewDateStartPatPrescription"
@@ -52,15 +45,22 @@
                 android:gravity="center"
                 android:text="Date, time" />
 
-            <Button
-                android:id="@+id/buttonSeeDetailsStartPatPrescription"
-                android:layout_width="150dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:background="@drawable/button_background"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:gravity="center"
-                android:text="See details"
-                android:textColor="@color/white" />
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/buttonSeeDetailsStartPatPrescription"
+                    android:layout_width="150dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_background"
+                    android:gravity="center"
+                    android:text="See details"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </LinearLayout>
 

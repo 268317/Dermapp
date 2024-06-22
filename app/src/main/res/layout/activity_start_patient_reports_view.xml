@@ -17,27 +17,22 @@
             android:background="@drawable/grey_background"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewDoctorStartPatReports"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:orientation="horizontal">
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:text="Doctor name" />
 
-                <TextView
-                    android:id="@+id/textViewDoctorStartPatReports"
-                    android:layout_width="117dp"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:text="Doctor name" />
-
-                <TextView
-                    android:id="@+id/textViewSurnameStartPatReports"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="surname"
-                    android:textAlignment="textStart" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textViewSurnameStartPatReports"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="surname"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textViewDateStartPatReports"
@@ -46,15 +41,24 @@
                 android:gravity="center"
                 android:text="Date, time" />
 
-            <Button
-                android:id="@+id/buttonSeeFullReportStartPatReports"
-                android:layout_width="180dp"
-                android:layout_height="30dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/button_background_selector"
                 android:gravity="center"
-                android:text="SEE FULL REPORT"
-                android:textColor="@color/white" />
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/buttonSeeFullReportStartPatReports"
+                    android:layout_width="180dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_background_selector"
+                    android:gravity="center"
+                    android:text="SEE FULL REPORT"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </RelativeLayout>
