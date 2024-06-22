@@ -27,9 +27,6 @@
                 <item
                     android:id="@+id/nav_make"
                     android:title="Make appointment"/>
-                <item
-                    android:id="@+id/nav_myAppointments"
-                    android:title="My appointments"/>
             </menu>
         </item>
     </group>
@@ -43,12 +40,6 @@
                 <item
                     android:id="@+id/nav_newReport"
                     android:title="Add new report"/>
-                <item
-                    android:id="@+id/nav_myReports"
-                    android:title="My reports"/>
-                <item
-                    android:id="@+id/nav_myPrescriptions"
-                    android:title="My prescriptions"/>
             </menu>
         </item>
 

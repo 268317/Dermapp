@@ -10,7 +10,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +25,7 @@
                 android:id="@+id/backHeader"
                 layout="@layout/header_back"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -38,8 +42,9 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="414dp"
                         android:layout_height="400dp"
-                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="230dp"
                         android:background="@drawable/top_background"
+                        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutNewMessagePat"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -56,6 +61,7 @@
                         android:background="@drawable/white_background"
                         android:elevation="3dp"
                         android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -74,16 +80,20 @@
 
                                 <AutoCompleteTextView
                                     android:id="@+id/autoCompleteTextViewDoctor"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="0dp"
                                     android:layout_height="35dp"
+                                    android:layout_marginBottom="20dp"
                                     android:background="@drawable/rounded_gray_background"
-                                    android:completionThreshold="0"
+                                    android:completionThreshold="1"
+                                    android:editable="false"
                                     android:hint="Doctor"
+                                    android:inputType="none"
                                     android:paddingStart="16dp"
                                     android:textColor="@android:color/black"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent" />
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -105,12 +115,12 @@
                                     android:id="@+id/enterYourMessageNewMessagePat"
                                     android:layout_width="0dp"
                                     android:layout_height="0dp"
-                                    android:ems="10"
-                                    android:paddingStart="16dp"
                                     android:layout_marginTop="10dp"
+                                    android:ems="10"
                                     android:gravity="start|top"
                                     android:hint="Enter your message"
                                     android:inputType="textMultiLine"
+                                    android:paddingStart="16dp"
                                     android:textColorHint="#989595"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
@@ -133,10 +143,14 @@
                                     android:id="@+id/imageSendNewMessagePat"
                                     android:layout_width="40dp"
                                     android:layout_height="45dp"
+                                    android:layout_marginStart="287dp"
+                                    android:layout_marginTop="15dp"
                                     android:layout_marginEnd="36dp"
                                     android:layout_marginBottom="28dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
                                     app:srcCompat="@drawable/baseline_send_24" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>

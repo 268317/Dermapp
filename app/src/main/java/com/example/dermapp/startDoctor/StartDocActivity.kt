@@ -194,23 +194,12 @@ class StartDocActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_myAppointments -> {
-                    Toast.makeText(this, "My appointments clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
                 R.id.nav_newReport -> {
                     val intent = Intent(this, CreateNewReportActivity::class.java)
                     startActivity(intent)
                     true
                 }
-                R.id.nav_myReports -> {
-                    Toast.makeText(this, "My reports clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_myPrescriptions -> {
-                    Toast.makeText(this, "My prescriptions clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
+
                 R.id.nav_myMailbox -> {
                     val intent = Intent(this, MessagesDocActivity::class.java)
                     startActivity(intent)
