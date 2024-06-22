@@ -9,14 +9,15 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dermapp.messages.MessagesPatActivity
-import com.example.dermapp.startPatient.StartPatActivity
+import com.example.dermapp.database.Doctor
+import com.example.dermapp.database.Message
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 
 class NewMessagePatActivity : AppCompatActivity() {
 
-    private lateinit var enterDoctorNameEditText: EditText
-    private lateinit var enterDoctorLastNameEditText: EditText
-    private lateinit var enterDoctorIdEditText: EditText
     private lateinit var enterYourMessageEditText: EditText
+    private lateinit var doctorNameSurnameEditText: EditText
     private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,42 +32,79 @@ class NewMessagePatActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Initialize EditTexts
-        enterDoctorIdEditText = findViewById(R.id.autoCompleteTextViewDoctor)
         enterYourMessageEditText = findViewById(R.id.enterYourMessageNewMessagePat)
+        doctorNameSurnameEditText = findViewById(R.id.autoCompleteTextViewDoctor)
 
-        // Retrieve send ImageView
+        doctorNameSurnameEditText.isEnabled = false
+
+        val doctorId = intent.getStringExtra("doctorId")
+        doctorId?.let {
+            fetchDoctorNameAndSurname(it)
+        }
+
         val sendImageView = findViewById<ImageView>(R.id.imageSendNewMessagePat)
 
-        // Set click listener for send ImageView
         sendImageView.setOnClickListener {
-            // Perform send message action
             sendMessage()
         }
     }
 
+    private fun fetchDoctorNameAndSurname(doctorId: String) {
+        FirebaseFirestore.getInstance().collection("doctors").document(doctorId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val doctor = documentSnapshot.toObject(Doctor::class.java)
+                    doctor?.let {
+                        val doctorNameSurname = "${it.firstName} ${it.lastName}"
+                        doctorNameSurnameEditText.setText(doctorNameSurname)
+                    }
+                } else {
+                    Toast.makeText(this, "Doctor not found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to fetch doctor's details: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun sendMessage() {
-        // Retrieve input values
-        val doctorName = enterDoctorNameEditText.text.toString().trim()
-        val doctorLastName = enterDoctorLastNameEditText.text.toString().trim()
-        val doctorId = enterDoctorIdEditText.text.toString().trim()
+        val doctorId = intent.getStringExtra("doctorId") ?: return
         val message = enterYourMessageEditText.text.toString().trim()
 
-        // Check if all required fields are filled
-        if (doctorName.isEmpty() || doctorLastName.isEmpty() || doctorId.isEmpty() || message.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        if (message.isEmpty()) {
+            Toast.makeText(this, "Please enter your message", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Simulate sending the message (replace with your implementation)
-        // For demonstration, display a toast message with the entered details
-        val sendMessageText = "Sending message to Dr. $doctorName $doctorLastName (ID: $doctorId):\n$message"
-        Toast.makeText(this, sendMessageText, Toast.LENGTH_LONG).show()
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val patientPesel = "12345678901" // Replace with actual patient PESEL retrieval logic
 
-        // Clear input fields after sending message
-        enterDoctorNameEditText.text.clear()
-        enterDoctorLastNameEditText.text.clear()
-        enterDoctorIdEditText.text.clear()
-        enterYourMessageEditText.text.clear()
+        // Create a new message object
+        val messageObject = Message(
+            doctorId = doctorId,
+            patientId = currentUserUid,
+            messageText = message
+        )
+
+        // Add the message to Firestore
+        FirebaseFirestore.getInstance().collection("messages").add(messageObject)
+            .addOnSuccessListener { documentReference ->
+                // Set the messageId to be the same as the Firestore document ID
+                val messageId = documentReference.id
+                messageObject.messageId = messageId
+
+                // Update the document with the new messageId
+                FirebaseFirestore.getInstance().collection("messages").document(messageId).set(messageObject)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Message sent successfully", Toast.LENGTH_SHORT).show()
+                        enterYourMessageEditText.text.clear()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Failed to update messageId: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to send message: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

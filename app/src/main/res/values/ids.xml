@@ -30,4 +30,6 @@
     <item name="backHeaderDoc" type="id" />
     <item name="linearLayoutMessagesDoc" type="id" />
     <item name="recyclerViewMessagesDoc" type="id" />
+    <item name="newMessageButtonPat" type="id">
+    </item>
 </resources>

@@ -24,17 +24,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintBaseline_toBottomOf="parent" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -70,14 +68,19 @@
                             android:layout_height="652dp"
                             android:layout_gravity="center" />
 
+                        <Button
+                            android:id="@+id/newMessageButtonPat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New Message"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="16dp"/>
 
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -203,10 +203,7 @@ class StartPatActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.nav_myReports -> {
-                    Toast.makeText(this, "My reports clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
+
                 R.id.nav_myPrescriptions -> {
                     Toast.makeText(this, "My prescriptions clicked", Toast.LENGTH_SHORT).show()
                     true
