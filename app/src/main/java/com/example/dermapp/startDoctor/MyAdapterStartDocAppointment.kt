@@ -18,11 +18,6 @@ class MyAdapterStartDocAppointment (private val appointmentsList: List<Appointme
         holder.firstNamePat.text = appointment.doctorId
 //        holder.lastNamePat.text = appointment.patientPesel
         holder.appointmentDate.text = appointment.datetime.toString()
-<<<<<<< HEAD
-        holder.lastNamePat.text = appointment.patientId
-        holder.appointmentDate.text = appointment.datetime.toString()
-=======
->>>>>>> parent of 14438d7 (RV update)
     }
 
     override fun getItemCount(): Int {
