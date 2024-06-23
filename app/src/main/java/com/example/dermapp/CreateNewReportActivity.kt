@@ -1,32 +1,38 @@
 package com.example.dermapp
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.dermapp.database.AppUser
+import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.room.util.copy
+import kotlinx.coroutines.*
+import java.util.*
 
 class CreateNewReportActivity : AppCompatActivity() {
 
@@ -52,6 +58,7 @@ class CreateNewReportActivity : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private var selectedDoctorId: String? = null
     private val firestore = FirebaseFirestore.getInstance()
+    private lateinit var doctorsList: List<Doctor>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,13 +105,25 @@ class CreateNewReportActivity : AppCompatActivity() {
 
         val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
         doctorsCollection.get().addOnSuccessListener { doctorsResult ->
-            val doctorsList = doctorsResult.toObjects(Doctor::class.java)
+            doctorsList = doctorsResult.toObjects(Doctor::class.java)
             val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
             val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
             autoDoc.setAdapter(docAdapter)
         }
 
         loadDoctors()
+    }
+
+    private fun setupAutoCompleteTextView() {
+        autoDoc.setOnItemClickListener { _, _, position, _ ->
+            val selectedDoctorText = autoDoc.text.toString()
+            val selectedDoctor = doctorsList.find { "${it.firstName} ${it.lastName}" == selectedDoctorText }
+            selectedDoctor?.let {
+                selectedDoctorId = it.doctorId
+            } ?: run {
+                Log.e(TAG, "Coudn't find doctor on the list")
+            }
+        }
     }
 
     private fun openGallery() {
@@ -143,9 +162,10 @@ class CreateNewReportActivity : AppCompatActivity() {
                 val doctorNames = doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
                 val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
                 autoDoc.setAdapter(docAdapter)
-                autoDoc.setOnItemClickListener { _, _, position, _ ->
-                    selectedDoctorId = doctorsList[position].doctorId
-                }
+//                autoDoc.setOnItemClickListener { _, _, position, _ ->
+//                    selectedDoctorId = doctorsList[position].doctorId
+//                }
+                setupAutoCompleteTextView()
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
@@ -217,7 +237,7 @@ class CreateNewReportActivity : AppCompatActivity() {
                             documentReference.set(updatedAppointment)
                             Toast.makeText(
                                 this,
-                                "Report send successfully.",
+                                "Report sent successfully.",
                                 Toast.LENGTH_SHORT
                             ).show()
 

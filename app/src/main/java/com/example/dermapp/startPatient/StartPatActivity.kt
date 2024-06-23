@@ -1,7 +1,9 @@
 package com.example.dermapp.startPatient
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -153,48 +155,37 @@ class StartPatActivity : AppCompatActivity() {
     }
 
     private fun fetchReports() {
-        val db = FirebaseFirestore.getInstance()
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        if (currentUserUid != null) {
-            db.collection("patients").document(currentUserUid).get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val pesel = document.getString("pesel")
-                        if (pesel != null) {
-                            val reportsCollection = db.collection("appointment")
+        currentUserUid?.let { uid ->
+            val userPatRef = FirebaseFirestore.getInstance().collection("patients").document(uid)
+            Log.d(TAG, "User uid: ${currentUserUid}")
 
-                            reportsCollection
-                                .whereEqualTo("patientPesel", pesel)
-                                .get()
-                                .addOnSuccessListener { documents ->
-                                    val reports = mutableListOf<MedicalReport>()
-                                    for (document in documents) {
-                                        val report = document.toObject(MedicalReport::class.java)
-                                        reports.add(report)
-                                    }
-                                    // Aktualizuj adapter raportów
-                                    reportsAdapter.updateReports(reports)
-                                }
-                                .addOnFailureListener { exception ->
-                                    println("Błąd podczas pobierania raportów: ${exception.message}")
-                                }
-                        } else {
-                            println("Pole PESEL nie istnieje w dokumencie.")
+            userPatRef.get().addOnSuccessListener { document ->
+                val currentUserPesel = document.getString("pesel")
+                Log.d(TAG, "User pesel: ${currentUserPesel}")
+                currentUserPesel?.let { pesel ->
+                    val reportsCollection = FirebaseFirestore.getInstance().collection("report")
+                    reportsCollection
+                        .whereEqualTo("patientPesel", pesel)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            val reports = mutableListOf<MedicalReport>()
+                            for (document in documents) {
+                                val report = document.toObject(MedicalReport::class.java)
+                                reports.add(report)
+                                Log.d(TAG, "Report: ${report}")
+                            }
+                            reportsAdapter.updateReports(reports)
                         }
-                    } else {
-                        println("Dokument nie istnieje.")
-                    }
+                        .addOnFailureListener { exception ->
+                        }
+                } ?: run {
                 }
-                .addOnFailureListener { exception ->
-                    println("Błąd podczas pobierania dokumentu: ${exception.message}")
-                }
-        } else {
-            println("Brak zalogowanego użytkownika.")
+            }.addOnFailureListener { exception ->
+            }
         }
     }
-
-
 
     private fun fetchPrescriptions() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid

@@ -1,7 +1,10 @@
 package com.example.dermapp
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -23,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
@@ -245,7 +249,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                                         ).show()
 
                                         // Ustawienie powiadomienia
-                                        //setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
+                                        setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
                                         // Wyczyszczenie pól po udanym zapisaniu wizyty
                                         autoDoc.setText("")
@@ -294,6 +298,26 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         super.onDestroy()
         // Zatrzymanie wszystkich korutyn w zakresie, aby uniknąć wycieków pamięci
         coroutineScope.cancel()
+    }
+
+
+    private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
+        val intent = Intent(this, ReminderBroadcast::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000 // 24 h przed wizyta
+
+        Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
+
+        //alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
+
+        val calendar = Calendar.getInstance()
+        val currentTime = calendar.timeInMillis
+        val tenSecondsMillis = 1000 * 4
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, currentTime + tenSecondsMillis, pendingIntent)
+
     }
 }
 
