@@ -14,11 +14,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dermapp.AppointmentsDocActivity
 import com.example.dermapp.CreateNewReportActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
+import com.example.dermapp.SetAppointmentDocActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
@@ -203,6 +205,18 @@ class StartDocActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+                R.id.nav_set -> {
+                    val intent = Intent(this, SetAppointmentDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
+                R.id.nav_myAppointments -> {
+                    val intent = Intent(this, AppointmentsDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
                 else -> false
             }
         }
