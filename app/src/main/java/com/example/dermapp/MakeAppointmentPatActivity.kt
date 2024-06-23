@@ -20,15 +20,11 @@ import com.example.dermapp.database.Location
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 class MakeAppointmentPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
@@ -187,7 +183,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                 val appointment = Appointment(
                     doctorId = doctorId,
                     patientId = FirebaseAuth.getInstance().currentUser?.uid,
-                    datetime = appointmentDate,
+                    appointmentDate = appointmentDate,
                     localization = location,
                     diagnosis = "", // Set diagnosis if applicable
                     recommendations = "" // Set recommendations if applicable
