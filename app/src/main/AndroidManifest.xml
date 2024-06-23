@@ -74,6 +74,9 @@
             android:name=".AppointmentsDocActivity"
             android:exported="false" />
         <activity
+            android:name=".ManageDocLocationsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

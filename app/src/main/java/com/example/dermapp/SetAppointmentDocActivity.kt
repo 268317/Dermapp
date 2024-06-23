@@ -162,7 +162,6 @@ class SetAppointmentDocActivity : AppCompatActivity() {
         calendar.add(Calendar.MINUTE, 18) // 9 minutes before and after
         val endTimeWindow = calendar.time
 
-        // Query to check if any existing appointment overlaps with the selected window
         firestore.collection("availableDates")
             .whereEqualTo("doctorId", doctorId)
             .whereGreaterThanOrEqualTo("datetime", startTimeWindow)

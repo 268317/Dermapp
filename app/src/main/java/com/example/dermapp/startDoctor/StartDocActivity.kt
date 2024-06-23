@@ -19,6 +19,7 @@ import com.example.dermapp.AppointmentsDocActivity
 import com.example.dermapp.CreateNewReportActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
+import com.example.dermapp.ManageDocLocationsActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
 import com.example.dermapp.SetAppointmentDocActivity
@@ -192,6 +193,11 @@ class StartDocActivity : AppCompatActivity() {
                 }
                 R.id.nav_myProfile -> {
                     val intent = Intent(this, ProfileDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_myLocations -> {
+                    val intent = Intent(this, ManageDocLocationsActivity::class.java)
                     startActivity(intent)
                     true
                 }

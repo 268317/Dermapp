@@ -10,6 +10,9 @@
                     android:id="@+id/nav_myProfile"
                     android:title="My profile"/>
                 <item
+                    android:id="@+id/nav_myLocations"
+                    android:title="My locations"/>
+                <item
                     android:id="@+id/nav_logout"
                     android:title="Logout"/>
             </menu>
