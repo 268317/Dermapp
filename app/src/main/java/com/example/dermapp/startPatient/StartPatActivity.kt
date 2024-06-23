@@ -1,18 +1,13 @@
 package com.example.dermapp.startPatient
 
-import MyAdapterStartPatReport
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +16,6 @@ import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentPatActivity
 import com.example.dermapp.ProfilePatActivity
 import com.example.dermapp.R
-import com.example.dermapp.ReportActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
@@ -30,148 +24,41 @@ import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Date
 
-class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClickListener {
+class StartPatActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuButton: ImageButton
     private lateinit var navView: NavigationView
 
-    @SuppressLint("MissingInflatedId")
+    private lateinit var recyclerViewAppointments: RecyclerView
+    private lateinit var recyclerViewReports: RecyclerView
+    private lateinit var recyclerViewPrescriptions: RecyclerView
+
+    private lateinit var appointmentsAdapter: MyAdapterStartPatAppointment
+    private lateinit var reportsAdapter: MyAdapterStartPatReport
+    private lateinit var prescriptionsAdapter: MyAdapterStartPatPrescription
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_start_patient)
 
-
         drawerLayout = findViewById(R.id.drawer_layout)
 
-        val recyclerViewAppointments = findViewById<RecyclerView>(R.id.RVstartPatAppointment)
+        recyclerViewAppointments = findViewById(R.id.RVstartPatAppointment)
         recyclerViewAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val appointments: MutableList<Appointment> = ArrayList()
+        appointmentsAdapter = MyAdapterStartPatAppointment(mutableListOf(), this)
+        recyclerViewAppointments.adapter = appointmentsAdapter
 
-        val recyclerViewReports = findViewById<RecyclerView>(R.id.RVstartPatReport)
+        recyclerViewReports = findViewById(R.id.RVstartPatReport)
         recyclerViewReports.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val reports: MutableList<MedicalReport> = ArrayList()
+        reportsAdapter = MyAdapterStartPatReport(mutableListOf(), this)
+        recyclerViewReports.adapter = reportsAdapter
 
-        val recyclerViewPrescriptions = findViewById<RecyclerView>(R.id.RVstartPatPrescription)
+        recyclerViewPrescriptions = findViewById(R.id.RVstartPatPrescription)
         recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val prescriptions: MutableList<Prescription> = ArrayList()
-
-        appointments.add(
-            Appointment(
-                doctorId = "Jan",
-                patientId = "Kowalski",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Adam",
-                patientId = "Nowak",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Monika",
-                patientId = "Adamska",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Anna",
-                patientId = "Kwiatek",
-                appointmentDate = Date()
-            )
-        )
-
-        reports.add(
-            MedicalReport(
-                medicalReportId = "1jstXDBrYMZppA30ZZjl",
-                doctorId = "12345",
-                patientPesel = "83627837264",
-                reportDate = "22-06-2024 17:55",
-                attachmentUrl = "content://media/external/images/media/1000035185"
-            )
-        )
-
-        reports.add(
-            MedicalReport(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
-            )
-        )
-
-        reports.add(
-            MedicalReport(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
-
-        // Set layout manager and adapter for RecyclerView
-        recyclerViewAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewAppointments.adapter = MyAdapterStartPatAppointment(appointments)
-
-        // Apply window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartPatAppointment)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        // Set layout manager and adapter for RecyclerView
-        recyclerViewReports.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewReports.adapter = MyAdapterStartPatReport(reports, this)
-
-        // Apply window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartPatReport)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        // Set layout manager and adapter for RecyclerView
-        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewPrescriptions.adapter = MyAdapterStartPatPrescription(prescriptions)
-
-        // Apply window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartPatPrescription)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        prescriptionsAdapter = MyAdapterStartPatPrescription(mutableListOf(), this)
+        recyclerViewPrescriptions.adapter = prescriptionsAdapter
 
         val header = findViewById<RelativeLayout>(R.id.includeHeader)
         menuButton = header.findViewById(R.id.menuButton)
@@ -199,18 +86,9 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
                     startActivity(intent)
                     true
                 }
-                R.id.nav_myAppointments -> {
-                    Toast.makeText(this, "My appointments clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
                 R.id.nav_newReport -> {
                     val intent = Intent(this, CreateNewReportActivity::class.java)
                     startActivity(intent)
-                    true
-                }
-
-                R.id.nav_myPrescriptions -> {
-                    Toast.makeText(this, "My prescriptions clicked", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.nav_myMailbox -> {
@@ -222,11 +100,16 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
             }
         }
 
+        fetchAppointments()
+        fetchReports()
+        fetchPrescriptions()
+
+
         // Pobierz UID aktualnie zalogowanego użytkownika
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
         // Utwórz odwołanie do dokumentu użytkownika w Firestore
-        val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
+        val userRef = FirebaseFirestore.getInstance().collection("users").document(currentUserUid!!)
 
         // Pobierz dane użytkownika z Firestore
         userRef.get().addOnSuccessListener { documentSnapshot ->
@@ -241,15 +124,90 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
                     headerNameTextView.text = user.firstName
                 }
             }
-        }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
+        }
+
+
+    }
+
+    private fun fetchAppointments() {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
+
+        currentUserUid?.let { uid ->
+            appointmentsCollection
+                .whereEqualTo("patientId", uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val appointments = mutableListOf<Appointment>()
+                    for (document in documents) {
+                        val appointment = document.toObject(Appointment::class.java)
+                        appointments.add(appointment)
+                    }
+                    appointmentsAdapter.updateAppointments(appointments)
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors
+                    // For example, Log.e(TAG, "Error fetching appointments", exception)
+                }
         }
     }
 
-    override fun onItemClick(medicalReportId: String) {
-        // Start ReportActivity and pass medicalReportId
-        val intent = Intent(this, ReportActivity::class.java)
-        intent.putExtra(ReportActivity.MEDICAL_REPORT_ID_EXTRA, medicalReportId)
-        startActivity(intent)
+    private fun fetchReports() {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        currentUserUid?.let { uid ->
+            val userDocRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+
+            userDocRef.get().addOnSuccessListener { document ->
+                val currentUserPesel = document.getString("pesel")
+                currentUserPesel?.let { pesel ->
+                    val reportsCollection = FirebaseFirestore.getInstance().collection("report")
+                    reportsCollection
+                        .whereEqualTo("patientPesel", pesel)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            val reports = mutableListOf<MedicalReport>()
+                            for (document in documents) {
+                                val report = document.toObject(MedicalReport::class.java)
+                                reports.add(report)
+                            }
+                            reportsAdapter.updateReports(reports)
+                        }
+                        .addOnFailureListener { exception ->
+                            // Handle errors
+                            // For example, Log.e(TAG, "Error fetching reports", exception)
+                        }
+                } ?: run {
+                    // Handle case where PESEL is null
+                    // For example, Log.e(TAG, "Error: User PESEL is null")
+                }
+            }.addOnFailureListener { exception ->
+                // Handle errors
+                // For example, Log.e(TAG, "Error fetching user document", exception)
+            }
+        }
+    }
+
+    private fun fetchPrescriptions() {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
+
+        currentUserUid?.let { uid ->
+            prescriptionsCollection
+                .whereEqualTo("patientId", uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val prescriptions = mutableListOf<Prescription>()
+                    for (document in documents) {
+                        val prescription = document.toObject(Prescription::class.java)
+                        prescriptions.add(prescription)
+                    }
+                    prescriptionsAdapter.updatePrescriptions(prescriptions)
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors
+                    // For example, Log.e(TAG, "Error fetching prescriptions", exception)
+                }
+        }
     }
 }

@@ -6,7 +6,7 @@ data class MedicalReport(
     @get:PropertyName("medicalReportId") @set:PropertyName("medicalReportId") open var medicalReportId: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") open var doctorId: String = "",
     @get:PropertyName("patientPesel") @set:PropertyName("patientPesel") open var patientPesel: String = "",
-    @get:PropertyName("date") @set:PropertyName("date") open var reportDate: String,
+    @get:PropertyName("date") @set:PropertyName("date") open var date: String,
     @get:PropertyName("itching") @set:PropertyName("itching") open var itching: Boolean = false,
     @get:PropertyName("rash") @set:PropertyName("rash") open var rash: Boolean = false,
     @get:PropertyName("redness") @set:PropertyName("redness") open var redness: Boolean = false,
@@ -21,7 +21,4 @@ data class MedicalReport(
     @get:PropertyName("discoloration") @set:PropertyName("discoloration") open var discoloration: Boolean = false,
     @get:PropertyName("otherInfo") @set:PropertyName("otherInfo") open var otherInfo: String = "",
     @get:PropertyName("attachmentUrl") @set:PropertyName("attachmentUrl") open var attachmentUrl: String = ""  // Nowe pole
-) {
-    constructor() : this("", "", "", "", false, false, false, false, false,
-        false, false, false, false, false, false, false, "")
-}
+)

@@ -7,8 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 
 class MyViewHolderStartPatReport(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val firstNameDoc: TextView = itemView.findViewById(R.id.textViewDoctorStartPatReports)
-    val lastNameDoc: TextView = itemView.findViewById(R.id.textViewSurnameStartPatReports)
-    val reportDate: TextView = itemView.findViewById(R.id.textViewDateStartPatReports)
-    val buttonSeeFullReport: Button = itemView.findViewById(R.id.buttonSeeFullReportStartPatReports)
+    val firstNameDoc : TextView
+    val lastNameDoc : TextView
+    val reportDate : TextView
+    val seeDetailsButton: Button
+    init {
+        firstNameDoc = itemView.findViewById(R.id.textViewDoctorStartPatReports)
+        lastNameDoc = itemView.findViewById(R.id.textViewSurnameStartPatReports)
+        reportDate = itemView.findViewById(R.id.textViewDateStartPatReports)
+        seeDetailsButton = itemView.findViewById(R.id.buttonSeeFullReportStartPatReports)
+    }
 }

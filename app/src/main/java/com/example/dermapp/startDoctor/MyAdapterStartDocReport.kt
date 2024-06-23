@@ -1,6 +1,5 @@
 package com.example.dermapp.startDoctor
 
-import com.example.dermapp.startPatient.MyViewHolderStartPatReport
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,7 @@ class MyAdapterStartDocReport (private val reportsList: List<MedicalReport>) : R
         // wyciągnąć imię i nazwisko lekarza
         holder.firstNamePat.text = report.doctorId
         holder.lastNamePat.text = report.patientPesel
-        holder.reportDate.text = report.reportDate.toString()
+        holder.reportDate.text = report.date.toString()
     }
 
     override fun getItemCount(): Int {
