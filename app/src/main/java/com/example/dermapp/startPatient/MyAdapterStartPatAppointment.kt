@@ -30,6 +30,12 @@ class MyAdapterStartPatAppointment(private var appointmentsList: MutableList<App
 
     override fun onBindViewHolder(holder: MyViewHolderStartPatAppointment, position: Int) {
         val appointment = appointmentsList[position]
+<<<<<<< HEAD
+        holder.firstNameDoc.text = appointment.doctorId
+        holder.lastNameDoc.text = appointment.patientId
+        holder.appointmentDate.text = appointment.datetime.toString()
+=======
+>>>>>>> parent of 14438d7 (RV update)
 
         // Fetch doctor details using coroutine
         GlobalScope.launch(Dispatchers.Main) {
