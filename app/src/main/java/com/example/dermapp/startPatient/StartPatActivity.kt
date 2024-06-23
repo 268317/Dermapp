@@ -1,7 +1,9 @@
 package com.example.dermapp.startPatient
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -156,10 +158,12 @@ class StartPatActivity : AppCompatActivity() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
         currentUserUid?.let { uid ->
-            val userDocRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+            val userPatRef = FirebaseFirestore.getInstance().collection("patients").document(uid)
+            Log.d(TAG, "User uid: ${currentUserUid}")
 
-            userDocRef.get().addOnSuccessListener { document ->
+            userPatRef.get().addOnSuccessListener { document ->
                 val currentUserPesel = document.getString("pesel")
+                Log.d(TAG, "User pesel: ${currentUserPesel}")
                 currentUserPesel?.let { pesel ->
                     val reportsCollection = FirebaseFirestore.getInstance().collection("report")
                     reportsCollection
@@ -170,20 +174,15 @@ class StartPatActivity : AppCompatActivity() {
                             for (document in documents) {
                                 val report = document.toObject(MedicalReport::class.java)
                                 reports.add(report)
+                                Log.d(TAG, "Report: ${report}")
                             }
                             reportsAdapter.updateReports(reports)
                         }
                         .addOnFailureListener { exception ->
-                            // Handle errors
-                            // For example, Log.e(TAG, "Error fetching reports", exception)
                         }
                 } ?: run {
-                    // Handle case where PESEL is null
-                    // For example, Log.e(TAG, "Error: User PESEL is null")
                 }
             }.addOnFailureListener { exception ->
-                // Handle errors
-                // For example, Log.e(TAG, "Error fetching user document", exception)
             }
         }
     }

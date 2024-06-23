@@ -1,143 +1,320 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f5f5f5"
-        tools:context=".ReportActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    tools:context=".ReportActivity">
 
     <include
-            android:id="@+id/backHeader"
-            layout="@layout/header_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/backHeader"
+        layout="@layout/header_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout33"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/top_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backHeader">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-            android:layout_width="408dp"
-            android:layout_height="694dp"
-            app:layout_constraintTop_toBottomOf="@+id/backHeader"
-            android:id="@+id/scrollView3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="3dp"
-            app:layout_constraintEnd_toEndOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/backHeader">
 
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                    android:id="@+id/linearLayoutCreateNewReport2"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="610dp"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
-                    android:background="@drawable/white_background"
-                    android:elevation="3dp"
-                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout3"
                         android:layout_width="match_parent"
-                        android:layout_height="37dp"
-                        android:layout_margin="10dp"
-                        android:orientation="horizontal">
+                        android:layout_height="300dp"
+                        android:background="@drawable/top_background"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                            android:text="Doctor"
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutCreateNewReport"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/textView3"
-                            android:layout_weight="1"
-                            android:background="@drawable/rounded_gray_background"
-                            android:textSize="20sp"
-                            android:textAlignment="center" />
+                            android:layout_height="610dp"
+                            android:clickable="false"
+                            android:layout_marginBottom="30dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="24dp"
+                            android:background="@drawable/white_background"
+                            android:elevation="3dp"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal">
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_margin="10dp"
-                        android:orientation="horizontal">
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
 
-                    <TextView
-                            android:id="@+id/textViewCheckSymptomsCreateNewReport2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="Symptoms"
-                            android:textAlignment="center"
-                            android:textColor="#FF9800"
-                            android:textSize="24sp" />
-                </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/TextViewDoctor"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="35dp"
+                                        android:background="@drawable/rounded_gray_background"
+                                        android:completionThreshold="0"
+                                        android:hint="Doctor"
+                                        android:paddingStart="16dp"
+                                        android:textSize="16sp"
+                                        android:gravity="center_vertical"
+                                        android:textColor="@android:color/black"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/textViewCheckSymptomsCreateNewReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Symptoms"
+                                    android:textAlignment="center"
+                                    android:textColor="#FF9800"
+                                    android:textSize="24sp" />
+                            </LinearLayout>
 
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="106dp"
-                        android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
 
-                    <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="109dp"
-                            android:id="@+id/textView2"
-                            android:layout_weight="1"
-                            android:textSize="16sp"
-                            android:textAlignment="center"
-                            android:gravity="center" />
-                </LinearLayout>
+                                <CheckBox
+                                    android:id="@+id/checkBoxItchingCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:text="itching"
+                                    android:textSize="16sp"
+                                    android:enabled="false" />
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/grey_background"
-                        android:orientation="horizontal">
+                                <CheckBox
+                                    android:id="@+id/checkBoxMoleChangesCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:text="mole changes"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
 
-                    <TextView
-                            android:text="EnterOtherInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/enterOtherInfoCreateNewReport22"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:gravity="center" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
 
-                </LinearLayout>
+                                <CheckBox
+                                    android:id="@+id/checkBoxRashCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="55dp"
+                                    android:layout_weight="1"
+                                    android:text="rash"
+                                    android:textSize="16sp" />
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
+                                <CheckBox
+                                    android:id="@+id/checkBoxDrynessCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="55dp"
+                                    android:layout_weight="1"
+                                    android:text="dryness"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
 
-            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxPimplesCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="pimples"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxSevereAcneCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="severe acne"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxBlackheadsCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="blackheads"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxWartsCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="warts"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_margin="0dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxRednessCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="redness"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxDiscolorationCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="discoloration"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_margin="0dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxSeborrhoeaCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="seborrhoea"
+                                    android:textSize="16sp" />
+
+                                <CheckBox
+                                    android:id="@+id/checkBoxNewMoleCreateNewReport"
+                                    android:layout_width="100dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="new mole"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                android:layout_margin="10dp"
+                                android:background="@drawable/grey_background"
+                                android:orientation="horizontal">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="140dp"
+                                    android:layout_weight="1">
+
+                                    <EditText
+                                        android:id="@+id/enterOtherInfoCreateNewReport"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:ems="10"
+                                        android:gravity="start|top"
+                                        android:hint="Enter other info"
+                                        android:paddingStart="16dp"
+                                        android:inputType="textMultiLine"
+                                        android:textColorHint="#989595"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/view2CreateNewReport"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="10dp"
+                                android:background="#FF9800"
+                                tools:layout_editor_absoluteX="22dp"
+                                tools:layout_editor_absoluteY="337dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageAddPhotoCreateNewReport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    app:srcCompat="@drawable/add_a_photo" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </ScrollView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </ScrollView>

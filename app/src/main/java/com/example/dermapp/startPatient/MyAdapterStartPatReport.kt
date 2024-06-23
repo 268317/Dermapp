@@ -68,14 +68,14 @@ class MyAdapterStartPatReport(
 
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, ReportActivity::class.java)
-            intent.putExtra("reportId", report.medicalReportId)
+            intent.putExtra(ReportActivity.MEDICAL_REPORT_ID_EXTRA, report.medicalReportId)
             context.startActivity(intent)
         }
 
         // Set appointment date and time
         report.date.let { reportDate ->
-            val formattedDateTime = dateTimeFormatter.format(reportDate)
-            holder.reportDate.text = formattedDateTime
+            //val formattedDateTime = dateTimeFormatter.format(reportDate)
+            holder.reportDate.text = report.date//formattedDateTime
         }
     }
 

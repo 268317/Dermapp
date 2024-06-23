@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -29,10 +30,13 @@ class ManageDocLocationsActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private var currentUserUid: String? = null
     private lateinit var backButton: AppCompatImageButton
+    private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_locations_doc)
+
 
         db = FirebaseFirestore.getInstance()
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -61,13 +65,31 @@ class ManageDocLocationsActivity : AppCompatActivity() {
                 editTextNewLoc.text.clear()
             }
         }
+        loadCurrentDoctorId()
+    }
 
-        loadLocations()
+    private fun loadCurrentDoctorId() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        firestore.collection("doctors").document(userId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val doctor = documentSnapshot.toObject(Doctor::class.java)
+                    currentDocId = doctor?.doctorId
+                    loadLocations()
+                } else {
+                    Toast.makeText(this, "Failed to load doctor information.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun loadLocations() {
-        Log.d(TAG, "I want to load locations")
+
         db.collection("locations")
+            .whereEqualTo("doctorId", currentDocId)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {

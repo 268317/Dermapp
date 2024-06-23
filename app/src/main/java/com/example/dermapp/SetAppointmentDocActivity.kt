@@ -200,12 +200,12 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                                     }
                                     .addOnFailureListener { exception ->
                                         exception.printStackTrace()
-                                        Toast.makeText(this@SetAppointmentDocActivity, "Failed to book appointment", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@SetAppointmentDocActivity, "Failed to set appointment", Toast.LENGTH_SHORT).show()
                                     }
                             }
                             .addOnFailureListener { exception ->
                                 exception.printStackTrace()
-                                Toast.makeText(this@SetAppointmentDocActivity, "Failed to book appointment", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@SetAppointmentDocActivity, "Failed to set appointment", Toast.LENGTH_SHORT).show()
                             }
                     }
                 }
