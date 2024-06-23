@@ -36,13 +36,13 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewUpcomingAppointmentsPat"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="bottom"
-                    android:text="Upcoming appointments"
-                    android:textSize="20sp"
-                    android:paddingLeft="16dp"/>
+                        android:id="@+id/textViewUpcomingAppointmentsPat"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="bottom"
+                        android:text="Upcoming appointments"
+                        android:textSize="20sp"
+                        android:paddingLeft="16dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatAppointment"
@@ -51,13 +51,13 @@
                     android:scrollbars="horizontal" />
 
                 <TextView
-                    android:id="@+id/textViewMyReportsPat"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="bottom"
-                    android:text="My reports"
-                    android:textSize="20sp"
-                    android:paddingLeft="16dp"/>
+                        android:id="@+id/textViewMyReportsPat"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="bottom"
+                        android:text="My reports"
+                        android:textSize="20sp"
+                        android:paddingLeft="16dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatReport"
@@ -66,13 +66,13 @@
                     android:scrollbars="horizontal" />
 
                 <TextView
-                    android:id="@+id/textViewMyPrescriptionsPat"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="bottom"
-                    android:text="My prescriptions"
-                    android:textSize="20sp"
-                    android:paddingLeft="16dp"/>
+                        android:id="@+id/textViewMyPrescriptionsPat"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="bottom"
+                        android:text="My prescriptions"
+                        android:textSize="20sp"
+                        android:paddingLeft="16dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatPrescription"

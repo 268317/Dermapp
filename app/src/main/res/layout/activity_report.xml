@@ -21,8 +21,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout33"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_width="0dp"
+            android:layout_height="264dp"
             android:background="@drawable/top_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,7 @@
                             android:text="Doctor"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/textView3"
+                            android:id="@+id/textViewDoctorName"
                             android:layout_weight="1"
                             android:background="@drawable/rounded_gray_background"
                             android:textSize="20sp"
@@ -107,7 +107,7 @@
                             android:text="TextView"
                             android:layout_width="match_parent"
                             android:layout_height="109dp"
-                            android:id="@+id/textView2"
+                            android:id="@+id/textViewCheckedSymptoms"
                             android:layout_weight="1"
                             android:textSize="16sp"
                             android:textAlignment="center"
@@ -125,7 +125,7 @@
                             android:text="EnterOtherInfo"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/enterOtherInfoCreateNewReport22"
+                            android:id="@+id/textViewOther"
                             android:layout_weight="1"
                             android:textAlignment="center"
                             android:gravity="center" />
@@ -135,7 +135,15 @@
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal" />
+                        android:orientation="horizontal" >
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            tools:src="@tools:sample/avatars"
+                            android:id="@+id/imageReport"
+                            android:layout_weight="1" />
+                </LinearLayout>
 
             </LinearLayout>
 

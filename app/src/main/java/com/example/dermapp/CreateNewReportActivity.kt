@@ -217,7 +217,7 @@ class CreateNewReportActivity : AppCompatActivity() {
                             documentReference.set(updatedAppointment)
                             Toast.makeText(
                                 this,
-                                "Appointment booked successfully.",
+                                "Report send successfully.",
                                 Toast.LENGTH_SHORT
                             ).show()
 

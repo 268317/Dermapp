@@ -9,7 +9,7 @@ data class Prescription(
     @get:PropertyName("patientId") @set:PropertyName("patientId") open var patientId: String = "",
     @get:PropertyName("date") @set:PropertyName("date") open var date: Date,
     @get:PropertyName("prescriptionText") @set:PropertyName("prescriptionText") open var prescriptionText: String = ""
-) //{
-//    // Konstruktor bezargumentowy
-//    constructor() : this("", "", "", Date(), "")
-//}
+) {
+    // Konstruktor bezargumentowy
+    constructor() : this("", "", "", Date(), "")
+}

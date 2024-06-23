@@ -153,40 +153,48 @@ class StartPatActivity : AppCompatActivity() {
     }
 
     private fun fetchReports() {
+        val db = FirebaseFirestore.getInstance()
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        currentUserUid?.let { uid ->
-            val userDocRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+        if (currentUserUid != null) {
+            db.collection("patients").document(currentUserUid).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val pesel = document.getString("pesel")
+                        if (pesel != null) {
+                            val reportsCollection = db.collection("appointment")
 
-            userDocRef.get().addOnSuccessListener { document ->
-                val currentUserPesel = document.getString("pesel")
-                currentUserPesel?.let { pesel ->
-                    val reportsCollection = FirebaseFirestore.getInstance().collection("report")
-                    reportsCollection
-                        .whereEqualTo("patientPesel", pesel)
-                        .get()
-                        .addOnSuccessListener { documents ->
-                            val reports = mutableListOf<MedicalReport>()
-                            for (document in documents) {
-                                val report = document.toObject(MedicalReport::class.java)
-                                reports.add(report)
-                            }
-                            reportsAdapter.updateReports(reports)
+                            reportsCollection
+                                .whereEqualTo("patientPesel", pesel)
+                                .get()
+                                .addOnSuccessListener { documents ->
+                                    val reports = mutableListOf<MedicalReport>()
+                                    for (document in documents) {
+                                        val report = document.toObject(MedicalReport::class.java)
+                                        reports.add(report)
+                                    }
+                                    // Aktualizuj adapter raportów
+                                    reportsAdapter.updateReports(reports)
+                                }
+                                .addOnFailureListener { exception ->
+                                    println("Błąd podczas pobierania raportów: ${exception.message}")
+                                }
+                        } else {
+                            println("Pole PESEL nie istnieje w dokumencie.")
                         }
-                        .addOnFailureListener { exception ->
-                            // Handle errors
-                            // For example, Log.e(TAG, "Error fetching reports", exception)
-                        }
-                } ?: run {
-                    // Handle case where PESEL is null
-                    // For example, Log.e(TAG, "Error: User PESEL is null")
+                    } else {
+                        println("Dokument nie istnieje.")
+                    }
                 }
-            }.addOnFailureListener { exception ->
-                // Handle errors
-                // For example, Log.e(TAG, "Error fetching user document", exception)
-            }
+                .addOnFailureListener { exception ->
+                    println("Błąd podczas pobierania dokumentu: ${exception.message}")
+                }
+        } else {
+            println("Brak zalogowanego użytkownika.")
         }
     }
+
+
 
     private fun fetchPrescriptions() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
