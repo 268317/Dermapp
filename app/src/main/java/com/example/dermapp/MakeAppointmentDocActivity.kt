@@ -198,7 +198,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
                 val appointment = Appointment(
                     doctorId = doctorId,
                     patientId = selectedPatientId,
-                    appointmentDate = appointmentDate,
+                    datetime = appointmentDate,
                     localization = location,
                     diagnosis = "",
                     recommendations = ""

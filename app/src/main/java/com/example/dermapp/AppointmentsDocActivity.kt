@@ -93,7 +93,7 @@ class AppointmentsDocActivity : AppCompatActivity() {
         appointmentsListView.adapter = null
         patientsMap.clear()
         val selectedDateAppointments = appointments.filter { appointment ->
-            appointment.appointmentDate?.let { dateFormat.format(it) } == dateFormat.format(date)
+            appointment.datetime?.let { dateFormat.format(it) } == dateFormat.format(date)
         }
 
 
@@ -101,7 +101,7 @@ class AppointmentsDocActivity : AppCompatActivity() {
         var appointmentsProcessed = 0
 
         selectedDateAppointments.forEach { appointment ->
-            val appointmentDate = appointment.appointmentDate
+            val appointmentDate = appointment.datetime
             val time = appointmentDate?.let {
                 SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
             }

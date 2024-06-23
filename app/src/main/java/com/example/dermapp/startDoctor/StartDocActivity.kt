@@ -20,6 +20,7 @@ import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
+import com.example.dermapp.SetAppointmentDocActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
@@ -201,6 +202,11 @@ class StartDocActivity : AppCompatActivity() {
 
                 R.id.nav_myMailbox -> {
                     val intent = Intent(this, MessagesDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_set -> {
+                    val intent = Intent(this, SetAppointmentDocActivity::class.java)
                     startActivity(intent)
                     true
                 }
