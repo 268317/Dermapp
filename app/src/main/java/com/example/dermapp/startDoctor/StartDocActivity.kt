@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -28,7 +27,6 @@ import com.example.dermapp.messages.MessagesDocActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Date
 
 class StartDocActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -55,35 +53,43 @@ class StartDocActivity : AppCompatActivity() {
         recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val prescriptions: MutableList<Prescription> = ArrayList()
 
-        appointments.add(
-            Appointment(
+//        appointments.add(
+//            Appointment(
+//                doctorId = "Jan",
+//                patientPesel = "Kowalski",
+//                appointmentDate = Date()
+//            )
+//        )
+//
+//        appointments.add(
+//            Appointment(
+//                doctorId = "Adam",
+//                patientPesel = "Nowak",
+//                appointmentDate = Date()
+//            )
+//        )
+//
+//        appointments.add(
+//            Appointment(
+//                doctorId = "Monika",
+//                patientPesel = "Adamska",
+//                appointmentDate = Date()
+//            )
+//        )
+//
+//        appointments.add(
+//            Appointment(
+//                doctorId = "Anna",
+//                patientPesel = "Kwiatek",
+//                appointmentDate = Date()
+//            )
+//        )
+
+        reports.add(
+            MedicalReport(
                 doctorId = "Jan",
                 patientPesel = "Kowalski",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Adam",
-                patientPesel = "Nowak",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Monika",
-                patientPesel = "Adamska",
-                appointmentDate = Date()
-            )
-        )
-
-        appointments.add(
-            Appointment(
-                doctorId = "Anna",
-                patientPesel = "Kwiatek",
-                appointmentDate = Date()
+                date = "10-06-2024"
             )
         )
 
@@ -91,7 +97,7 @@ class StartDocActivity : AppCompatActivity() {
             MedicalReport(
                 doctorId = "Jan",
                 patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
+                date = "10-06-2024"
             )
         )
 
@@ -99,41 +105,33 @@ class StartDocActivity : AppCompatActivity() {
             MedicalReport(
                 doctorId = "Jan",
                 patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
+                date = "10-06-2024"
             )
         )
 
-        reports.add(
-            MedicalReport(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                reportDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
-
-        prescriptions.add(
-            Prescription(
-                doctorId = "Jan",
-                patientPesel = "Kowalski",
-                prescriptionDate = "10-06-2024"
-            )
-        )
+//        prescriptions.add(
+//            Prescription(
+//                doctorId = "Jan",
+//                patientId = "Kowalski",
+//                date = "10-06-2024".
+//            )
+//        )
+//
+//        prescriptions.add(
+//            Prescription(
+//                doctorId = "Jan",
+//                patientId = "Kowalski",
+//                date = "10-06-2024"
+//            )
+//        )
+//
+//        prescriptions.add(
+//            Prescription(
+//                doctorId = "Jan",
+//                patientId = "Kowalski",
+//                date = "10-06-2024"
+//            )
+//        )
 
         // Set layout manager and adapter for RecyclerView
         recyclerViewAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

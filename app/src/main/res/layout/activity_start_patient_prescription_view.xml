@@ -41,26 +41,17 @@
             <TextView
                 android:id="@+id/textViewDateStartPatPrescription"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="25dp"
                 android:gravity="center"
-                android:text="Date, time" />
+                android:text="Date, time"
+                android:textColor="@color/orange_light" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textTextStartPatPrescription"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="72dp"
                 android:gravity="center"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/buttonSeeDetailsStartPatPrescription"
-                    android:layout_width="150dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/button_background"
-                    android:gravity="center"
-                    android:text="See details"
-                    android:textColor="@color/white" />
-            </LinearLayout>
+                android:text="Prescription text" />
 
         </LinearLayout>
 

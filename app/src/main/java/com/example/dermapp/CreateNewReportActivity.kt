@@ -6,32 +6,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dermapp.database.AppUser
-import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
-
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.room.util.copy
-import kotlinx.coroutines.*
-import java.util.*
 
 class CreateNewReportActivity : AppCompatActivity() {
 
@@ -189,7 +184,7 @@ class CreateNewReportActivity : AppCompatActivity() {
                     val report = MedicalReport(
                         doctorId = doctorId,
                         patientPesel = pesel,
-                        reportDate = currentDateString,
+                        date = currentDateString,
                         itching = checkBoxItching.isChecked,
                         rash = checkBoxRash.isChecked,
                         redness = checkBoxRedness.isChecked,
