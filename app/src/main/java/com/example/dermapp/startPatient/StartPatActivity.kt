@@ -26,6 +26,9 @@ import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class StartPatActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -134,10 +137,12 @@ class StartPatActivity : AppCompatActivity() {
     private fun fetchAppointments() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
+        val today = Calendar.getInstance().time
 
         currentUserUid?.let { uid ->
             appointmentsCollection
                 .whereEqualTo("patientId", uid)
+                .whereGreaterThanOrEqualTo("datetime", today)
                 .get()
                 .addOnSuccessListener { documents ->
                     val appointments = mutableListOf<Appointment>()
@@ -145,7 +150,10 @@ class StartPatActivity : AppCompatActivity() {
                         val appointment = document.toObject(Appointment::class.java)
                         appointments.add(appointment)
                     }
-                    appointmentsAdapter.updateAppointments(appointments)
+                    val sortedAppointments = appointments.sortedBy { it.datetime }
+
+                    appointmentsAdapter.updateAppointments(sortedAppointments)
+                    //appointmentsAdapter.updateAppointments(appointments)
                 }
                 .addOnFailureListener { exception ->
                     // Handle errors
@@ -176,7 +184,12 @@ class StartPatActivity : AppCompatActivity() {
                                 reports.add(report)
                                 Log.d(TAG, "Report: ${report}")
                             }
-                            reportsAdapter.updateReports(reports)
+                            val sortedReports = reports.sortedBy {
+                                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(it.date)
+                            }
+
+                            reportsAdapter.updateReports(sortedReports)
+                                //reportsAdapter.updateReports(reports)
                         }
                         .addOnFailureListener { exception ->
                         }
@@ -201,7 +214,10 @@ class StartPatActivity : AppCompatActivity() {
                         val prescription = document.toObject(Prescription::class.java)
                         prescriptions.add(prescription)
                     }
-                    prescriptionsAdapter.updatePrescriptions(prescriptions)
+                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
+
+                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
+                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
                 }
                 .addOnFailureListener { exception ->
                     // Handle errors

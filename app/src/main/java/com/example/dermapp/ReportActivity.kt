@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.Manifest
 import com.example.dermapp.database.Doctor
 import java.io.FileNotFoundException
+import com.bumptech.glide.Glide
 
 class ReportActivity : AppCompatActivity() {
     private lateinit var textViewDoctor: TextView
@@ -212,7 +213,8 @@ class ReportActivity : AppCompatActivity() {
                         enterOtherInfoEditText.isEnabled = false
 
                         try {
-                            addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
+                            fetchImageFromFirebaseStorage(report.attachmentUrl)
+                            //addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
                         } catch (e: SecurityException) {
                             Log.e(TAG, "SecurityException: ${e.message}")
                             Toast.makeText(this, "Unable to access the image due to security restrictions", Toast.LENGTH_SHORT).show()
@@ -227,5 +229,11 @@ class ReportActivity : AppCompatActivity() {
                 Toast.makeText(this@ReportActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Failed to fetch medical report document: $exception")
             }
+    }
+
+    private fun fetchImageFromFirebaseStorage(imageUrl: String) {
+        Glide.with(this)
+            .load(imageUrl)
+            .into(addPhotoImageView)
     }
 }

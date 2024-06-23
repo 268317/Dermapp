@@ -15,20 +15,6 @@
         android:layout_height="wrap_content"/>
 
 
-<<<<<<< HEAD
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout33"
-            android:layout_width="0dp"
-            android:layout_height="264dp"
-            android:background="@drawable/top_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backHeader">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-=======
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,14 +59,6 @@
                         <LinearLayout
                             android:id="@+id/linearLayoutCreateNewReport"
                             android:layout_width="match_parent"
-<<<<<<< HEAD
-                            android:layout_height="match_parent"
-                            android:id="@+id/textViewDoctorName"
-                            android:layout_weight="1"
-                            android:background="@drawable/rounded_gray_background"
-                            android:textSize="20sp"
-                            android:textAlignment="center" />
-=======
                             android:layout_height="610dp"
                             android:clickable="false"
                             android:layout_marginBottom="30dp"
@@ -94,7 +72,6 @@
                             app:layout_constraintHorizontal_bias="1.0"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -108,12 +85,12 @@
                                     android:layout_weight="1">
 
                                     <TextView
-                                        android:id="@+id/TextViewDoctor"
+                                        android:id="@+id/TextViewPatient"
                                         android:layout_width="match_parent"
                                         android:layout_height="35dp"
                                         android:background="@drawable/rounded_gray_background"
                                         android:completionThreshold="0"
-                                        android:hint="Doctor"
+                                        android:hint="Patient"
                                         android:paddingStart="16dp"
                                         android:textSize="16sp"
                                         android:gravity="center_vertical"
@@ -150,18 +127,6 @@
                                 android:layout_height="45dp"
                                 android:orientation="horizontal">
 
-<<<<<<< HEAD
-                    <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="109dp"
-                            android:id="@+id/textViewCheckedSymptoms"
-                            android:layout_weight="1"
-                            android:textSize="16sp"
-                            android:textAlignment="center"
-                            android:gravity="center" />
-                </LinearLayout>
-=======
                                 <CheckBox
                                     android:id="@+id/checkBoxItchingCreateNewReport"
                                     android:layout_width="100dp"
@@ -170,7 +135,6 @@
                                     android:text="itching"
                                     android:textSize="16sp"
                                     android:enabled="false" />
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
 
                                 <CheckBox
                                     android:id="@+id/checkBoxMoleChangesCreateNewReport"
@@ -181,21 +145,10 @@
                                     android:textSize="16sp" />
                             </LinearLayout>
 
-<<<<<<< HEAD
-                    <TextView
-                            android:text="EnterOtherInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/textViewOther"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:gravity="center" />
-=======
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
                                 android:orientation="horizontal">
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
 
                                 <CheckBox
                                     android:id="@+id/checkBoxRashCreateNewReport"
@@ -205,20 +158,6 @@
                                     android:text="rash"
                                     android:textSize="16sp" />
 
-<<<<<<< HEAD
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" >
-
-                    <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            tools:src="@tools:sample/avatars"
-                            android:id="@+id/imageReport"
-                            android:layout_weight="1" />
-                </LinearLayout>
-=======
                                 <CheckBox
                                     android:id="@+id/checkBoxDrynessCreateNewReport"
                                     android:layout_width="100dp"
@@ -227,7 +166,6 @@
                                     android:text="dryness"
                                     android:textSize="16sp" />
                             </LinearLayout>
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
 
                             <LinearLayout
                                 android:layout_width="match_parent"

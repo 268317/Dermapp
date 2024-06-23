@@ -1,44 +1,5 @@
 package com.example.dermapp
 
-<<<<<<< HEAD
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.dermapp.startPatient.StartPatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-
-class ReportActivity : AppCompatActivity(){
-    private lateinit var doctorName: TextView
-    private lateinit var doctorFirstName: TextView
-    private lateinit var doctorLastName: TextView
-    private lateinit var checkedSymptoms: TextView
-    private lateinit var textOther: TextView
-    private lateinit var imageReport: ImageView
-    private lateinit var backButton: Button
-
-    private val firestore = FirebaseFirestore.getInstance()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_appointment_details_pat)
-
-        // Initialize UI elements with error checking
-        doctorName = findViewById(R.id.textViewDoctorName)
-        checkedSymptoms = findViewById(R.id.textViewCheckedSymptoms)
-        textOther = findViewById(R.id.textViewOther)
-        imageReport = findViewById(R.id.imageReport)
-
-=======
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -61,9 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.Manifest
 import com.example.dermapp.database.Doctor
 import java.io.FileNotFoundException
+import com.bumptech.glide.Glide
+import com.example.dermapp.startDoctor.StartDocActivity
 
-class ReportActivity : AppCompatActivity() {
-    private lateinit var textViewDoctor: TextView
+class ReportDocActivity : AppCompatActivity() {
+    private lateinit var textViewPatient: TextView
     private lateinit var checkBoxItching: CheckBox
     private lateinit var checkBoxMoleChanges: CheckBox
     private lateinit var checkBoxRash: CheckBox
@@ -90,118 +53,24 @@ class ReportActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_report)
+        setContentView(R.layout.activity_report_doc)
 
         initializeViews()
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
         backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
+            val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
-<<<<<<< HEAD
-        // Get UID of the currently logged in user
-        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        // Get appointmentId from Intent
-        val reportId = intent.getStringExtra("reportId")
-
-        // Fetch appointment details using coroutine
-        lifecycleScope.launch(Dispatchers.Main) {
-            try {
-                val reportDocument = firestore.collection("report")
-                    .document(reportId!!)
-                    .get()
-                    .await()
-
-                if (reportDocument.exists()) {
-                    val doctorId = reportDocument.getString("doctorId") ?: ""
-                    val photo = reportDocument.getString("attachmentUrl")
-                    val other = reportDocument.getString("otherInfo") ?: ""
-
-                    // Checking symptoms and adding them to checkedSymptoms
-                    val symptoms = listOf(
-                        "blackheads",
-                        "discoloration",
-                        "dryness",
-                        "itching",
-                        "moleChanges",
-                        "newMole",
-                        "pimples",
-                        "rash",
-                        "redness",
-                        "seborrhoea",
-                        "severeAcne",
-                        "warts"
-                    )
-
-                    val symptomNames = listOf(
-                        "Blackheads",
-                        "Discoloration",
-                        "Dryness",
-                        "Itching",
-                        "Mole Changes",
-                        "New Mole",
-                        "Pimples",
-                        "Rash",
-                        "Redness",
-                        "Seborrhoea",
-                        "Severe Acne",
-                        "Warts"
-                    )
-
-                    val checkedSymptomList = mutableListOf<String>()
-                    for (i in symptoms.indices) {
-                        if (reportDocument.getBoolean(symptoms[i]) == true) {
-                            checkedSymptomList.add(symptomNames[i])
-                        }
-                    }
-
-                    checkedSymptoms.text = checkedSymptomList.joinToString(", ")
-
-//                    photo?.let {
-//                    }
-
-                    textOther.text = other
-
-                    // Fetch doctor details
-                    val querySnapshot = firestore.collection("doctors")
-                        .whereEqualTo("doctorId", doctorId)
-                        .get()
-                        .await()
-
-                    if (!querySnapshot.isEmpty) {
-                        val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
-                        val firstName = doctorDocument.getString("firstName") ?: ""
-                        val lastName = doctorDocument.getString("lastName") ?: ""
-                        doctorFirstName.text = firstName
-                        doctorLastName.text = lastName
-                        doctorName.text = "$firstName $lastName"
-                    } else {
-                        doctorName.text = ""
-                    }
-
-                } else {
-                    doctorName.text = ""
-                }
-            } catch (e: Exception) {
-                Log.e("ReportActivity", "Error fetching report details", e)
-                doctorName.text = ""
-            }
-        }
-    }
-}
-=======
         medicalReportId = intent.getStringExtra(MEDICAL_REPORT_ID_EXTRA) ?: ""
 
         fetchMedicalReportFromFirestore(medicalReportId)
     }
 
     private fun initializeViews() {
-        textViewDoctor = findViewById(R.id.TextViewDoctor)
+        textViewPatient = findViewById(R.id.TextViewPatient)
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
         checkBoxMoleChanges = findViewById(R.id.checkBoxMoleChangesCreateNewReport)
         checkBoxRash = findViewById(R.id.checkBoxRashCreateNewReport)
@@ -287,12 +156,11 @@ class ReportActivity : AppCompatActivity() {
                     medicalReport?.let { report ->
                         Log.d(TAG, "Medical report fetched: $report")
 
-                        val doctorId = report.doctorId
-                        Log.d(TAG, "Doctor Id: ${doctorId}")
-                        if (doctorId != null && doctorId.isNotEmpty()) {
+                        val pesel = report.patientPesel
+                        if (pesel != null && pesel.isNotEmpty()) {
                             val db = FirebaseFirestore.getInstance()
-                            val doctorsRef = db.collection("doctors")
-                                .whereEqualTo("doctorId", doctorId)
+                            val doctorsRef = db.collection("patients")
+                                .whereEqualTo("pesel", pesel)
                                 .limit(1)
 
                             doctorsRef.get()
@@ -302,18 +170,17 @@ class ReportActivity : AppCompatActivity() {
                                         val doctor = doctorDocument.toObject(Doctor::class.java)
 
                                         doctor?.let {
-                                            Log.d(TAG, "Doctor fetched: ${doctor.firstName} ${doctor.lastName}")
-                                            textViewDoctor.text = "${doctor.firstName} ${doctor.lastName}"
+                                            textViewPatient.text = "${doctor.firstName} ${doctor.lastName}"
                                         } ?: run {
-                                            Log.e(TAG, "Doctor object is null")
+                                            Log.e(TAG, "Patient object is null")
                                         }
                                     } else {
-                                        Log.e(TAG, "Doctor document does not exist")
+                                        Log.e(TAG, "Patient document does not exist")
                                     }
                                 }
                                 .addOnFailureListener { exception ->
                                     Log.e(TAG, "Error getting documents: ", exception)
-                                    // Obsłuż ewentualny błąd
+
                                 }
                         }
 
@@ -345,21 +212,27 @@ class ReportActivity : AppCompatActivity() {
                         enterOtherInfoEditText.isEnabled = false
 
                         try {
-                            addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
+                            fetchImageFromFirebaseStorage(report.attachmentUrl)
+                            //addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
                         } catch (e: SecurityException) {
                             Log.e(TAG, "SecurityException: ${e.message}")
                             Toast.makeText(this, "Unable to access the image due to security restrictions", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
-                    Toast.makeText(this@ReportActivity, "Document not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ReportDocActivity, "Document not found", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Medical report document not found")
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(this@ReportActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ReportDocActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Failed to fetch medical report document: $exception")
             }
     }
+
+    private fun fetchImageFromFirebaseStorage(imageUrl: String) {
+        Glide.with(this)
+            .load(imageUrl)
+            .into(addPhotoImageView)
+    }
 }
->>>>>>> 1777116fe66ac3f9d6ffb1c920156318545a4989

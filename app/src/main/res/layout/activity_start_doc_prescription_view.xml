@@ -29,19 +29,12 @@
 
                 <TextView
                     android:id="@+id/textViewPatientStartDocPrescription"
-                    android:layout_width="119dp"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:text="Patient name" />
-
-                <TextView
-                    android:id="@+id/textViewSurnameStartDocPrescription"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:gravity="center"
-                    android:text="surname"
-                    android:textAlignment="textStart" />
+                    android:text="Patient fullname"
+                    android:layout_weight="1" />
+
 
             </LinearLayout>
 

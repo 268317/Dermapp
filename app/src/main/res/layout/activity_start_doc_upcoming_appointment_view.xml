@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/constraintLayoutStartDocAppointments"
+    android:id="@+id/constraintLayoutStartPatAppointments"
     android:layout_width="250dp"
     android:layout_height="170dp"
     android:background="@drawable/rounded_gray_background">
@@ -17,44 +17,55 @@
             android:background="@drawable/grey_background"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewPatientStartDocAppointments"
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:orientation="horizontal">
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="Patient name" />
 
-                <TextView
-                    android:id="@+id/textViewPatientStartDocAppointments"
-                    android:layout_width="115dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Patient name" />
-
-                <TextView
-                    android:id="@+id/textViewSurnameStartDocAppointments"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Surname"
-                    android:textAlignment="textStart" />
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewDateStartDocAppointments"
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
+                android:layout_height="40dp"
                 android:gravity="center"
                 android:text="Date, time"
-                android:textSize="20sp" />
+                android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/buttonDeleteAppointmentDoc"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="217dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_gray_background"
-                android:text="DELETE" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/seeDetailsButtonStartAppointmentDoc"
+                    android:layout_width="116dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_background_selector"
+                    android:text="See details"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/buttonDeleteAppointmentDoc"
+                    android:layout_width="73dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_gray_background"
+                    android:text="DELETE"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </RelativeLayout>

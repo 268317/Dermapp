@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/constraintLayoutStartDocReports"
+    android:id="@+id/constraintLayoutStartPatAppointments"
     android:layout_width="250dp"
     android:layout_height="170dp"
     android:background="@drawable/rounded_gray_background">
@@ -11,14 +11,14 @@
         android:layout_gravity="center">
 
         <LinearLayout
-            android:id="@+id/linearLayoutStartDocReports"
+            android:id="@+id/linearLayoutStartDocAppointments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/grey_background"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewPatientStartDocReports"
+                android:id="@+id/textViewPatientStartDocAppointments"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center"
@@ -26,27 +26,43 @@
 
 
             <TextView
-                android:id="@+id/textViewDateStartDocReports"
+                android:id="@+id/textViewDateStartDocAppointments"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center"
-                android:text="Date, time" />
+                android:text="Date, time"
+                android:textSize="14sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="217dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/buttonSeeFullReportStartDocReports"
-                    android:layout_width="180dp"
+                    android:id="@+id/seeDetailsButtonStartAppointmentDoc"
+                    android:layout_width="116dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="@drawable/button_background_selector"
-                    android:gravity="center"
-                    android:text="SEE FULL REPORT"
+                    android:text="See details"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/buttonDeleteAppointmentDoc"
+                    android:layout_width="73dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_gray_background"
+                    android:text="EDIT"
                     android:textColor="@color/white" />
             </LinearLayout>
 

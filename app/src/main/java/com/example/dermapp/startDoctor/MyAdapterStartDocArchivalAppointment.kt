@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dermapp.AppointmentDetailsDocActivity
+import com.example.dermapp.AppointmentDetailsPatActivity
+import com.example.dermapp.CreateAppointmentDetailsDocActivity
 import com.example.dermapp.R
-import com.example.dermapp.ReportActivity
-import com.example.dermapp.ReportDocActivity
-import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.startPatient.MyViewHolderStartPatReport
+import com.example.dermapp.database.Appointment
+import com.example.dermapp.startPatient.MyViewHolderStartPatAppointment
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,10 +21,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-class MyAdapterStartDocReport(
-    private var reportsList: MutableList<MedicalReport>,
+class MyAdapterStartDocArchivalAppointment(
+    private var appointmentsList: MutableList<Appointment>,
     private val context: Context
-    ) : RecyclerView.Adapter<MyViewHolderStartDocReport>() {
+) : RecyclerView.Adapter<MyViewHolderStartDocArchivalAppointment>() {
 
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -31,20 +33,21 @@ class MyAdapterStartDocReport(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartDocReport {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartDocArchivalAppointment {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_start_doc_reports_view, parent, false)
-        return MyViewHolderStartDocReport(view)
+            .inflate(R.layout.activity_start_doc_archival_appointment_view, parent, false)
+        return MyViewHolderStartDocArchivalAppointment(view)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolderStartDocReport, position: Int) {
-        val report = reportsList[position]
+
+    override fun onBindViewHolder(holder: MyViewHolderStartDocArchivalAppointment, position: Int) {
+        val appointment = appointmentsList[position]
 
         // Fetch doctor details using coroutine
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val querySnapshot = firestore.collection("patients")
-                    .whereEqualTo("pesel", report.patientPesel)
+                    .whereEqualTo("userId", appointment.patientId)
                     .get()
                     .await()
 
@@ -66,26 +69,38 @@ class MyAdapterStartDocReport(
         }
 
         holder.seeDetailsButton.setOnClickListener {
-            val intent = Intent(context, ReportDocActivity::class.java)
-            intent.putExtra(ReportDocActivity.MEDICAL_REPORT_ID_EXTRA, report.medicalReportId)
+            val intent = Intent(context, AppointmentDetailsDocActivity::class.java)
+            intent.putExtra("appointmentId", appointment.appointmentId)
             context.startActivity(intent)
         }
 
         // Set appointment date and time
-        report.date.let { reportDate ->
-            //val formattedDateTime = dateTimeFormatter.format(reportDate)
-            holder.reportDate.text = report.date//formattedDateTime
+        appointment.datetime?.let { appointmentDate ->
+            val formattedDateTime = dateTimeFormatter.format(appointmentDate)
+            holder.appointmentDate.text = formattedDateTime
+        }
+
+        // Handle delete button click
+        holder.editButton.setOnClickListener {
+            editAppointment(appointment)
         }
     }
 
     override fun getItemCount(): Int {
-        return reportsList.size
+        return appointmentsList.size
     }
 
-    // Update adapter with new data
-    fun updateReports(newReport: List<MedicalReport>) {
-        reportsList.clear()
-        reportsList.addAll(newReport)
+    fun updateAppointments(newAppointments: List<Appointment>) {
+        appointmentsList.clear()
+        appointmentsList.addAll(newAppointments)
         notifyDataSetChanged()
+    }
+
+
+    // Function to delete appointment from Firestore
+    private fun editAppointment(appointment: Appointment) {
+        val intent = Intent(context, CreateAppointmentDetailsDocActivity::class.java)
+        intent.putExtra("appointmentId", appointment.appointmentId)
+        context.startActivity(intent)
     }
 }

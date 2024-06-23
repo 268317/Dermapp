@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.androidx.room.ktx)
     implementation ("com.jakewharton.threetenabp:threetenabp:1.3.1")
+    implementation ("com.github.bumptech.glide:glide:4.14.2@aar")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
