@@ -9,9 +9,11 @@ class MyViewHolderStartDocPrescription(itemView: View) : RecyclerView.ViewHolder
     val firstNamePat : TextView
     val lastNamePat : TextView
     val prescriptionDate : TextView
+    val prescriptionText : TextView
     init {
-        firstNamePat = itemView.findViewById(R.id.textViewPatientStartDocPrescription)
-        lastNamePat = itemView.findViewById(R.id.textViewSurnameStartDocPrescription)
-        prescriptionDate = itemView.findViewById(R.id.textViewDateStartDocPrescription)
+        firstNamePat = itemView.findViewById(R.id.textViewDoctorStartPatPrescription)
+        lastNamePat = itemView.findViewById(R.id.textViewSurnameStartPatPrescription)
+        prescriptionDate = itemView.findViewById(R.id.textViewDateStartPatPrescription)
+        prescriptionText = itemView.findViewById(R.id.textTextStartPatPrescription)
     }
 }

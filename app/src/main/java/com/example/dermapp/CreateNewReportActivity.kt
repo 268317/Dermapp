@@ -6,32 +6,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dermapp.database.AppUser
-import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
-
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.room.util.copy
-import kotlinx.coroutines.*
-import java.util.*
 
 class CreateNewReportActivity : AppCompatActivity() {
 
@@ -189,7 +184,7 @@ class CreateNewReportActivity : AppCompatActivity() {
                     val report = MedicalReport(
                         doctorId = doctorId,
                         patientPesel = pesel,
-                        reportDate = currentDateString,
+                        date = currentDateString,
                         itching = checkBoxItching.isChecked,
                         rash = checkBoxRash.isChecked,
                         redness = checkBoxRedness.isChecked,
@@ -220,45 +215,45 @@ class CreateNewReportActivity : AppCompatActivity() {
 
                             // Ustawienie appointmentId w dokumencie Firestore
                             documentReference.set(updatedAppointment)
-                                    Toast.makeText(
-                                        this,
-                                        "Appointment booked successfully.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                            Toast.makeText(
+                                this,
+                                "Appointment booked successfully.",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
 
-                                    // Wyczyszczenie pól po udanym zapisaniu wizyty
-                                    autoDoc.setText("")
-                                    selectedDoctorId = null
-                                    checkBoxItching.isChecked = false
-                                    checkBoxMoleChanges.isChecked = false
-                                    checkBoxRash.isChecked = false
-                                    checkBoxDryness.isChecked = false
-                                    checkBoxPimples.isChecked = false
-                                    checkBoxSevereAcne.isChecked = false
-                                    checkBoxBlackheads.isChecked = false
-                                    checkBoxWarts.isChecked = false
-                                    checkBoxRedness.isChecked = false
-                                    checkBoxDiscoloration.isChecked = false
-                                    checkBoxSeborrhoea.isChecked = false
-                                    checkBoxNewMole.isChecked = false
-                                    enterOtherInfoEditText.text.clear()
-                                    addPhotoTextView.text = ""
-                                    addPhotoImageView.setImageURI(null)
+                            // Wyczyszczenie pól po udanym zapisaniu wizyty
+                            autoDoc.setText("")
+                            selectedDoctorId = null
+                            checkBoxItching.isChecked = false
+                            checkBoxMoleChanges.isChecked = false
+                            checkBoxRash.isChecked = false
+                            checkBoxDryness.isChecked = false
+                            checkBoxPimples.isChecked = false
+                            checkBoxSevereAcne.isChecked = false
+                            checkBoxBlackheads.isChecked = false
+                            checkBoxWarts.isChecked = false
+                            checkBoxRedness.isChecked = false
+                            checkBoxDiscoloration.isChecked = false
+                            checkBoxSeborrhoea.isChecked = false
+                            checkBoxNewMole.isChecked = false
+                            enterOtherInfoEditText.text.clear()
+                            addPhotoTextView.text = ""
+                            addPhotoImageView.setImageURI(null)
 
 
-                                }.addOnFailureListener { e ->
+                        }.addOnFailureListener { e ->
                             Toast.makeText(
                                 this,
                                 "Failed to add report: ${e.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                        }
+                }
 
-                } else {
-            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
-        }
+            } else {
+                Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
+            }
         }.addOnFailureListener { exception ->
             // Obsłuż błędy pobierania danych z Firestore
         }

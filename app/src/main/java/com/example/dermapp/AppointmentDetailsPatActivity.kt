@@ -20,23 +20,11 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var textViewFirstNameAppointmentPat: TextView
     private lateinit var textViewLastNameAppointmentPat: TextView
     private lateinit var textViewDocIDAppointmentPat: TextView
-    private lateinit var textViewDiagnosisAppointmentPat: TextView
-    private lateinit var textViewMultiDiagnosisAppointmentPat: TextView
-    private lateinit var textViewRecommendationAppointmentPat: TextView
-    private lateinit var textViewMultiRecommendationAppointmentPat: TextView
     private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_pat)
-
-        val header = findViewById<LinearLayout>(R.id.backHeader)
-        backButton = header.findViewById(R.id.arrowButton)
-
-        backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
-            startActivity(intent)
-        }
 
         // Initialize UI elements
         textViewAppointmentDatePat = findViewById(R.id.textViewAppointmentDatePat)
@@ -46,42 +34,47 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         textViewLastNameAppointmentPat = findViewById(R.id.textViewLastNameAppointmentPat)
         textViewDocIDAppointmentPat = findViewById(R.id.textViewDocIDAppointmentPat)
 
+        // Retrieve passed data
+        val appointmentId = intent.getStringExtra("appointmentId")
+        val appointmentDate = intent.getStringExtra("appointmentDate")
+        val doctorId = intent.getStringExtra("doctorId")
 
-        // Set example data to the TextViews (replace with actual data)
+        // Set data to the TextViews
         textViewAppointmentDatePat.text = "Appointment date:"
-        textViewDateAppointmentPat.text = "DD MONTH YYYY, 00:00"
-        textViewDoctorAppointmentPat.text = "Doctor:"
-        textViewFirstNameAppointmentPat.text = "First name:"
-        textViewLastNameAppointmentPat.text = "Last name:"
-        textViewDocIDAppointmentPat.text = "Doctor ID:"
-        textViewDiagnosisAppointmentPat.text = "Diagnosis"
-        textViewMultiDiagnosisAppointmentPat.text = "Diagnosis details go here..."
-        textViewRecommendationAppointmentPat.text = "Recommendations"
-        textViewMultiRecommendationAppointmentPat.text = "Recommendation details go here..."
+        textViewDateAppointmentPat.text = appointmentDate ?: "Unknown"
+        textViewDoctorAppointmentPat.text = "Doctor ID:"
+        textViewDocIDAppointmentPat.text = doctorId ?: "Unknown"
 
-
-        // Pobierz UID aktualnie zalogowanego użytkownika
-        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        // Utwórz odwołanie do dokumentu użytkownika w Firestore
-        val userRef = FirebaseFirestore.getInstance().collection("users").document(currentUserUid!!)
-
-        // Pobierz dane użytkownika z Firestore
-        userRef.get().addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.exists()) {
-                // Konwertuj dane na obiekt użytkownika
-                val user = documentSnapshot.toObject(AppUser::class.java)
-
-                // Sprawdź, czy udało się pobrać dane użytkownika
-                user?.let {
-                    // Ustaw imię użytkownika w nagłówku
-                    val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
-                    headerNameTextView.text = user.firstName
-                }
-            }
-        }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
+        // Set up back button click listener
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
         }
 
+        // Retrieve currently logged in user's UID
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        // Create reference to user document in Firestore
+        currentUserUid?.let { uid ->
+            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+
+            // Get user data from Firestore
+            userRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    // Convert data to AppUser object
+                    val user = documentSnapshot.toObject(AppUser::class.java)
+
+                    // Update UI with user's first name
+                    user?.let {
+                        val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
+                        headerNameTextView.text = user.firstName
+                    }
+                }
+            }.addOnFailureListener { exception ->
+                // Handle errors fetching data from Firestore
+            }
+        }
     }
 }

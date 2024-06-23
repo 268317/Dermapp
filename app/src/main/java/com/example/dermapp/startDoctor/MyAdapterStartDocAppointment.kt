@@ -1,6 +1,5 @@
 package com.example.dermapp.startDoctor
 
-import com.example.dermapp.startPatient.MyViewHolderStartPatAppointment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +16,8 @@ class MyAdapterStartDocAppointment (private val appointmentsList: List<Appointme
         val appointment = appointmentsList[position]
         // wyciągnąć imię i nazwisko lekarza
         holder.firstNamePat.text = appointment.doctorId
-        holder.lastNamePat.text = appointment.patientPesel
-        holder.appointmentDate.text = appointment.appointmentDate.toString()
+//        holder.lastNamePat.text = appointment.patientPesel
+        holder.appointmentDate.text = appointment.datetime.toString()
     }
 
     override fun getItemCount(): Int {
