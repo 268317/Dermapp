@@ -88,24 +88,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Make an appointment"
+                                android:text="Set new appointment"
                                 android:textAlignment="center"
                                 android:textColor="#FF9800"
                                 android:textSize="24sp" />
                         </LinearLayout>
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTextViewPatient"
-                            android:layout_width="300dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/rounded_gray_background"
-                            android:completionThreshold="0"
-                            android:hint="Patient"
-                            android:paddingStart="16dp"
-                            android:textColor="@android:color/black"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline20"
-                            app:layout_constraintStart_toStartOf="@+id/guideline19"
-                            app:layout_constraintTop_toBottomOf="@+id/textViewMyReportsDoc" />
 
                         <AutoCompleteTextView
                             android:id="@+id/autoCompleteTextViewLocalization"
@@ -115,7 +102,6 @@
                             android:background="@drawable/rounded_gray_background"
                             android:clickable="true"
                             android:completionThreshold="0"
-                            android:focusable="false"
                             android:fontFamily="sans-serif"
                             android:hint="Localization"
                             android:inputType="none"
@@ -125,9 +111,8 @@
                             app:layout_constraintStart_toStartOf="@+id/guideline19"
                             app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextViewDoctor" />
 
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTextDate"
+                        <EditText
+                            android:id="@+id/editTextDate"
                             android:layout_width="300dp"
                             android:layout_height="35dp"
                             android:layout_marginTop="20dp"
@@ -135,16 +120,14 @@
                             android:clickable="true"
                             android:focusable="false"
                             android:hint="Date"
-                            android:inputType="date"
+                            android:inputType="datetime"
                             android:paddingStart="16dp"
                             android:textColor="@android:color/black"
-                            app:layout_constraintStart_toStartOf="@+id/autoCompleteTextViewLocalization"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextViewLocalization" />
 
                     </LinearLayout>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button

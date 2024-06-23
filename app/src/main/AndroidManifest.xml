@@ -59,10 +59,16 @@
             android:name=".MakeAppointmentPatActivity"
             android:exported="false" />
         <activity
+            android:name=".MakeAppointmentDocActivity"
+            android:exported="false" />
+        <activity
             android:name=".ReportActivity"
             android:exported="false" />
         <activity
             android:name=".ConfirmationDialogFragment"
+            android:exported="false" />
+        <activity
+            android:name=".SetAppointmentDocActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

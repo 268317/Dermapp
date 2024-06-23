@@ -20,6 +20,7 @@ import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
+import com.example.dermapp.SetAppointmentDocActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
@@ -58,7 +59,7 @@ class StartDocActivity : AppCompatActivity() {
         appointments.add(
             Appointment(
                 doctorId = "Jan",
-                patientPesel = "Kowalski",
+                patientId = "Kowalski",
                 appointmentDate = Date()
             )
         )
@@ -66,7 +67,7 @@ class StartDocActivity : AppCompatActivity() {
         appointments.add(
             Appointment(
                 doctorId = "Adam",
-                patientPesel = "Nowak",
+                patientId = "Nowak",
                 appointmentDate = Date()
             )
         )
@@ -74,7 +75,7 @@ class StartDocActivity : AppCompatActivity() {
         appointments.add(
             Appointment(
                 doctorId = "Monika",
-                patientPesel = "Adamska",
+                patientId = "Adamska",
                 appointmentDate = Date()
             )
         )
@@ -82,7 +83,7 @@ class StartDocActivity : AppCompatActivity() {
         appointments.add(
             Appointment(
                 doctorId = "Anna",
-                patientPesel = "Kwiatek",
+                patientId = "Kwiatek",
                 appointmentDate = Date()
             )
         )
@@ -191,6 +192,11 @@ class StartDocActivity : AppCompatActivity() {
                 }
                 R.id.nav_make -> {
                     val intent = Intent(this, MakeAppointmentDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_set -> {
+                    val intent = Intent(this, SetAppointmentDocActivity::class.java)
                     startActivity(intent)
                     true
                 }

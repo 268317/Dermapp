@@ -17,7 +17,7 @@ class MyAdapterStartDocAppointment (private val appointmentsList: List<Appointme
         val appointment = appointmentsList[position]
         // wyciągnąć imię i nazwisko lekarza
         holder.firstNamePat.text = appointment.doctorId
-        holder.lastNamePat.text = appointment.patientPesel
+        holder.lastNamePat.text = appointment.patientId
         holder.appointmentDate.text = appointment.appointmentDate.toString()
     }
 

@@ -15,7 +15,7 @@ class MyAdapterStartPatAppointment(private val appointmentsList: MutableList<App
     override fun onBindViewHolder(holder: MyViewHolderStartPatAppointment, position: Int) {
         val appointment = appointmentsList[position]
         holder.firstNameDoc.text = appointment.doctorId
-        holder.lastNameDoc.text = appointment.patientPesel
+        holder.lastNameDoc.text = appointment.patientId
         holder.appointmentDate.text = appointment.appointmentDate.toString()
 
         holder.deleteButton.setOnClickListener {

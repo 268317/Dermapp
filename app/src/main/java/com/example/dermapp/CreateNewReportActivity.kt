@@ -1,6 +1,7 @@
 package com.example.dermapp
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -57,6 +58,7 @@ class CreateNewReportActivity : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private var selectedDoctorId: String? = null
     private val firestore = FirebaseFirestore.getInstance()
+    private lateinit var doctorsList: List<Doctor>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,13 +105,25 @@ class CreateNewReportActivity : AppCompatActivity() {
 
         val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
         doctorsCollection.get().addOnSuccessListener { doctorsResult ->
-            val doctorsList = doctorsResult.toObjects(Doctor::class.java)
+            doctorsList = doctorsResult.toObjects(Doctor::class.java)
             val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
             val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
             autoDoc.setAdapter(docAdapter)
         }
 
         loadDoctors()
+    }
+
+    private fun setupAutoCompleteTextView() {
+        autoDoc.setOnItemClickListener { _, _, position, _ ->
+            val selectedDoctorText = autoDoc.text.toString()
+            val selectedDoctor = doctorsList.find { "${it.firstName} ${it.lastName}" == selectedDoctorText }
+            selectedDoctor?.let {
+                selectedDoctorId = it.doctorId
+            } ?: run {
+                Log.e(TAG, "Coudn't find doctor on the list")
+            }
+        }
     }
 
     private fun openGallery() {
@@ -148,9 +162,10 @@ class CreateNewReportActivity : AppCompatActivity() {
                 val doctorNames = doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
                 val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
                 autoDoc.setAdapter(docAdapter)
-                autoDoc.setOnItemClickListener { _, _, position, _ ->
-                    selectedDoctorId = doctorsList[position].doctorId
-                }
+//                autoDoc.setOnItemClickListener { _, _, position, _ ->
+//                    selectedDoctorId = doctorsList[position].doctorId
+//                }
+                setupAutoCompleteTextView()
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
@@ -222,7 +237,7 @@ class CreateNewReportActivity : AppCompatActivity() {
                             documentReference.set(updatedAppointment)
                                     Toast.makeText(
                                         this,
-                                        "Appointment booked successfully.",
+                                        "Report sent successfully.",
                                         Toast.LENGTH_SHORT
                                     ).show()
 

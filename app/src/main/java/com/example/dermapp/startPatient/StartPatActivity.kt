@@ -61,7 +61,7 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
         appointments.add(
             Appointment(
                 doctorId = "Jan",
-                patientPesel = "Kowalski",
+                patientId = "Kowalski",
                 appointmentDate = Date()
             )
         )
@@ -69,7 +69,7 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
         appointments.add(
             Appointment(
                 doctorId = "Adam",
-                patientPesel = "Nowak",
+                patientId = "Nowak",
                 appointmentDate = Date()
             )
         )
@@ -77,7 +77,7 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
         appointments.add(
             Appointment(
                 doctorId = "Monika",
-                patientPesel = "Adamska",
+                patientId = "Adamska",
                 appointmentDate = Date()
             )
         )
@@ -85,7 +85,7 @@ class StartPatActivity : AppCompatActivity(), MyAdapterStartPatReport.OnItemClic
         appointments.add(
             Appointment(
                 doctorId = "Anna",
-                patientPesel = "Kwiatek",
+                patientId = "Kwiatek",
                 appointmentDate = Date()
             )
         )
