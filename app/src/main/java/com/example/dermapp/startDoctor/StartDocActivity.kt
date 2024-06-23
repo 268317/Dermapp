@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -29,6 +30,9 @@ import com.example.dermapp.messages.MessagesDocActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class StartDocActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -55,37 +59,39 @@ class StartDocActivity : AppCompatActivity() {
         recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val prescriptions: MutableList<Prescription> = ArrayList()
 
-//        appointments.add(
-//            Appointment(
-//                doctorId = "Jan",
-//                patientPesel = "Kowalski",
-//                appointmentDate = Date()
-//            )
-//        )
-//
-//        appointments.add(
-//            Appointment(
-//                doctorId = "Adam",
-//                patientPesel = "Nowak",
-//                appointmentDate = Date()
-//            )
-//        )
-//
-//        appointments.add(
-//            Appointment(
-//                doctorId = "Monika",
-//                patientPesel = "Adamska",
-//                appointmentDate = Date()
-//            )
-//        )
-//
-//        appointments.add(
-//            Appointment(
-//                doctorId = "Anna",
-//                patientPesel = "Kwiatek",
-//                appointmentDate = Date()
-//            )
-//        )
+        val format = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+        appointments.add(
+            Appointment(
+                doctorId = "Jan",
+                patientId = "Kowalski",
+                datetime = Date()
+            )
+        )
+
+        appointments.add(
+            Appointment(
+                doctorId = "Adam",
+                patientId = "Nowak",
+                datetime = Date()
+            )
+        )
+
+        appointments.add(
+            Appointment(
+                doctorId = "Monika",
+                patientId = "Adamska",
+                datetime = Date()
+            )
+        )
+
+        appointments.add(
+            Appointment(
+                doctorId = "Anna",
+                patientId = "Kwiatek",
+                datetime = Date()
+            )
+        )
 
         reports.add(
             MedicalReport(
@@ -115,7 +121,7 @@ class StartDocActivity : AppCompatActivity() {
 //            Prescription(
 //                doctorId = "Jan",
 //                patientId = "Kowalski",
-//                date = "10-06-2024".
+//                date = format.parse("10-06-2024")
 //            )
 //        )
 //
@@ -123,7 +129,7 @@ class StartDocActivity : AppCompatActivity() {
 //            Prescription(
 //                doctorId = "Jan",
 //                patientId = "Kowalski",
-//                date = "10-06-2024"
+//                date = format.parse("10-06-2024")
 //            )
 //        )
 //
@@ -131,7 +137,7 @@ class StartDocActivity : AppCompatActivity() {
 //            Prescription(
 //                doctorId = "Jan",
 //                patientId = "Kowalski",
-//                date = "10-06-2024"
+//                date = format.parse("10-06-2024")
 //            )
 //        )
 
@@ -194,6 +200,11 @@ class StartDocActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+                R.id.nav_set -> {
+                    val intent = Intent(this, SetAppointmentDocActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 R.id.nav_newReport -> {
                     val intent = Intent(this, CreateNewReportActivity::class.java)
                     startActivity(intent)
@@ -202,11 +213,6 @@ class StartDocActivity : AppCompatActivity() {
 
                 R.id.nav_myMailbox -> {
                     val intent = Intent(this, MessagesDocActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_set -> {
-                    val intent = Intent(this, SetAppointmentDocActivity::class.java)
                     startActivity(intent)
                     true
                 }
