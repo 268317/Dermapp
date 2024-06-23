@@ -19,7 +19,6 @@ import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Location
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startDoctor.StartDocActivity
-import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
@@ -41,6 +40,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,15 +60,16 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
         autoDateTime.setOnClickListener {
             if (selectedPatientId != null && selectedLocationId != null) {
-                loadDoctorAvailableDatetime(selectedPatientId!!, selectedLocationId!!)
+                loadDoctorAvailableDatetime(currentDocId!!, selectedLocationId!!)
             } else {
-                Toast.makeText(this, "Please select a doctor and location first.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please select a patient and location first.", Toast.LENGTH_SHORT).show()
             }
         }
 
         setupAutoCompleteTextView(autoPat)
         setupAutoCompleteTextView(autoLoc)
 
+        loadCurrentDoctorId()
         loadPatients()
 
         bookButton.setOnClickListener {
@@ -85,17 +86,33 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadCurrentDoctorId() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        firestore.collection("doctors").document(userId).get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val doctor = documentSnapshot.toObject(Doctor::class.java)
+                    currentDocId = doctor?.doctorId
+                } else {
+                    Toast.makeText(this, "Failed to load doctor information.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
     private fun loadPatients() {
-        val doctorsCollection = firestore.collection("patients")
-        doctorsCollection.get()
-            .addOnSuccessListener { doctorsResult ->
-                val patientsList = doctorsResult.toObjects(Patient::class.java)
+        val patientsCollection = firestore.collection("patients")
+        patientsCollection.get()
+            .addOnSuccessListener { patientsResult ->
+                val patientsList = patientsResult.toObjects(Patient::class.java)
                 val patientNames = patientsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
-                val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, patientNames)
-                autoPat.setAdapter(docAdapter)
+                val patAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, patientNames)
+                autoPat.setAdapter(patAdapter)
                 autoPat.setOnItemClickListener { _, _, position, _ ->
                     selectedPatientId = patientsList[position].appUserId
-                    loadDoctorLocations(selectedPatientId!!)
+                    loadDoctorLocations(currentDocId!!)
                 }
             }
             .addOnFailureListener { exception ->
@@ -137,12 +154,10 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
                 val availableDates = availableDatesCollection.toObjects(AvailableDates::class.java)
 
-                // Ustawienie formatera z odpowiednią strefą czasową
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
+                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
 
                 val dateTimes = availableDates.map { availableDate ->
-                    // Formatowanie daty i godziny zgodnie z formaterem
                     dateFormat.format(availableDate.datetime)
                 }.toTypedArray()
 
@@ -164,60 +179,52 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
     }
 
     private fun bookAppointment() {
-        val doctorId = selectedPatientId ?: return
+        val doctorId = currentDocId ?: return
         val locationId = selectedLocationId ?: return
         val dateTimeId = selectedDateTimeId ?: return
 
-        val doctor = autoPat.text.toString()
+        val patient = autoPat.text.toString()
         val location = autoLoc.text.toString()
         val dateTime = autoDateTime.text.toString()
 
-        if (doctor.isNotEmpty() && location.isNotEmpty() && dateTime.isNotEmpty()) {
+        if (patient.isNotEmpty() && location.isNotEmpty() && dateTime.isNotEmpty()) {
             try {
-                // Utworzenie formatera z odpowiednią strefą czasową
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
+                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
 
-                // Parsowanie daty i godziny z formatu tekstowego
                 val appointmentDate = dateFormat.parse(dateTime)
                 val appointmentTimeInMillis = appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
 
                 val appointment = Appointment(
                     doctorId = doctorId,
-                    patientId = FirebaseAuth.getInstance().currentUser?.uid,
+                    patientId = selectedPatientId,
                     appointmentDate = appointmentDate,
                     localization = location,
-                    diagnosis = "", // Set diagnosis if applicable
-                    recommendations = "" // Set recommendations if applicable
+                    diagnosis = "",
+                    recommendations = ""
                 )
 
-                // Zapis wizyty do Firestore z automatycznie generowanym appointmentId
                 firestore.collection("appointment")
                     .add(appointment)
                     .addOnSuccessListener { documentReference ->
                         val generatedAppointmentId = documentReference.id
 
-                        // Aktualizacja appointmentId z wygenerowanym ID
                         val updatedAppointment = appointment.copy(appointmentId = generatedAppointmentId)
 
-                        // Ustawienie appointmentId w dokumencie Firestore
                         documentReference.set(updatedAppointment)
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
 
                                 val generatedAppointmentId = documentReference.id
 
-                                // Aktualizacja pola isAvailable w kolekcji availableDates
                                 val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
                                 availableDatesRef
                                     .update("isAvailable", false)
                                     .addOnSuccessListener {
                                         Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
 
-                                        //Ustawienie powiadomienia
                                         setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
-                                        // Wyczyszczenie pól po udanym zapisaniu wizyty
                                         autoPat.setText("")
                                         autoLoc.setText("")
                                         autoDateTime.setText("")
@@ -247,11 +254,8 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onDestroy() {
         super.onDestroy()
-        // Zatrzymanie wszystkich korutyn w zakresie, aby uniknąć wycieków pamięci
         coroutineScope.cancel()
     }
 
@@ -261,7 +265,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000 // 24 h przed wizyta
+        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000
 
         Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
 
