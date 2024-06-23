@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
@@ -15,12 +16,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 
-class MyAdapterStartPatAppointment(private var appointmentsList: MutableList<Appointment>, private val context: Context) :
-    RecyclerView.Adapter<MyViewHolderStartPatAppointment>() {
+class MyAdapterStartPatAppointment(
+    private var appointmentsList: MutableList<Appointment>,
+    private val context: Context
+) : RecyclerView.Adapter<MyViewHolderStartPatAppointment>() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+
+    // SimpleDateFormat configured for date and time in Warsaw timezone
+    private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("Europe/Warsaw")
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatAppointment {
         val view = LayoutInflater.from(parent.context)
@@ -61,7 +69,7 @@ class MyAdapterStartPatAppointment(private var appointmentsList: MutableList<App
 
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsPatActivity::class.java)
-//            intent.putExtra("appointmentId", appointment.appointmentId)
+            intent.putExtra("appointmentId", appointment.appointmentId)
             context.startActivity(intent)
         }
 
@@ -71,13 +79,10 @@ class MyAdapterStartPatAppointment(private var appointmentsList: MutableList<App
             holder.appointmentDate.text = formattedDateTime
         }
 
-        // Handle delete button click (if needed)
+        // Handle delete button click
         holder.deleteButton.setOnClickListener {
-            // Handle deletion logic
-            // Example: removeAppointment(holder.adapterPosition)
+            showDeleteConfirmationDialog(appointment)
         }
-
-
     }
 
     override fun getItemCount(): Int {
@@ -89,5 +94,57 @@ class MyAdapterStartPatAppointment(private var appointmentsList: MutableList<App
         appointmentsList.clear()
         appointmentsList.addAll(newAppointments)
         notifyDataSetChanged()
+    }
+
+    // Function to show delete confirmation dialog
+    private fun showDeleteConfirmationDialog(appointment: Appointment) {
+        AlertDialog.Builder(context)
+            .setTitle("Delete Appointment")
+            .setMessage("Are you sure you want to delete this appointment?")
+            .setPositiveButton("Delete") { dialog, _ ->
+                deleteAppointment(appointment)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    // Function to delete appointment from Firestore
+    private fun deleteAppointment(appointment: Appointment) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                // Fetch corresponding availableData document
+                val querySnapshot = firestore.collection("availableData")
+                    .whereEqualTo("datetime", appointment.datetime)
+                    .get()
+                    .await()
+
+                if (!querySnapshot.isEmpty) {
+                    // Assuming there's only one document matching datetime
+                    val availableDataDoc = querySnapshot.documents[0]
+                    val availableDataDocId = availableDataDoc.id
+
+                    // Update isAvailable field to true in availableData
+                    firestore.collection("availableData")
+                        .document(availableDataDocId)
+                        .update("isAvailable", true)
+                        .await()
+                }
+
+                // Delete appointment document from appointment collection
+                firestore.collection("appointment")
+                    .document(appointment.appointmentId)
+                    .delete()
+                    .await()
+
+                // Update RecyclerView immediately after deletion
+                updateAppointments(appointmentsList.filter { it.appointmentId != appointment.appointmentId })
+
+            } catch (e: Exception) {
+                // Handle error while deleting appointment
+            }
+        }
     }
 }

@@ -32,7 +32,7 @@ class MyAdapterStartPatPrescription(private var prescriptionsList: MutableList<P
         // Fetch doctor details using coroutine
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val querySnapshot = firestore.collection("prescription")
+                val querySnapshot = firestore.collection("doctors")
                     .whereEqualTo("doctorId", prescription.doctorId)
                     .get()
                     .await()
@@ -56,10 +56,13 @@ class MyAdapterStartPatPrescription(private var prescriptionsList: MutableList<P
                 holder.lastNameDoc.text = "Doctor"
             }
         }
-
         prescription.date.let { prescriptionDate ->
             val formattedDateTime = dateTimeFormatter.format(prescriptionDate)
             holder.prescriptionDate.text = formattedDateTime
+        }
+
+        prescription.prescriptionText.let { prescriptionText ->
+            holder.prescriptionText.text = prescriptionText
         }
     }
 

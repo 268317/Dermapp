@@ -1,11 +1,7 @@
 package com.example.dermapp
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -64,7 +60,11 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
             if (selectedDoctorId != null && selectedLocationId != null) {
                 loadDoctorAvailableDatetime(selectedDoctorId!!, selectedLocationId!!)
             } else {
-                Toast.makeText(this, "Please select a doctor and location first.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please select a doctor and location first.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -92,8 +92,10 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         doctorsCollection.get()
             .addOnSuccessListener { doctorsResult ->
                 val doctorsList = doctorsResult.toObjects(Doctor::class.java)
-                val doctorNames = doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
-                val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
+                val doctorNames =
+                    doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
+                val docAdapter =
+                    ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
                 autoDoc.setAdapter(docAdapter)
                 autoDoc.setOnItemClickListener { _, _, position, _ ->
                     selectedDoctorId = doctorsList[position].doctorId
@@ -112,14 +114,19 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                 val locList = locationsResult.toObjects(Location::class.java)
                 val locNames = locList.map { it.fullAddress }.toTypedArray()
                 if (locNames.isNotEmpty()) {
-                    val locAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locNames)
+                    val locAdapter =
+                        ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locNames)
                     autoLoc.setAdapter(locAdapter)
                     autoLoc.setOnItemClickListener { _, _, position, _ ->
                         selectedLocationId = locList[position].locationId
                     }
                     autoLoc.showDropDown()
                 } else {
-                    Toast.makeText(this, "No locations available for the selected doctor.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "No locations available for the selected doctor.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .addOnFailureListener { exception ->
@@ -149,18 +156,30 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                 }.toTypedArray()
 
                 if (dateTimes.isNotEmpty()) {
-                    val dateTimeAdapter = ArrayAdapter(this@MakeAppointmentPatActivity, android.R.layout.simple_dropdown_item_1line, dateTimes)
+                    val dateTimeAdapter = ArrayAdapter(
+                        this@MakeAppointmentPatActivity,
+                        android.R.layout.simple_dropdown_item_1line,
+                        dateTimes
+                    )
                     autoDateTime.setAdapter(dateTimeAdapter)
                     autoDateTime.setOnItemClickListener { _, _, position, _ ->
                         selectedDateTimeId = availableDates[position].availableDateId
                     }
                     autoDateTime.showDropDown()
                 } else {
-                    Toast.makeText(this@MakeAppointmentPatActivity, "No available datetimes for the selected doctor and location.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MakeAppointmentPatActivity,
+                        "No available datetimes for the selected doctor and location.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@MakeAppointmentPatActivity, "Failed to load available datetimes: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MakeAppointmentPatActivity,
+                    "Failed to load available datetimes: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -182,7 +201,8 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
                 // Parsowanie daty i godziny z formatu tekstowego
                 val appointmentDate = dateFormat.parse(dateTime)
-                val appointmentTimeInMillis = appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
+                val appointmentTimeInMillis =
+                    appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
 
                 val appointment = Appointment(
                     doctorId = doctorId,
@@ -200,24 +220,32 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                         val generatedAppointmentId = documentReference.id
 
                         // Aktualizacja appointmentId z wygenerowanym ID
-                        val updatedAppointment = appointment.copy(appointmentId = generatedAppointmentId)
+                        val updatedAppointment =
+                            appointment.copy(appointmentId = generatedAppointmentId)
 
                         // Ustawienie appointmentId w dokumencie Firestore
                         documentReference.set(updatedAppointment)
                             .addOnSuccessListener {
-                                Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
-
-                                val generatedAppointmentId = documentReference.id
+                                Toast.makeText(
+                                    this,
+                                    "Appointment booked successfully.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
                                 // Aktualizacja pola isAvailable w kolekcji availableDates
-                                val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
+                                val availableDatesRef =
+                                    firestore.collection("availableDates").document(dateTimeId)
                                 availableDatesRef
                                     .update("isAvailable", false)
                                     .addOnSuccessListener {
-                                        Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            this,
+                                            "Availability updated successfully.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
 
-                                        //Ustawienie powiadomienia
-                                        setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
+                                        // Ustawienie powiadomienia
+                                        //setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
                                         // Wyczyszczenie pól po udanym zapisaniu wizyty
                                         autoDoc.setText("")
@@ -228,20 +256,33 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                                         selectedDateTimeId = null
                                     }
                                     .addOnFailureListener { e ->
-                                        Toast.makeText(this, "Failed to update availability: ${e.message}", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            this,
+                                            "Failed to update availability: ${e.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(this, "Failed to set appointmentId: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Failed to set appointmentId: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(this, "Failed to book appointment: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Failed to book appointment: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
             } catch (e: ParseException) {
                 e.printStackTrace()
-                Toast.makeText(this, "Failed to parse date: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to parse date: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
 
         } else {
@@ -249,24 +290,10 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onDestroy() {
         super.onDestroy()
         // Zatrzymanie wszystkich korutyn w zakresie, aby uniknąć wycieków pamięci
         coroutineScope.cancel()
     }
-
-    @SuppressLint("SuspiciousIndentation")
-    private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
-        val intent = Intent(this, ReminderBroadcast::class.java)
-
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000 // 24 h przed wizyta
-
-        Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
-    }
 }
+

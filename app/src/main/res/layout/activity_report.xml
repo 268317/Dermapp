@@ -1,129 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f5f5f5"
-    tools:context=".CreateNewReportActivity">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f5f5"
+        tools:context=".ReportActivity">
 
     <include
-        android:id="@+id/backHeader"
-        layout="@layout/header_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            android:id="@+id/backHeader"
+            layout="@layout/header_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout33"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/top_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backHeader">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/backHeader">
+            android:layout_width="408dp"
+            android:layout_height="694dp"
+            app:layout_constraintTop_toBottomOf="@+id/backHeader"
+            android:id="@+id/scrollView3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="3dp"
+            app:layout_constraintEnd_toEndOf="parent">
+
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
+                    android:id="@+id/linearLayoutCreateNewReport2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_height="610dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/white_background"
+                    android:elevation="3dp"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout3"
+                <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:background="@drawable/top_background"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-                        <!-- Zdjęcie w tle, na przykład -->
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="37dp"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
 
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <LinearLayout
-                            android:id="@+id/linearLayoutCreateNewReport"
+                    <TextView
+                            android:text="Doctor"
                             android:layout_width="match_parent"
-                            android:layout_height="610dp"
-                            android:layout_marginBottom="30dp"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginEnd="24dp"
-                            android:background="@drawable/white_background"
-                            android:elevation="3dp"
-                            android:orientation="vertical">
+                            android:layout_height="match_parent"
+                            android:id="@+id/textView3"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_gray_background"
+                            android:textSize="20sp"
+                            android:textAlignment="center" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="55dp"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
+                </LinearLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
 
-                                    <AutoCompleteTextView
-                                        android:id="@+id/autoCompleteTextViewDoctor"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="35dp"
-                                        android:background="@drawable/rounded_gray_background"
-                                        android:completionThreshold="0"
-                                        android:hint="Doctor"
-                                        android:paddingStart="16dp"
-                                        android:textColor="@android:color/black"
-                                        android:clickable="false"
-                                        android:focusable="false"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                            android:id="@+id/textViewCheckSymptomsCreateNewReport2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Symptoms"
+                            android:textAlignment="center"
+                            android:textColor="#FF9800"
+                            android:textSize="24sp" />
+                </LinearLayout>
 
-                                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            </LinearLayout>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="106dp"
+                        android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="109dp"
+                            android:id="@+id/textView2"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textAlignment="center"
+                            android:gravity="center" />
+                </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/textViewCheckSymptomsCreateNewReport"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Check symptoms"
-                                    android:textAlignment="center"
-                                    android:textColor="#FF9800"
-                                    android:textSize="24sp"
-                                    android:clickable="false"
-                                    android:focusable="false" />
-                            </LinearLayout>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/grey_background"
+                        android:orientation="horizontal">
 
-                            <!-- Pozostałe elementy XML -->
+                    <TextView
+                            android:text="EnterOtherInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/enterOtherInfoCreateNewReport22"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:gravity="center" />
 
-                        </LinearLayout>
-                    </ScrollView>
+                </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

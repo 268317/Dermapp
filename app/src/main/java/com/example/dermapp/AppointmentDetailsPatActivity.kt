@@ -2,78 +2,111 @@ package com.example.dermapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dermapp.database.AppUser
+import androidx.lifecycle.lifecycleScope
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class AppointmentDetailsPatActivity : AppCompatActivity() {
 
     // Declare UI elements
-    private lateinit var textViewAppointmentDatePat: TextView
-    private lateinit var textViewDateAppointmentPat: TextView
-    private lateinit var textViewDoctorAppointmentPat: TextView
-    private lateinit var textViewFirstNameAppointmentPat: TextView
-    private lateinit var textViewLastNameAppointmentPat: TextView
-    private lateinit var textViewDocIDAppointmentPat: TextView
+    private lateinit var appointmentDate: TextView
+    private lateinit var appointmentDocFirstName: TextView
+    private lateinit var appointmentDocLastName: TextView
+    private lateinit var appointmentDocId: TextView
+    private lateinit var appointmentLoc: TextView
     private lateinit var backButton: ImageButton
+
+    private val firestore = FirebaseFirestore.getInstance()
+    // SimpleDateFormat configured for date and time in Warsaw timezone
+    private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("Europe/Warsaw")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_pat)
 
-        // Initialize UI elements
-        textViewAppointmentDatePat = findViewById(R.id.textViewAppointmentDatePat)
-        textViewDateAppointmentPat = findViewById(R.id.textViewDateAppointmentPat)
-        textViewDoctorAppointmentPat = findViewById(R.id.textViewDoctorAppointmentPat)
-        textViewFirstNameAppointmentPat = findViewById(R.id.textViewFirstNameAppointmentPat)
-        textViewLastNameAppointmentPat = findViewById(R.id.textViewLastNameAppointmentPat)
-        textViewDocIDAppointmentPat = findViewById(R.id.textViewDocIDAppointmentPat)
+        // Initialize UI elements with error checking
+        appointmentDate = findViewById(R.id.textViewDateAppointmentPat)
+        appointmentDocFirstName = findViewById(R.id.textViewDoctorNameAppointmentPat)
+        appointmentDocLastName = findViewById(R.id.textViewDocLastNameAppointmentPat)
+        appointmentDocId = findViewById(R.id.textViewDoctorIDAppointmentPat)
+        appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
 
-        // Retrieve passed data
-        val appointmentId = intent.getStringExtra("appointmentId")
-        val appointmentDate = intent.getStringExtra("appointmentDate")
-        val doctorId = intent.getStringExtra("doctorId")
-
-        // Set data to the TextViews
-        textViewAppointmentDatePat.text = "Appointment date:"
-        textViewDateAppointmentPat.text = appointmentDate ?: "Unknown"
-        textViewDoctorAppointmentPat.text = "Doctor ID:"
-        textViewDocIDAppointmentPat.text = doctorId ?: "Unknown"
-
-        // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
+
         backButton.setOnClickListener {
             val intent = Intent(this, StartPatActivity::class.java)
             startActivity(intent)
         }
 
-        // Retrieve currently logged in user's UID
+        // Get UID of the currently logged in user
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Create reference to user document in Firestore
-        currentUserUid?.let { uid ->
-            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+        // Get appointmentId from Intent
+        val appointmentId = intent.getStringExtra("appointmentId")
 
-            // Get user data from Firestore
-            userRef.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    // Convert data to AppUser object
-                    val user = documentSnapshot.toObject(AppUser::class.java)
+        // Fetch appointment details using coroutine
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val appointmentDocument = firestore.collection("appointment")
+                    .document(appointmentId!!)
+                    .get()
+                    .await()
 
-                    // Update UI with user's first name
-                    user?.let {
-                        val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
-                        headerNameTextView.text = user.firstName
+                if (appointmentDocument.exists()) {
+                    val doctorId = appointmentDocument.getString("doctorId") ?: ""
+                    val datetime = appointmentDocument.getDate("datetime")
+                    val localization = appointmentDocument.getString("localization") ?: ""
+
+                    appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
+                    appointmentDocId.text = doctorId
+                    appointmentLoc.text = localization
+
+                    // Fetch doctor details
+                    val querySnapshot = firestore.collection("doctors")
+                        .whereEqualTo("doctorId", doctorId)
+                        .get()
+                        .await()
+
+                    if (!querySnapshot.isEmpty) {
+                        val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
+                        val firstName = doctorDocument.getString("firstName") ?: ""
+                        val lastName = doctorDocument.getString("lastName") ?: ""
+                        appointmentDocFirstName.text = firstName
+                        appointmentDocLastName.text = lastName
+                    } else {
+                        appointmentDocFirstName.text = "Unknown"
+                        appointmentDocLastName.text = "Doctor"
                     }
+
+                } else {
+                    appointmentDate.text = "Unknown"
+                    appointmentDocId.text = "doctorId"
+                    appointmentLoc.text = "localization"
+                    appointmentDocFirstName.text = "Unknown"
+                    appointmentDocLastName.text = "Doctor"
                 }
-            }.addOnFailureListener { exception ->
-                // Handle errors fetching data from Firestore
+            } catch (e: Exception) {
+                Log.e("AppointmentDetailsPat", "Error fetching appointment details", e)
+                appointmentDate.text = "Unknown"
+                appointmentDocId.text = "doctorId"
+                appointmentLoc.text = "localization"
+                appointmentDocFirstName.text = "Unknown"
+                appointmentDocLastName.text = "Doctor"
             }
         }
     }

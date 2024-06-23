@@ -15,12 +15,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 
-class MyAdapterStartPatReport(private var reportsList: MutableList<MedicalReport>, private val context: Context) :
-    RecyclerView.Adapter<MyViewHolderStartPatReport>() {
+class MyAdapterStartPatReport(
+    private var reportsList: MutableList<MedicalReport>,
+    private val context: Context
+) : RecyclerView.Adapter<MyViewHolderStartPatReport>() {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+
+    // SimpleDateFormat configured for date and time in Warsaw timezone
+    private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("Europe/Warsaw")
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatReport {
         val view = LayoutInflater.from(parent.context)
@@ -34,7 +41,7 @@ class MyAdapterStartPatReport(private var reportsList: MutableList<MedicalReport
         // Fetch doctor details using coroutine
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val querySnapshot = firestore.collection("report")
+                val querySnapshot = firestore.collection("doctors")
                     .whereEqualTo("doctorId", report.doctorId)
                     .get()
                     .await()
@@ -61,7 +68,7 @@ class MyAdapterStartPatReport(private var reportsList: MutableList<MedicalReport
 
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, ReportActivity::class.java)
-//            intent.putExtra("appointmentId", appointment.appointmentId)
+            intent.putExtra("reportId", report.medicalReportId)
             context.startActivity(intent)
         }
 
