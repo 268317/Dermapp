@@ -311,7 +311,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
         Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
 
-        //alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
+        alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
 
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis

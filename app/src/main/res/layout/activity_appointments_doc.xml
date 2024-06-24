@@ -16,6 +16,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:paddingLeft="16dp"
+        android:text="Booked appointments"
+        android:textSize="20sp">
+    </TextView>
+
     <ListView
         android:id="@+id/appointmentsListView"
         android:layout_width="match_parent"
