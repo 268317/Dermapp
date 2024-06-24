@@ -27,6 +27,9 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var appointmentDocId: TextView
     private lateinit var appointmentLoc: TextView
     private lateinit var backButton: ImageButton
+    private lateinit var textRecommendations: TextView
+    private lateinit var textDiagnosis: TextView
+
 
     private val firestore = FirebaseFirestore.getInstance()
     // SimpleDateFormat configured for date and time in Warsaw timezone
@@ -44,6 +47,8 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         appointmentDocLastName = findViewById(R.id.textViewDocLastNameAppointmentPat)
         appointmentDocId = findViewById(R.id.textViewDoctorIDAppointmentPat)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
+        textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
+        textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
 
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
@@ -71,11 +76,15 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                     val doctorId = appointmentDocument.getString("doctorId") ?: ""
                     val datetime = appointmentDocument.getDate("datetime")
                     val localization = appointmentDocument.getString("localization") ?: ""
+                    val recommendation = appointmentDocument.getString("recommendations") ?:""
+                    val diagnosis = appointmentDocument.getString("diagnosis") ?:""
 
                     appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
-                    appointmentDocId.text = doctorId
                     appointmentLoc.text = localization
+                    textRecommendations.text = recommendation
+                    textDiagnosis.text = diagnosis
 
+                    appointmentDocId.text = doctorId
                     // Fetch doctor details
                     val querySnapshot = firestore.collection("doctors")
                         .whereEqualTo("doctorId", doctorId)

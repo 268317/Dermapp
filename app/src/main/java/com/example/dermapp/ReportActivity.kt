@@ -42,6 +42,7 @@ class ReportActivity : AppCompatActivity() {
     private lateinit var addPhotoImageView: ImageView
     private lateinit var backButton: ImageButton
     private var photoUri: Uri? = null
+    private lateinit var firestore: FirebaseFirestore
 
     private lateinit var medicalReportId: String // Property to store medicalReportId
 
@@ -53,6 +54,7 @@ class ReportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
+        firestore = FirebaseFirestore.getInstance()
 
         initializeViews()
         val header = findViewById<LinearLayout>(R.id.backHeader)
@@ -85,61 +87,6 @@ class ReportActivity : AppCompatActivity() {
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_READ_EXTERNAL_STORAGE
-            )
-        } else {
-            loadImage()
-        }
-    }
-
-    private fun requestReadExternalStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_READ_EXTERNAL_STORAGE
-            )
-        } else {
-            loadImage()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_READ_EXTERNAL_STORAGE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Permission granted, load the image
-                loadImage()
-            } else {
-                // Permission denied, handle appropriately
-                Toast.makeText(this, "Permission denied to read external storage", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun loadImage() {
-        try {
-            val imageUri = Uri.parse("content://media/external/images/media/1000035185")
-            val inputStream = contentResolver.openInputStream(imageUri)
-            if (inputStream != null) {
-                addPhotoImageView.setImageURI(imageUri)
-            } else {
-                Toast.makeText(this, "Unable to access the image", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: SecurityException) {
-            Log.e(TAG, "SecurityException: ${e.message}")
-            Toast.makeText(this, "Unable to access the image due to security restrictions", Toast.LENGTH_SHORT).show()
-        } catch (e: FileNotFoundException) {
-            Log.e(TAG, "FileNotFoundException: ${e.message}")
-            Toast.makeText(this, "Image file not found", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun fetchMedicalReportFromFirestore(medicalReportId: String) {

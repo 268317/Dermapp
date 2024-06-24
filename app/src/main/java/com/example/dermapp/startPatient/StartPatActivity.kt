@@ -38,10 +38,12 @@ class StartPatActivity : AppCompatActivity() {
     private lateinit var recyclerViewAppointments: RecyclerView
     private lateinit var recyclerViewReports: RecyclerView
     private lateinit var recyclerViewPrescriptions: RecyclerView
+    private lateinit var recyclerViewArchivalAppointments: RecyclerView
 
     private lateinit var appointmentsAdapter: MyAdapterStartPatAppointment
     private lateinit var reportsAdapter: MyAdapterStartPatReport
     private lateinit var prescriptionsAdapter: MyAdapterStartPatPrescription
+    private lateinit var archivalAdapter: MyAdapterStartPatArchivalAppointment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,11 @@ class StartPatActivity : AppCompatActivity() {
         recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         prescriptionsAdapter = MyAdapterStartPatPrescription(mutableListOf(), this)
         recyclerViewPrescriptions.adapter = prescriptionsAdapter
+
+        recyclerViewArchivalAppointments = findViewById(R.id.RVstartPatArchivalAppointments)
+        recyclerViewArchivalAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        archivalAdapter = MyAdapterStartPatArchivalAppointment(mutableListOf(), this)
+        recyclerViewArchivalAppointments.adapter = archivalAdapter
 
         val header = findViewById<RelativeLayout>(R.id.includeHeader)
         menuButton = header.findViewById(R.id.menuButton)
@@ -108,6 +115,7 @@ class StartPatActivity : AppCompatActivity() {
         fetchAppointments()
         fetchReports()
         fetchPrescriptions()
+        fetchArchivalAppointments()
 
 
         // Pobierz UID aktualnie zalogowanego użytkownika
@@ -142,17 +150,47 @@ class StartPatActivity : AppCompatActivity() {
         currentUserUid?.let { uid ->
             appointmentsCollection
                 .whereEqualTo("patientId", uid)
-                .whereGreaterThanOrEqualTo("datetime", today)
                 .get()
                 .addOnSuccessListener { documents ->
                     val appointments = mutableListOf<Appointment>()
                     for (document in documents) {
                         val appointment = document.toObject(Appointment::class.java)
-                        appointments.add(appointment)
+                        if (appointment.datetime!! >= today) {
+                            appointments.add(appointment)
+                        }
                     }
                     val sortedAppointments = appointments.sortedBy { it.datetime }
 
                     appointmentsAdapter.updateAppointments(sortedAppointments)
+                    //appointmentsAdapter.updateAppointments(appointments)
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors
+                    // For example, Log.e(TAG, "Error fetching appointments", exception)
+                }
+        }
+    }
+
+    private fun fetchArchivalAppointments() {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
+        val today = Calendar.getInstance().time
+
+        currentUserUid?.let { uid ->
+            appointmentsCollection
+                .whereEqualTo("patientId", uid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val appointments = mutableListOf<Appointment>()
+                    for (document in documents) {
+                        val appointment = document.toObject(Appointment::class.java)
+                        if (appointment.datetime!! < today) {
+                            appointments.add(appointment)
+                        }
+                    }
+                    val sortedAppointments = appointments.sortedBy { it.datetime }
+
+                    archivalAdapter.updateAppointments(sortedAppointments)
                     //appointmentsAdapter.updateAppointments(appointments)
                 }
                 .addOnFailureListener { exception ->
@@ -184,8 +222,8 @@ class StartPatActivity : AppCompatActivity() {
                                 reports.add(report)
                                 Log.d(TAG, "Report: ${report}")
                             }
-                            val sortedReports = reports.sortedBy {
-                                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(it.date)
+                            val sortedReports = reports.sortedByDescending {
+                                SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).parse(it.date)
                             }
 
                             reportsAdapter.updateReports(sortedReports)

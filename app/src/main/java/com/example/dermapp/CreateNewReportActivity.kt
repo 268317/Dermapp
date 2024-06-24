@@ -9,8 +9,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dermapp.database.AppUser
-import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Patient
@@ -18,24 +16,14 @@ import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.text.ParseException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-import java.util.TimeZone
-
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.room.util.copy
-import kotlinx.coroutines.*
 import java.util.*
 
 class CreateNewReportActivity : AppCompatActivity() {
 
+    // Deklaracje pól UI i inne zmienne
     private lateinit var checkBoxItching: CheckBox
     private lateinit var checkBoxMoleChanges: CheckBox
     private lateinit var checkBoxRash: CheckBox
@@ -53,10 +41,11 @@ class CreateNewReportActivity : AppCompatActivity() {
     private lateinit var addPhotoImageView: ImageView
     private lateinit var backButton: ImageButton
     private lateinit var autoDoc: AutoCompleteTextView
+
     private var photoUri: Uri? = null
+    private var selectedDoctorId: String? = null
 
     private val PICK_IMAGE_REQUEST = 1
-    private var selectedDoctorId: String? = null
     private val firestore = FirebaseFirestore.getInstance()
     private lateinit var doctorsList: List<Doctor>
 
@@ -64,20 +53,34 @@ class CreateNewReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_report)
 
-        val header = findViewById<LinearLayout>(R.id.backHeader)
-        backButton = header.findViewById(R.id.arrowButton)
+        // Inicjalizacja UI i inne operacje
+        initializeUI()
 
-        backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
-            startActivity(intent)
-        }
-
+        // Przycisk "Send Report"
         val sendReportButton = findViewById<Button>(R.id.buttonUpdateProfilePat)
         sendReportButton.setOnClickListener {
-            saveReport(photoUri.toString())
+            // Przesyłanie zdjęcia do Firebase Storage
+            uploadPhotoToFirebaseStorage()
         }
 
-        // Initialize UI elements
+        // Obsługa kliknięcia na ImageView do dodawania zdjęcia
+        addPhotoImageView.setOnClickListener {
+            openGallery()
+        }
+
+        val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
+        doctorsCollection.get().addOnSuccessListener { doctorsResult ->
+            doctorsList = doctorsResult.toObjects(Doctor::class.java)
+            val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
+            val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
+            autoDoc.setAdapter(docAdapter)
+        }
+
+        loadDoctors()
+    }
+
+    private fun initializeUI() {
+        // Inicjalizacja pól UI
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
         checkBoxMoleChanges = findViewById(R.id.checkBoxMoleChangesCreateNewReport)
         checkBoxRash = findViewById(R.id.checkBoxRashCreateNewReport)
@@ -95,23 +98,17 @@ class CreateNewReportActivity : AppCompatActivity() {
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
         autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
 
-        // Handle checkbox states or other interactions
-        handleCheckboxes()
-
-        // Handle adding photo (click listener for ImageView)
-        addPhotoImageView.setOnClickListener {
-            openGallery()
+        // Przycisk back
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
         }
 
-        val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
-        doctorsCollection.get().addOnSuccessListener { doctorsResult ->
-            doctorsList = doctorsResult.toObjects(Doctor::class.java)
-            val doctorNames = doctorsList.map { "${it.lastName} ${it.firstName}" }.toTypedArray()
-            val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
-            autoDoc.setAdapter(docAdapter)
-        }
+        // Inicjalizacja AutoCompleteTextView dla lekarzy
+        setupAutoCompleteTextView()
 
-        loadDoctors()
     }
 
     private fun setupAutoCompleteTextView() {
@@ -127,6 +124,7 @@ class CreateNewReportActivity : AppCompatActivity() {
     }
 
     private fun openGallery() {
+        // Otwarcie galerii zdjęć
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
@@ -135,46 +133,40 @@ class CreateNewReportActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             photoUri = data.data
-            Log.d("onActivityResult", data.data.toString())
             addPhotoImageView.setImageURI(photoUri)
-            photoUri = Uri.parse(data.data.toString())
+            //photoUri = Uri.parse(data.data.toString())
         }
     }
 
-    private fun handleCheckboxes() {
-        // Example: Handle checkbox selections and get user input from EditText
-        val selectedSymptoms = mutableListOf<String>()
+    private fun uploadPhotoToFirebaseStorage() {
+        // Sprawdzenie czy URI zdjęcia jest null
+        photoUri?.let { uri ->
+            // Pobranie referencji do Firebase Storage
+            val storageRef = FirebaseStorage.getInstance().reference
+            // Utworzenie nazwy pliku dla zdjęcia w Storage
+            val photoRef = storageRef.child("reports/${UUID.randomUUID()}")
+            // Przesłanie zdjęcia do Firebase Storage
+            val uploadTask = photoRef.putFile(uri)
+            // Obsługa zdarzenia po przesłaniu zdjęcia
+            uploadTask.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Pobranie URL przesłanego zdjęcia
+                    photoRef.downloadUrl.addOnSuccessListener { url ->
+                        // Po udanym przesłaniu zdjęcia, zapisz raport w Firestore
+                        saveReport(url.toString())
 
-        checkBoxItching.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                selectedSymptoms.add("Itching")
-            } else {
-                selectedSymptoms.remove("Itching")
+                    }
+                } else {
+                    // Obsługa błędów przy przesyłaniu zdjęcia
+                    Toast.makeText(this, "Failed to upload photo: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
             }
+        } ?: run {
+            Toast.makeText(this, "Please select a photo to upload", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun loadDoctors() {
-        val doctorsCollection = firestore.collection("doctors")
-        doctorsCollection.get()
-            .addOnSuccessListener { doctorsResult ->
-                val doctorsList = doctorsResult.toObjects(Doctor::class.java)
-                val doctorNames = doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
-                val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
-                autoDoc.setAdapter(docAdapter)
-//                autoDoc.setOnItemClickListener { _, _, position, _ ->
-//                    selectedDoctorId = doctorsList[position].doctorId
-//                }
-                setupAutoCompleteTextView()
-            }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
-            }
-    }
-
-
-
-    private fun saveReport(photoUrl: String?) {
+    private fun saveReport(photoUrl: String) {
         // Pobierz UID aktualnie zalogowanego użytkownika
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -191,16 +183,15 @@ class CreateNewReportActivity : AppCompatActivity() {
                 user?.let {
                     val pesel = user.pesel
 
-
                     val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-                    dateFormat.timeZone =
-                        TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
+                    dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
 
                     val calendar = Calendar.getInstance()
                     val currentDate = calendar.time
                     val currentDateString = dateFormat.format(currentDate)
                     val doctorId = selectedDoctorId ?: return@addOnSuccessListener
 
+                    // Utwórz obiekt raportu medycznego
                     val report = MedicalReport(
                         doctorId = doctorId,
                         patientPesel = pesel,
@@ -218,50 +209,26 @@ class CreateNewReportActivity : AppCompatActivity() {
                         seborrhoea = checkBoxSeborrhoea.isChecked,
                         discoloration = checkBoxDiscoloration.isChecked,
                         otherInfo = enterOtherInfoEditText.text.toString(),
-                        attachmentUrl = photoUri.toString()
+                        attachmentUrl = photoUrl
                     )
 
-                    val doctor = autoDoc.text.toString()
-
-
+                    // Zapisz raport w Firestore
                     firestore.collection("report")
                         .add(report)
-                        .addOnSuccessListener {
-                                documentReference ->
+                        .addOnSuccessListener { documentReference ->
                             val generatedReportId = documentReference.id
-
                             // Aktualizacja appointmentId z wygenerowanym ID
-                            val updatedAppointment = report.copy(medicalReportId = generatedReportId)
-
+                            val updatedReport = report.copy(medicalReportId = generatedReportId)
                             // Ustawienie appointmentId w dokumencie Firestore
-                            documentReference.set(updatedAppointment)
+                            documentReference.set(updatedReport)
                             Toast.makeText(
                                 this,
                                 "Report sent successfully.",
                                 Toast.LENGTH_SHORT
                             ).show()
 
-
-                            // Wyczyszczenie pól po udanym zapisaniu wizyty
-                            autoDoc.setText("")
-                            selectedDoctorId = null
-                            checkBoxItching.isChecked = false
-                            checkBoxMoleChanges.isChecked = false
-                            checkBoxRash.isChecked = false
-                            checkBoxDryness.isChecked = false
-                            checkBoxPimples.isChecked = false
-                            checkBoxSevereAcne.isChecked = false
-                            checkBoxBlackheads.isChecked = false
-                            checkBoxWarts.isChecked = false
-                            checkBoxRedness.isChecked = false
-                            checkBoxDiscoloration.isChecked = false
-                            checkBoxSeborrhoea.isChecked = false
-                            checkBoxNewMole.isChecked = false
-                            enterOtherInfoEditText.text.clear()
-                            addPhotoTextView.text = ""
-                            addPhotoImageView.setImageURI(null)
-
-
+                            // Wyczyszczenie pól po udanym zapisaniu raportu
+                            clearFields()
                         }.addOnFailureListener { e ->
                             Toast.makeText(
                                 this,
@@ -270,12 +237,49 @@ class CreateNewReportActivity : AppCompatActivity() {
                             ).show()
                         }
                 }
-
             } else {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             }
         }.addOnFailureListener { exception ->
             // Obsłuż błędy pobierania danych z Firestore
+            exception.printStackTrace()
         }
+    }
+
+    private fun clearFields() {
+        // Wyczyszczenie pól po wysłaniu raportu
+        autoDoc.setText("")
+        selectedDoctorId = null
+        checkBoxItching.isChecked = false
+        checkBoxMoleChanges.isChecked = false
+        checkBoxRash.isChecked = false
+        checkBoxDryness.isChecked = false
+        checkBoxPimples.isChecked = false
+        checkBoxSevereAcne.isChecked = false
+        checkBoxBlackheads.isChecked = false
+        checkBoxWarts.isChecked = false
+        checkBoxRedness.isChecked = false
+        checkBoxDiscoloration.isChecked = false
+        checkBoxSeborrhoea.isChecked = false
+        checkBoxNewMole.isChecked = false
+        enterOtherInfoEditText.text.clear()
+        addPhotoTextView.text = ""
+        addPhotoImageView.setImageURI(null)
+    }
+
+    private fun loadDoctors() {
+        // Pobranie listy lekarzy z Firestore
+        val doctorsCollection = firestore.collection("doctors")
+        doctorsCollection.get()
+            .addOnSuccessListener { doctorsResult ->
+                val doctorsList = doctorsResult.toObjects(Doctor::class.java)
+                val doctorNames = doctorsList.map { "${it.firstName} ${it.lastName}" }.toTypedArray()
+                val docAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, doctorNames)
+                autoDoc.setAdapter(docAdapter)
+                setupAutoCompleteTextView()
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+            }
     }
 }

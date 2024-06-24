@@ -15,72 +15,93 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <include
-                android:id="@+id/includeHeader"
-                layout="@layout/header_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/includeHeader"
+                    layout="@layout/header_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
 
                 <TextView
-                        android:id="@+id/textViewUpcomingAppointmentsPat"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="bottom"
-                        android:text="Upcoming appointments"
-                        android:textSize="20sp"
-                        android:paddingLeft="16dp" />
+                    android:id="@+id/textViewUpcomingAppointmentsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="bottom"
+                    android:paddingLeft="16dp"
+                    android:text="Upcoming appointments"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatAppointment"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
 
                 <TextView
-                        android:id="@+id/textViewMyReportsPat"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="bottom"
-                        android:text="My reports"
-                        android:textSize="20sp"
-                        android:paddingLeft="16dp" />
+                    android:id="@+id/textViewMyReportsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="bottom"
+                    android:paddingLeft="16dp"
+                    android:text="My reports"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatReport"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
 
                 <TextView
-                        android:id="@+id/textViewMyPrescriptionsPat"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="bottom"
-                        android:text="My prescriptions"
-                        android:textSize="20sp"
-                        android:paddingLeft="16dp" />
+                    android:id="@+id/textViewMyPrescriptionsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="bottom"
+                    android:paddingLeft="16dp"
+                    android:text="My prescriptions"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartPatPrescription"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
+
+                <TextView
+                    android:id="@+id/textViewArchivalAppointmentsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="bottom"
+                    android:paddingLeft="16dp"
+                    android:text="Archival appointments"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/RVstartPatArchivalAppointments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal" />
+
+
             </LinearLayout>
-        </LinearLayout>
+
+        </ScrollView>
 
 
         <androidx.constraintlayout.widget.Guideline

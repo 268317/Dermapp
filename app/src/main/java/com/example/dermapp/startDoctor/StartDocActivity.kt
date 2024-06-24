@@ -282,8 +282,8 @@ class StartDocActivity : AppCompatActivity() {
                         val report = document.toObject(MedicalReport::class.java)
                         reports.add(report)
                     }
-                    val sortedReports = reports.sortedBy {
-                        SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(it.date)
+                    val sortedReports = reports.sortedByDescending {
+                        SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).parse(it.date)
                     }
 
                     reportsAdapter.updateReports(sortedReports)

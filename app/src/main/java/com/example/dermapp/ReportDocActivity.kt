@@ -98,32 +98,6 @@ class ReportDocActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestReadExternalStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_READ_EXTERNAL_STORAGE
-            )
-        } else {
-            loadImage()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_READ_EXTERNAL_STORAGE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Permission granted, load the image
-                loadImage()
-            } else {
-                // Permission denied, handle appropriately
-                Toast.makeText(this, "Permission denied to read external storage", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     private fun loadImage() {
         try {

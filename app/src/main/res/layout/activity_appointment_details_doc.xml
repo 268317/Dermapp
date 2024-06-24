@@ -228,7 +228,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|top"
-                android:hint="Diagnosis"
+                android:hint="-"
                 android:inputType="textMultiLine"
                 android:padding="15dp"
                 android:textSize="16sp" />
@@ -247,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|top"
-                android:hint="Recommendations"
+                android:hint="-"
                 android:inputType="textMultiLine"
                 android:layout_marginBottom="40dp"
                 android:padding="15dp"

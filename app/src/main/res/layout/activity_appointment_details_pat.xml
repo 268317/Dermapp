@@ -25,6 +25,13 @@
     <!--            app:layout_constraintEnd_toEndOf="parent"-->
     <!--            app:srcCompat="@drawable/baseline_spa_24" />-->
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/backHeader">
+
+
+
     <LinearLayout
             android:id="@+id/linearLayoutAppointmentPat"
             android:layout_width="match_parent"
@@ -204,6 +211,49 @@
                     android:textSize="20sp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewDiagnosisPat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Diagnosis:"
+            android:textColor="#FF9800"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/editTextMultiLineDiagnosisAppointmentPat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:hint="-"
+            android:inputType="textMultiLine"
+            android:padding="15dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewRecommendationsPat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Recommendations:"
+            android:textColor="#FF9800"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/editTextMultiLineRecommendationsAppointmentPat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:hint="-"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="40dp"
+            android:padding="15dp"
+            android:textSize="16sp" />
+
+
     </LinearLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

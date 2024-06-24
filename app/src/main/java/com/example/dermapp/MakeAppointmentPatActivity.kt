@@ -139,18 +139,19 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
     }
 
     private fun loadDoctorAvailableDatetime(doctorId: String, locationId: String) {
+        val now = Calendar.getInstance().time
         coroutineScope.launch {
             try {
                 val availableDatesCollection = firestore.collection("availableDates")
                     .whereEqualTo("doctorId", doctorId)
                     .whereEqualTo("locationId", locationId)
                     .whereEqualTo("isAvailable", true)
+                    .whereGreaterThan("datetime", now)
                     .get()
                     .await()
 
                 val availableDates = availableDatesCollection.toObjects(AvailableDates::class.java)
 
-                // Ustawienie formatera z odpowiednią strefą czasową
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
                 dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
 
