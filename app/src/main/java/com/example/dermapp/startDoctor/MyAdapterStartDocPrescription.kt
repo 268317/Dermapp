@@ -2,15 +2,12 @@ package com.example.dermapp.startDoctor
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Prescription
-import com.example.dermapp.startPatient.MyViewHolderStartPatPrescription
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +16,11 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * RecyclerView Adapter for displaying prescriptions in StartDocActivity.
+ * @param prescriptionsList List of Prescription objects to display.
+ * @param context Context of the activity or fragment using this adapter.
+ */
 class MyAdapterStartDocPrescription(
     private var prescriptionsList: MutableList<Prescription>,
     private val context: Context
@@ -27,12 +29,18 @@ class MyAdapterStartDocPrescription(
     private val firestore = FirebaseFirestore.getInstance()
     private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
+    /**
+     * Creates a new ViewHolder by inflating the layout defined in R.layout.activity_start_doc_prescription_view.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartDocPrescription {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_doc_prescription_view, parent, false)
         return MyViewHolderStartDocPrescription(view)
     }
 
+    /**
+     * Binds data to the ViewHolder at the specified position.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartDocPrescription, position: Int) {
         val prescription = prescriptionsList[position]
 
@@ -71,7 +79,7 @@ class MyAdapterStartDocPrescription(
           //  holder.prescriptionText.text = prescriptionText
         //}
 
-        // Handle delete button click
+        // Handle details button click to view prescription details
         holder.detailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsPatActivity::class.java)
             intent.putExtra("prescriptionId", prescription.prescriptionId)
@@ -79,11 +87,17 @@ class MyAdapterStartDocPrescription(
         }
     }
 
+    /**
+     * Returns the number of items in the prescriptionsList.
+     */
     override fun getItemCount(): Int {
         return prescriptionsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new data.
+     * @param newPrescriptions List of updated Prescription objects.
+     */
     fun updatePrescriptions(newPrescriptions: List<Prescription>) {
         prescriptionsList.clear()
         prescriptionsList.addAll(newPrescriptions)

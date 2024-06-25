@@ -18,11 +18,18 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * Adapter for displaying upcoming appointments in a RecyclerView for a patient.
+ *
+ * @param appointmentsList List of appointments to display
+ * @param context Context used for starting activities and dialogs
+ */
 class MyAdapterStartPatAppointment(
     private var appointmentsList: MutableList<Appointment>,
     private val context: Context
 ) : RecyclerView.Adapter<MyViewHolderStartPatAppointment>() {
 
+    // Firebase Firestore instance
     private val firestore = FirebaseFirestore.getInstance()
 
     // SimpleDateFormat configured for date and time in Warsaw timezone
@@ -30,12 +37,19 @@ class MyAdapterStartPatAppointment(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
+
+    /**
+     * Creates and returns a new ViewHolder for appointment items.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatAppointment {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_patient_upcoming_appointment_view, parent, false)
         return MyViewHolderStartPatAppointment(view)
     }
 
+    /**
+     * Binds data to the ViewHolder.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartPatAppointment, position: Int) {
         val appointment = appointmentsList[position]
 
@@ -67,6 +81,7 @@ class MyAdapterStartPatAppointment(
             }
         }
 
+        // Handle click on see details button
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsPatActivity::class.java)
             intent.putExtra("appointmentId", appointment.appointmentId)
@@ -85,18 +100,27 @@ class MyAdapterStartPatAppointment(
         }
     }
 
+    /**
+     * Returns the total number of appointments in the list.
+     */
     override fun getItemCount(): Int {
         return appointmentsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new appointment data.
+     *
+     * @param newAppointments New list of appointments to display
+     */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
         appointmentsList.addAll(newAppointments)
         notifyDataSetChanged()
     }
 
-    // Function to show delete confirmation dialog
+    /**
+     * Function to show delete confirmation dialog.
+     */
     private fun showDeleteConfirmationDialog(appointment: Appointment) {
         AlertDialog.Builder(context)
             .setTitle("Delete Appointment")
@@ -111,7 +135,9 @@ class MyAdapterStartPatAppointment(
             .show()
     }
 
-    // Function to delete appointment from Firestore
+    /**
+     * Function to delete appointment from Firestore.
+     */
     private fun deleteAppointment(appointment: Appointment) {
         GlobalScope.launch(Dispatchers.Main) {
             try {

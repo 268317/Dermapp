@@ -1,7 +1,6 @@
 package com.example.dermapp.startDoctor
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -25,7 +24,6 @@ import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ManageDocLocationsActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
-import com.example.dermapp.ReportActivity
 import com.example.dermapp.SetAppointmentDocActivity
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
@@ -38,9 +36,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
+/**
+ * Activity for displaying the dashboard and managing appointments, reports, and prescriptions for doctors.
+ */
 class StartDocActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuButton: ImageButton
@@ -58,6 +58,9 @@ class StartDocActivity : AppCompatActivity() {
     private lateinit var prescriptionsAdapter: MyAdapterStartDocPrescription
     private lateinit var archivalAdapter: MyAdapterStartDocArchivalAppointment
 
+    /**
+     * Initializes the activity and sets up the UI components.
+     */
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,7 @@ class StartDocActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
+        // Initialize RecyclerViews for displaying appointments, reports, prescriptions, and archival appointments
         recyclerViewAppointments = findViewById(R.id.RVstartDocAppointment)
         recyclerViewAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         appointmentsAdapter = MyAdapterStartDocAppointment(mutableListOf(), this)
@@ -87,8 +91,6 @@ class StartDocActivity : AppCompatActivity() {
         recyclerViewArchivalAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         archivalAdapter = MyAdapterStartDocArchivalAppointment(mutableListOf(), this)
         recyclerViewArchivalAppointments.adapter = archivalAdapter
-
-        val format = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
 
         // Apply window insets
@@ -112,13 +114,16 @@ class StartDocActivity : AppCompatActivity() {
             insets
         }
 
+        // Initialize header and menu button
         val header = findViewById<RelativeLayout>(R.id.includeHeaderDoc)
         menuButton = header.findViewById(R.id.menuButton)
 
+        // Open drawer when menu button is clicked
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        // Initialize navigation view and set item click listener
         navView = findViewById(R.id.nav_view)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -170,30 +175,27 @@ class StartDocActivity : AppCompatActivity() {
             }
         }
 
-        // Pobierz UID aktualnie zalogowanego użytkownika
+        // Load current user's first name into the header
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Utwórz odwołanie do dokumentu użytkownika w Firestore
         val userRef = FirebaseFirestore.getInstance().collection("doctors").document(currentUserUid!!)
 
-        // Pobierz dane użytkownika z Firestore
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                // Konwertuj dane na obiekt użytkownika
                 val user = documentSnapshot.toObject(AppUser::class.java)
 
-                // Sprawdź, czy udało się pobrać dane użytkownika
                 user?.let {
-                    // Ustaw imię użytkownika w nagłówku
                     val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
                     headerNameTextView.text = user.firstName
                 }
             }
-        }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
         }
     }
 
+    /**
+     * Loads the current doctor's ID from Firebase Authentication.
+     * If successful, initiates fetching of appointments, prescriptions, reports, and archival appointments.
+     */
     private fun loadCurrentDoctorId() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         firestore.collection("doctors").document(userId).get()
@@ -215,6 +217,9 @@ class StartDocActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Fetches upcoming appointments for the current doctor from Firestore.
+     */
     private fun fetchAppointments() {
         val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
         val today = Calendar.getInstance().time
@@ -241,6 +246,9 @@ class StartDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Fetches archival appointments (past appointments) for the current doctor from Firestore.
+     */
     private fun fetchArchivalAppointments() {
         val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
         val today = Calendar.getInstance().time
@@ -262,13 +270,12 @@ class StartDocActivity : AppCompatActivity() {
                     archivalAdapter.updateAppointments(sortedAppointments)
                     //appointmentsAdapter.updateAppointments(appointments)
                 }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching appointments", exception)
-                }
         }
     }
 
+    /**
+     * Fetches medical reports for the current doctor from Firestore.
+     */
     private fun fetchReports() {
         val reportsCollection = FirebaseFirestore.getInstance().collection("report")
 
@@ -289,13 +296,12 @@ class StartDocActivity : AppCompatActivity() {
                     reportsAdapter.updateReports(sortedReports)
                     //reportsAdapter.updateReports(reports)
                 }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching prescriptions", exception)
-                }
         }
     }
 
+    /**
+     * Fetches prescriptions issued by the current doctor from Firestore.
+     */
     private fun fetchPrescriptions() {
         val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
 
@@ -313,10 +319,6 @@ class StartDocActivity : AppCompatActivity() {
 
                     prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
                     //prescriptionsAdapter.updatePrescriptions(prescriptions)
-                }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching prescriptions", exception)
                 }
         }
     }

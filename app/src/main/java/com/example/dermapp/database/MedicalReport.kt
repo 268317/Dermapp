@@ -2,6 +2,28 @@ package com.example.dermapp.database
 
 import com.google.firebase.firestore.PropertyName
 
+/**
+ * Data class representing a medical report in the Firestore database.
+ *
+ * @property medicalReportId The ID of the medical report.
+ * @property doctorId The ID of the doctor associated with the medical report.
+ * @property patientPesel The PESEL (Personal Identification Number) of the patient associated with the medical report.
+ * @property date The date of the medical report.
+ * @property itching Indicates if itching is present in the medical report.
+ * @property rash Indicates if rash is present in the medical report.
+ * @property redness Indicates if redness is present in the medical report.
+ * @property newMole Indicates if a new mole is reported in the medical report.
+ * @property moleChanges Indicates if there are changes in moles reported in the medical report.
+ * @property blackheads Indicates if blackheads are reported in the medical report.
+ * @property pimples Indicates if pimples are reported in the medical report.
+ * @property warts Indicates if warts are reported in the medical report.
+ * @property dryness Indicates if dryness is reported in the medical report.
+ * @property severeAcne Indicates if severe acne is reported in the medical report.
+ * @property seborrhoea Indicates if seborrhoea is reported in the medical report.
+ * @property discoloration Indicates if discoloration is reported in the medical report.
+ * @property otherInfo Additional information provided in the medical report.
+ * @property attachmentUrl The URL of any attachment (e.g., image) associated with the medical report.
+ */
 data class MedicalReport(
     @get:PropertyName("medicalReportId") @set:PropertyName("medicalReportId") open var medicalReportId: String = "",
     @get:PropertyName("doctorId") @set:PropertyName("doctorId") open var doctorId: String = "",

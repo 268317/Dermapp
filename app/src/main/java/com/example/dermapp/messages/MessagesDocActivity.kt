@@ -16,13 +16,20 @@ import com.example.dermapp.R
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.database.Patient
 
+/**
+ * Activity for displaying messages and interacting with patients as a doctor.
+ */
 class MessagesDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
 
+    /**
+     * Initializes the activity, sets up RecyclerView, and prepares UI elements.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messages_doc)
 
+        // Initialize RecyclerView and data list
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewMessagesDoc)
         val items: MutableList<Patient> = ArrayList()
 
@@ -50,6 +57,7 @@ class MessagesDocActivity : AppCompatActivity() {
 //        })
 
 
+        // Example data addition (replace with Firebase database retrieval)
         items.add(
             Patient(
                 appUserId = "1234",
@@ -63,6 +71,7 @@ class MessagesDocActivity : AppCompatActivity() {
         )
 
 
+        // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeaderDoc)
         backButton = header.findViewById(R.id.arrowButton)
 
@@ -84,13 +93,21 @@ class MessagesDocActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = MyAdapterMessagesDoc(items)
 
-        // Apply window insets
+        // Apply window insets to handle system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
     }
+
+    /**
+     * Sets click listeners for patient's image and name to handle interactions.
+     *
+     * @param imageViewId The ID of the ImageView representing the patient's image.
+     * @param textViewId The ID of the TextView representing the patient's name.
+     * @param patientName The name of the patient associated with the views.
+     */
 
     private fun setPatientEntryClickListener(imageViewId: Int, textViewId: Int, patientName: String) {
         val imageView = findViewById<ImageView>(imageViewId)
@@ -107,6 +124,11 @@ class MessagesDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays a short toast message on the screen.
+     *
+     * @param message The message to be displayed in the toast.
+     */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

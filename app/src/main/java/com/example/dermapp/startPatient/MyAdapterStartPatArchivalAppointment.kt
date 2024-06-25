@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
@@ -18,11 +17,18 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * Adapter for displaying archival appointments in a RecyclerView for a patient.
+ *
+ * @param appointmentsList List of appointments to display
+ * @param context Context used for starting activities and dialogs
+ */
 class MyAdapterStartPatArchivalAppointment(
     private var appointmentsList: MutableList<Appointment>,
     private val context: Context
 ) : RecyclerView.Adapter<MyViewHolderStartPatArchivalAppointment>() {
 
+    // Firebase Firestore instance
     private val firestore = FirebaseFirestore.getInstance()
 
     // SimpleDateFormat configured for date and time in Warsaw timezone
@@ -30,12 +36,18 @@ class MyAdapterStartPatArchivalAppointment(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
+    /**
+     * Creates and returns a new ViewHolder for appointment items.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatArchivalAppointment {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_patient_archival_appointment_view, parent, false)
         return MyViewHolderStartPatArchivalAppointment(view)
     }
 
+    /**
+     * Binds data to the ViewHolder.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartPatArchivalAppointment, position: Int) {
         val appointment = appointmentsList[position]
 
@@ -67,6 +79,7 @@ class MyAdapterStartPatArchivalAppointment(
             }
         }
 
+        // Handle click on see details button
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsPatActivity::class.java)
             intent.putExtra("appointmentId", appointment.appointmentId)
@@ -81,11 +94,19 @@ class MyAdapterStartPatArchivalAppointment(
 
     }
 
+    /**
+     * Returns the total number of appointments in the list.
+     */
+
     override fun getItemCount(): Int {
         return appointmentsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new appointment data.
+     *
+     * @param newAppointments New list of appointments to display
+     */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
         appointmentsList.addAll(newAppointments)

@@ -2,6 +2,19 @@ package com.example.dermapp.database
 
 import com.google.firebase.database.PropertyName
 
+/**
+ * Data class representing a doctor in the dermatology application.
+ *
+ * @property doctorId Unique identifier for the doctor.
+ * @property appUserId Unique identifier inherited from AppUser.
+ * @property email Email address of the doctor.
+ * @property password Password of the doctor.
+ * @property firstName First name of the doctor.
+ * @property lastName Last name of the doctor.
+ * @property address Address of the doctor.
+ * @property phone Phone number of the doctor.
+ * @property birthDate Date of birth of the doctor.
+ */
 data class Doctor(
     @get:PropertyName("userId") @set:PropertyName("userId") override var appUserId: String = "",
     @get:PropertyName("email") @set:PropertyName("email") override var email: String = "",

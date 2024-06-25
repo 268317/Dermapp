@@ -6,6 +6,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 
+/**
+ * ViewHolder class for displaying archival appointments in a RecyclerView in StartDocActivity.
+ * @param itemView The view representing each item in the RecyclerView.
+ */
 class MyViewHolderStartDocArchivalAppointment(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val firstNamePat : TextView
     //val lastNamePat : TextView

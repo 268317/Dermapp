@@ -6,6 +6,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 
+/**
+ * ViewHolder class for displaying prescriptions in a RecyclerView in StartDocActivity.
+ * @param itemView The view representing each item in the RecyclerView.
+ */
 class MyViewHolderStartDocPrescription(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val firstNamePat : TextView
     //val lastNamePat : TextView

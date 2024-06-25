@@ -6,6 +6,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 
+/**
+ * ViewHolder for displaying patient information in a RecyclerView for doctor messages.
+ *
+ * @param itemView The view corresponding to each item in the RecyclerView.
+ */
 class MyViewHolderMessagesDoc(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val imagePat : ImageView
     val firstNamePat : TextView

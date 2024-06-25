@@ -17,10 +17,18 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * Adapter for displaying medical reports in a RecyclerView for a patient.
+ *
+ * @param reportsList List of medical reports to display
+ * @param context Context used for starting activities
+ */
 class MyAdapterStartPatReport(
     private var reportsList: MutableList<MedicalReport>,
     private val context: Context
 ) : RecyclerView.Adapter<MyViewHolderStartPatReport>() {
+
+    // Firebase Firestore instance
 
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -29,12 +37,18 @@ class MyAdapterStartPatReport(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
+    /**
+     * Creates and returns a new ViewHolder for medical report items.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatReport {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_patient_reports_view, parent, false)
         return MyViewHolderStartPatReport(view)
     }
 
+    /**
+     * Binds data to the ViewHolder.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartPatReport, position: Int) {
         val report = reportsList[position]
 
@@ -66,24 +80,32 @@ class MyAdapterStartPatReport(
             }
         }
 
+        // Set click listener for seeing details of the report
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, ReportActivity::class.java)
             intent.putExtra(ReportActivity.MEDICAL_REPORT_ID_EXTRA, report.medicalReportId)
             context.startActivity(intent)
         }
 
-        // Set appointment date and time
+        // Set appointment date and time on the ViewHolder
         report.date.let { reportDate ->
             //val formattedDateTime = dateTimeFormatter.format(reportDate)
             holder.reportDate.text = report.date//formattedDateTime
         }
     }
 
+    /**
+     * Returns the total number of medical reports in the list.
+     */
     override fun getItemCount(): Int {
         return reportsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new medical report data.
+     *
+     * @param newReport New list of medical reports to display
+     */
     fun updateReports(newReport: List<MedicalReport>) {
         reportsList.clear()
         reportsList.addAll(newReport)

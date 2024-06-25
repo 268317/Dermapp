@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsDocActivity
-import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Appointment
-import com.example.dermapp.startPatient.MyViewHolderStartPatAppointment
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -20,6 +18,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * RecyclerView Adapter for displaying upcoming appointments in StartDocActivity.
+ * @param appointmentsList List of Appointment objects to display.
+ * @param context Context of the activity or fragment using this adapter.
+ */
 class MyAdapterStartDocAppointment(
     private var appointmentsList: MutableList<Appointment>,
     private val context: Context
@@ -32,17 +35,22 @@ class MyAdapterStartDocAppointment(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
+    /**
+     * Creates a new ViewHolder by inflating the layout defined in R.layout.activity_start_doc_upcoming_appointment_view.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartDocAppointment {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_doc_upcoming_appointment_view, parent, false)
         return MyViewHolderStartDocAppointment(view)
     }
 
-
+    /**
+     * Binds data to the ViewHolder at the specified position.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartDocAppointment, position: Int) {
         val appointment = appointmentsList[position]
 
-        // Fetch doctor details using coroutine
+        // Fetch patient details using coroutine
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val querySnapshot = firestore.collection("patients")
@@ -55,18 +63,16 @@ class MyAdapterStartDocAppointment(
                     val firstName = doctorDocument.getString("firstName") ?: ""
                     val lastName = doctorDocument.getString("lastName") ?: ""
 
-                    // Update ViewHolder with doctor's name
                     holder.firstNamePat.text = "${firstName} ${lastName}"
                 } else {
-                    // Handle case where no matching doctor document is found
                     holder.firstNamePat.text = "Unknown Patient"
                 }
             } catch (e: Exception) {
-                // Handle Firestore fetch errors
                 holder.firstNamePat.text = "Unknown Patient"
             }
         }
 
+        // Handle see details button click to view appointment details
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsDocActivity::class.java)
             intent.putExtra("appointmentId", appointment.appointmentId)
@@ -85,18 +91,27 @@ class MyAdapterStartDocAppointment(
         }
     }
 
+    /**
+     * Returns the number of items in the appointmentsList.
+     */
     override fun getItemCount(): Int {
         return appointmentsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new data.
+     * @param newAppointments List of updated Appointment objects.
+     */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
         appointmentsList.addAll(newAppointments)
         notifyDataSetChanged()
     }
 
-    // Function to show delete confirmation dialog
+    /**
+     * Function to show delete confirmation dialog.
+     * @param appointment The appointment to delete.
+     */
     private fun showDeleteConfirmationDialog(appointment: Appointment) {
         AlertDialog.Builder(context)
             .setTitle("Delete Appointment")
@@ -111,7 +126,10 @@ class MyAdapterStartDocAppointment(
             .show()
     }
 
-    // Function to delete appointment from Firestore
+    /**
+     * Function to delete appointment from Firestore and update RecyclerView.
+     * @param appointment The appointment to delete.
+     */
     private fun deleteAppointment(appointment: Appointment) {
         GlobalScope.launch(Dispatchers.Main) {
             try {

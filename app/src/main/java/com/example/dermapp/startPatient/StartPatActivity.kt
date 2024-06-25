@@ -30,6 +30,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * Activity for patients to view their appointments, reports, prescriptions,
+ * and manage other functionalities like profile and messaging.
+ */
 class StartPatActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuButton: ImageButton
@@ -45,13 +49,18 @@ class StartPatActivity : AppCompatActivity() {
     private lateinit var prescriptionsAdapter: MyAdapterStartPatPrescription
     private lateinit var archivalAdapter: MyAdapterStartPatArchivalAppointment
 
+    /**
+     * Initializes the activity, sets up UI elements, and fetches necessary data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_start_patient)
 
+        // Initialize DrawerLayout and its components
         drawerLayout = findViewById(R.id.drawer_layout)
 
+        // Initialize RecyclerViews and adapters for appointments, reports, prescriptions, and archival appointments
         recyclerViewAppointments = findViewById(R.id.RVstartPatAppointment)
         recyclerViewAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         appointmentsAdapter = MyAdapterStartPatAppointment(mutableListOf(), this)
@@ -72,6 +81,7 @@ class StartPatActivity : AppCompatActivity() {
         archivalAdapter = MyAdapterStartPatArchivalAppointment(mutableListOf(), this)
         recyclerViewArchivalAppointments.adapter = archivalAdapter
 
+        // Initialize menu button in the header to open navigation drawer
         val header = findViewById<RelativeLayout>(R.id.includeHeader)
         menuButton = header.findViewById(R.id.menuButton)
 
@@ -79,6 +89,7 @@ class StartPatActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        // Set navigation item click listener for the navigation drawer
         navView = findViewById(R.id.nav_view)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -112,27 +123,21 @@ class StartPatActivity : AppCompatActivity() {
             }
         }
 
+        // Fetch data for appointments, reports, prescriptions, and archival appointments
         fetchAppointments()
         fetchReports()
         fetchPrescriptions()
         fetchArchivalAppointments()
 
 
-        // Pobierz UID aktualnie zalogowanego użytkownika
+        // Fetch current user's data and display their first name in the header
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        // Utwórz odwołanie do dokumentu użytkownika w Firestore
         val userRef = FirebaseFirestore.getInstance().collection("users").document(currentUserUid!!)
-
-        // Pobierz dane użytkownika z Firestore
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                // Konwertuj dane na obiekt użytkownika
                 val user = documentSnapshot.toObject(AppUser::class.java)
 
-                // Sprawdź, czy udało się pobrać dane użytkownika
                 user?.let {
-                    // Ustaw imię użytkownika w nagłówku
                     val headerNameTextView: TextView = findViewById(R.id.firstNameTextView)
                     headerNameTextView.text = user.firstName
                 }
@@ -142,6 +147,9 @@ class StartPatActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Fetches upcoming appointments for the current patient from Firestore.
+     */
     private fun fetchAppointments() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
@@ -164,13 +172,12 @@ class StartPatActivity : AppCompatActivity() {
                     appointmentsAdapter.updateAppointments(sortedAppointments)
                     //appointmentsAdapter.updateAppointments(appointments)
                 }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching appointments", exception)
-                }
         }
     }
 
+    /**
+     * Fetches past appointments (archival) for the current patient from Firestore.
+     */
     private fun fetchArchivalAppointments() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val appointmentsCollection = FirebaseFirestore.getInstance().collection("appointment")
@@ -193,13 +200,12 @@ class StartPatActivity : AppCompatActivity() {
                     archivalAdapter.updateAppointments(sortedAppointments)
                     //appointmentsAdapter.updateAppointments(appointments)
                 }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching appointments", exception)
-                }
         }
     }
 
+    /**
+     * Fetches medical reports for the current patient from Firestore.
+     */
     private fun fetchReports() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -229,15 +235,15 @@ class StartPatActivity : AppCompatActivity() {
                             reportsAdapter.updateReports(sortedReports)
                                 //reportsAdapter.updateReports(reports)
                         }
-                        .addOnFailureListener { exception ->
-                        }
                 } ?: run {
                 }
-            }.addOnFailureListener { exception ->
             }
         }
     }
 
+    /**
+     * Fetches prescriptions for the current patient from Firestore.
+     */
     private fun fetchPrescriptions() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
@@ -256,10 +262,6 @@ class StartPatActivity : AppCompatActivity() {
 
                     prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
                     //prescriptionsAdapter.updatePrescriptions(prescriptions)
-                }
-                .addOnFailureListener { exception ->
-                    // Handle errors
-                    // For example, Log.e(TAG, "Error fetching prescriptions", exception)
                 }
         }
     }

@@ -2,6 +2,20 @@ package com.example.dermapp.database
 
 import com.google.firebase.firestore.PropertyName
 
+/**
+ * Open class representing a user in the dermatology application.
+ *
+ * @property appUserId Unique identifier for the user.
+ * @property email Email address of the user.
+ * @property password Password of the user.
+ * @property firstName First name of the user.
+ * @property lastName Last name of the user.
+ * @property address Address of the user.
+ * @property phone Phone number of the user.
+ * @property birthDate Birth date of the user.
+ * @property role Role of the user (e.g., doctor, patient).
+ * @property avatar Avatar image identifier for the user.
+ */
 open class AppUser(
     @get:PropertyName("appUserId") @set:PropertyName("appUserId") open var appUserId: String = "",
     @get:PropertyName("email") @set:PropertyName("email") open var email: String = "",
@@ -12,4 +26,5 @@ open class AppUser(
     @get:PropertyName("phone") @set:PropertyName("phone") open var phone: String = "",
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
     @get:PropertyName("role") @set:PropertyName("role") open var role: String = "",
-    @get:PropertyName("avatar") @set:PropertyName("avatar") open var avatar: Int = 0)
+    @get:PropertyName("avatar") @set:PropertyName("avatar") open var avatar: Int = 0
+)

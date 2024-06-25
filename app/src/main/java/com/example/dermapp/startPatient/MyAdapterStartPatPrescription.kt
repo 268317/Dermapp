@@ -16,20 +16,35 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Adapter for displaying prescriptions in a RecyclerView for a patient.
+ *
+ * @param prescriptionsList List of prescriptions to display
+ * @param context Context used for starting activities and dialogs
+ */
 class MyAdapterStartPatPrescription(
     private var prescriptionsList: MutableList<Prescription>,
     private val context: Context
 ) : RecyclerView.Adapter<MyViewHolderStartPatPrescription>() {
 
+    // Firebase Firestore instance
     private val firestore = FirebaseFirestore.getInstance()
+
+    // SimpleDateFormat configured for date and time
     private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
+    /**
+     * Creates and returns a new ViewHolder for prescription items.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatPrescription {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.activity_start_patient_prescription_view, parent, false)
         return MyViewHolderStartPatPrescription(view)
     }
 
+    /**
+     * Binds data to the ViewHolder.
+     */
     override fun onBindViewHolder(holder: MyViewHolderStartPatPrescription, position: Int) {
         val prescription = prescriptionsList[position]
 
@@ -77,18 +92,29 @@ class MyAdapterStartPatPrescription(
         }
     }
 
+    /**
+     * Returns the total number of prescriptions in the list.
+     */
     override fun getItemCount(): Int {
         return prescriptionsList.size
     }
 
-    // Update adapter with new data
+    /**
+     * Updates the adapter with new prescription data.
+     *
+     * @param newPrescriptions New list of prescriptions to display
+     */
     fun updatePrescriptions(newPrescriptions: List<Prescription>) {
         prescriptionsList.clear()
         prescriptionsList.addAll(newPrescriptions)
         notifyDataSetChanged()
     }
 
-    // Function to show delete confirmation dialog
+    /**
+     * Function to show delete confirmation dialog.
+     *
+     * @param prescription Prescription object to delete
+     */
     private fun showDeleteConfirmationDialog(prescription: Prescription) {
         AlertDialog.Builder(context)
             .setTitle("Delete Prescription")
@@ -103,7 +129,11 @@ class MyAdapterStartPatPrescription(
             .show()
     }
 
-    // Function to delete prescription from Firestore
+    /**
+     * Function to delete prescription from Firestore.
+     *
+     * @param prescription Prescription object to delete
+     */
     private fun deletePrescription(prescription: Prescription) {
         GlobalScope.launch(Dispatchers.Main) {
             try {
@@ -122,12 +152,10 @@ class MyAdapterStartPatPrescription(
                     Log.d("MyAdapter", "Prescription deleted successfully")
                 } else {
                     Log.e("MyAdapter", "Prescription ID is empty or null")
-                    // Obsłuż przypadek, gdy prescriptionId jest puste
                 }
 
             } catch (e: Exception) {
                 Log.e("MyAdapter", "Error deleting prescription: ${e.message}")
-                // Obsłuż błąd usuwania recepty
             }
         }
     }
