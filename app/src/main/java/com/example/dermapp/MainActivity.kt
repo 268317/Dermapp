@@ -1,4 +1,5 @@
 package com.example.dermapp
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,28 +11,32 @@ import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 /**
- * Aktywność obsługująca logowanie użytkownika za pomocą Firebase Authentication.
+ * Activity responsible for user login using Firebase Authentication.
  */
 class MainActivity : BaseActivity() {
 
+    // UI elements
     private var inputEmail: EditText? = null
     private var inputPassword: EditText? = null
     private var loginButton: Button? = null
     private var signUpButton: Button? = null
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements and sets click listeners for login and sign up buttons.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Inicjalizacja pól wejściowych i przycisku logowania
+        // Initialize input fields and login button
         inputEmail = findViewById(R.id.editTextEmailAddress)
         inputPassword = findViewById(R.id.editTextPassword)
         loginButton = findViewById(R.id.LogInButton)
         signUpButton = findViewById(R.id.SignUpButton)
 
-        // Ustawienie nasłuchiwania kliknięć przycisku logowania
+        // Set click listeners for login and sign up buttons
         loginButton?.setOnClickListener{
             logInRegisteredUser()
         }
@@ -39,65 +44,59 @@ class MainActivity : BaseActivity() {
         signUpButton?.setOnClickListener{
             goToSignIn()
         }
-
     }
 
-
     /**
-     * Metoda walidująca wprowadzone dane logowania.
-     * @return True, jeśli dane są poprawne, w przeciwnym razie False.
+     * Validates the entered login details.
+     * @return True if details are valid, false otherwise.
      */
     private fun validateLoginDetails(): Boolean {
-
-        return when{
+        return when {
             TextUtils.isEmpty(inputEmail?.text.toString().trim{ it <= ' '}) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
                 false
             }
 
             TextUtils.isEmpty(inputPassword?.text.toString().trim{ it <= ' '}) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_password), true)
                 false
             }
 
             else -> {
-                showErrorSnackBar("Your details are valid",false)
+                showErrorSnackBar("Your details are valid", false)
                 true
             }
         }
-
-
     }
 
     /**
-     * Metoda logowania zarejestrowanego użytkownika za pomocą Firebase Authentication.
+     * Logs in a registered user using Firebase Authentication.
      */
-    private fun logInRegisteredUser(){
-        if(validateLoginDetails()){
+    private fun logInRegisteredUser() {
+        if (validateLoginDetails()) {
             val email = inputEmail?.text.toString().trim { it<= ' '}
             val password = inputPassword?.text.toString().trim { it<= ' '}
 
-            // Logowanie za pomocą FirebaseAuth
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener{task ->
-                    if(task.isSuccessful){
+            // Sign in with FirebaseAuth
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         showErrorSnackBar("You are logged in successfully.", false)
                         goToNextActivity()
                         finish()
-
-                    } else{
-                        showErrorSnackBar(task.exception!!.message.toString(),true)
+                    } else {
+                        showErrorSnackBar(task.exception!!.message.toString(), true)
                     }
                 }
         }
     }
 
     /**
-     * Metoda przechodzenia do głównej aktywności po pomyślnym zalogowaniu i przekazanie uid do głównej aktywności.
+     * Redirects to the appropriate activity after successful login and passes the user's UID.
      */
     private fun goToNextActivity() {
         val user = FirebaseAuth.getInstance().currentUser
-        val uid = user?.uid ?:""
+        val uid = user?.uid ?: ""
         if (user != null) {
             FirebaseFirestore.getInstance().collection("patients").document(uid)
                 .get()
@@ -123,12 +122,13 @@ class MainActivity : BaseActivity() {
                     }
                 }
         }
-
     }
 
+    /**
+     * Redirects to the sign up activity.
+     */
     private fun goToSignIn() {
         val intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
-   }
-
+    }
 }

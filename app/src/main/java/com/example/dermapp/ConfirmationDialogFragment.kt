@@ -7,9 +7,20 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
+/**
+ * A DialogFragment for displaying a confirmation dialog that requires a password.
+ */
 class ConfirmationDialogFragment : DialogFragment() {
 
+    /**
+     * Interface for handling confirmation button clicks.
+     */
     interface ConfirmationDialogListener {
+        /**
+         * Called when the confirm button is clicked.
+         * @param password The entered password.
+         * @param dialog The dialog fragment.
+         */
         fun onConfirmButtonClicked(password: String, dialog: DialogFragment)
     }
 

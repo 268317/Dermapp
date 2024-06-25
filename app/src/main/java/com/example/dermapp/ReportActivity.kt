@@ -6,14 +6,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.AutoCompleteTextView
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.dermapp.database.MedicalReport
@@ -24,6 +18,9 @@ import com.example.dermapp.database.Doctor
 import java.io.FileNotFoundException
 import com.bumptech.glide.Glide
 
+/**
+ * Activity to display medical reports for patients.
+ */
 class ReportActivity : AppCompatActivity() {
     private lateinit var textViewDoctor: TextView
     private lateinit var checkBoxItching: CheckBox
@@ -56,20 +53,27 @@ class ReportActivity : AppCompatActivity() {
         setContentView(R.layout.activity_report)
         firestore = FirebaseFirestore.getInstance()
 
+        // Initialize views and setup back button click listener
         initializeViews()
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
+        // Navigate back to patient start activity on back button click
         backButton.setOnClickListener {
             val intent = Intent(this, StartPatActivity::class.java)
             startActivity(intent)
         }
 
+        // Retrieve medical report ID passed from previous activity
         medicalReportId = intent.getStringExtra(MEDICAL_REPORT_ID_EXTRA) ?: ""
 
+        // Fetch medical report data from Firestore based on the ID
         fetchMedicalReportFromFirestore(medicalReportId)
     }
 
+    /**
+     * Initializes all UI views from XML layout.
+     */
     private fun initializeViews() {
         textViewDoctor = findViewById(R.id.TextViewDoctor)
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
@@ -86,9 +90,12 @@ class ReportActivity : AppCompatActivity() {
         checkBoxNewMole = findViewById(R.id.checkBoxNewMoleCreateNewReport)
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
-
     }
 
+    /**
+     * Fetches the medical report details from Firestore based on the provided medicalReportId.
+     * @param medicalReportId The ID of the medical report to fetch.
+     */
     private fun fetchMedicalReportFromFirestore(medicalReportId: String) {
         val db = FirebaseFirestore.getInstance()
         Log.d(TAG, "medicalReportId: ${medicalReportId}")
@@ -102,6 +109,7 @@ class ReportActivity : AppCompatActivity() {
                     medicalReport?.let { report ->
                         Log.d(TAG, "Medical report fetched: $report")
 
+                        // Fetch doctor details based on doctorId from Firestore
                         val doctorId = report.doctorId
                         Log.d(TAG, "Doctor Id: ${doctorId}")
                         if (doctorId != null && doctorId.isNotEmpty()) {
@@ -117,6 +125,7 @@ class ReportActivity : AppCompatActivity() {
                                         val doctor = doctorDocument.toObject(Doctor::class.java)
 
                                         doctor?.let {
+                                            // Display doctor's full name in TextView
                                             Log.d(TAG, "Doctor fetched: ${doctor.firstName} ${doctor.lastName}")
                                             textViewDoctor.text = "${doctor.firstName} ${doctor.lastName}"
                                         } ?: run {
@@ -128,10 +137,11 @@ class ReportActivity : AppCompatActivity() {
                                 }
                                 .addOnFailureListener { exception ->
                                     Log.e(TAG, "Error getting documents: ", exception)
-                                    // Obsłuż ewentualny błąd
+                                    // Handle any potential error
                                 }
                         }
 
+                        // Display medical report details in checkboxes and text fields
                         checkBoxItching.isChecked = report.itching
                         checkBoxItching.isEnabled = false
                         checkBoxMoleChanges.isChecked = report.moleChanges
@@ -159,25 +169,31 @@ class ReportActivity : AppCompatActivity() {
                         enterOtherInfoEditText.setText(report.otherInfo)
                         enterOtherInfoEditText.isEnabled = false
 
+                        // Fetch and display image attachment from Firebase Storage
                         try {
                             fetchImageFromFirebaseStorage(report.attachmentUrl)
-                            //addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
                         } catch (e: SecurityException) {
                             Log.e(TAG, "SecurityException: ${e.message}")
                             Toast.makeText(this, "Unable to access the image due to security restrictions", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
+                    // Handle case where medical report document does not exist
                     Toast.makeText(this@ReportActivity, "Document not found", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Medical report document not found")
                 }
             }
             .addOnFailureListener { exception ->
+                // Handle failure to fetch medical report document
                 Toast.makeText(this@ReportActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Failed to fetch medical report document: $exception")
             }
     }
 
+    /**
+     * Fetches an image from Firebase Storage using the provided imageUrl and displays it in ImageView.
+     * @param imageUrl The URL of the image stored in Firebase Storage.
+     */
     private fun fetchImageFromFirebaseStorage(imageUrl: String) {
         Glide.with(this)
             .load(imageUrl)

@@ -1,7 +1,5 @@
 package com.example.dermapp
 
-
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +9,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.database.Doctor
@@ -20,8 +16,10 @@ import com.example.dermapp.database.Location
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.launch
 
+/**
+ * Activity for managing locations associated with a doctor's profile.
+ */
 class ManageDocLocationsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -33,31 +31,35 @@ class ManageDocLocationsActivity : AppCompatActivity() {
     private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements and sets up necessary listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_locations_doc)
 
-
         db = FirebaseFirestore.getInstance()
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
+        // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
+        // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerViewLocations)
         recyclerView.layoutManager = LinearLayoutManager(this)
         locationsList = mutableListOf()
         locationsAdapter = LocationsAdapter(locationsList)
         recyclerView.adapter = locationsAdapter
 
+        // Set up button click listener for adding new location
         val addButton: Button = findViewById(R.id.bookButton)
         val editTextNewLoc: EditText = findViewById(R.id.editTextNewLoc)
-
         addButton.setOnClickListener {
             val newLocation = editTextNewLoc.text.toString()
             if (newLocation.isNotEmpty()) {
@@ -65,9 +67,14 @@ class ManageDocLocationsActivity : AppCompatActivity() {
                 editTextNewLoc.text.clear()
             }
         }
+
+        // Load current doctor's ID and associated locations
         loadCurrentDoctorId()
     }
 
+    /**
+     * Loads the current doctor's ID from Firestore and proceeds to load associated locations.
+     */
     private fun loadCurrentDoctorId() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         firestore.collection("doctors").document(userId).get()
@@ -86,8 +93,10 @@ class ManageDocLocationsActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Loads locations associated with the current doctor from Firestore.
+     */
     private fun loadLocations() {
-
         db.collection("locations")
             .whereEqualTo("doctorId", currentDocId)
             .get()
@@ -105,6 +114,10 @@ class ManageDocLocationsActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Adds a new location for the current doctor to Firestore.
+     * @param address The full address of the new location to add.
+     */
     private fun addLocation(address: String) {
         val userRef = db.collection("doctors").document(currentUserUid!!)
         userRef.get().addOnSuccessListener { documentSnapshot ->

@@ -6,25 +6,22 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.AutoCompleteTextView
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import android.Manifest
 import com.example.dermapp.database.Doctor
 import java.io.FileNotFoundException
 import com.bumptech.glide.Glide
 import com.example.dermapp.startDoctor.StartDocActivity
+import android.Manifest
 
+/**
+ * Activity to display medical reports for doctors.
+ */
 class ReportDocActivity : AppCompatActivity() {
     private lateinit var textViewPatient: TextView
     private lateinit var checkBoxItching: CheckBox
@@ -55,20 +52,27 @@ class ReportDocActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_doc)
 
+        // Initialize views and setup permissions for image loading
         initializeViews()
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
+        // Handle back button click to return to previous activity
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
+        // Retrieve medical report ID passed from previous activity
         medicalReportId = intent.getStringExtra(MEDICAL_REPORT_ID_EXTRA) ?: ""
 
+        // Fetch medical report data from Firestore based on the ID
         fetchMedicalReportFromFirestore(medicalReportId)
     }
 
+    /**
+     * Initializes all UI views from XML layout and checks permissions for image loading.
+     */
     private fun initializeViews() {
         textViewPatient = findViewById(R.id.TextViewPatient)
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
@@ -86,6 +90,7 @@ class ReportDocActivity : AppCompatActivity() {
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
 
+        // Request permission to read external storage if not granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -94,13 +99,17 @@ class ReportDocActivity : AppCompatActivity() {
                 REQUEST_CODE_READ_EXTERNAL_STORAGE
             )
         } else {
+            // Load image if permission is already granted
             loadImage()
         }
     }
 
-
+    /**
+     * Loads an image from external storage using its URI and displays it in an ImageView.
+     */
     private fun loadImage() {
         try {
+            // Example URI to be replaced with actual URI from Firestore or other source
             val imageUri = Uri.parse("content://media/external/images/media/1000035185")
             val inputStream = contentResolver.openInputStream(imageUri)
             if (inputStream != null) {
@@ -117,6 +126,10 @@ class ReportDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Fetches the medical report details from Firestore based on the provided medicalReportId.
+     * @param medicalReportId The ID of the medical report to fetch.
+     */
     private fun fetchMedicalReportFromFirestore(medicalReportId: String) {
         val db = FirebaseFirestore.getInstance()
         Log.d(TAG, "medicalReportId: ${medicalReportId}")
@@ -130,6 +143,7 @@ class ReportDocActivity : AppCompatActivity() {
                     medicalReport?.let { report ->
                         Log.d(TAG, "Medical report fetched: $report")
 
+                        // Fetch patient details based on PESEL from Firestore
                         val pesel = report.patientPesel
                         if (pesel != null && pesel.isNotEmpty()) {
                             val db = FirebaseFirestore.getInstance()
@@ -144,6 +158,7 @@ class ReportDocActivity : AppCompatActivity() {
                                         val doctor = doctorDocument.toObject(Doctor::class.java)
 
                                         doctor?.let {
+                                            // Display patient's full name in TextView
                                             textViewPatient.text = "${doctor.firstName} ${doctor.lastName}"
                                         } ?: run {
                                             Log.e(TAG, "Patient object is null")
@@ -154,10 +169,10 @@ class ReportDocActivity : AppCompatActivity() {
                                 }
                                 .addOnFailureListener { exception ->
                                     Log.e(TAG, "Error getting documents: ", exception)
-
                                 }
                         }
 
+                        // Display medical report details in checkboxes and text fields
                         checkBoxItching.isChecked = report.itching
                         checkBoxItching.isEnabled = false
                         checkBoxMoleChanges.isChecked = report.moleChanges
@@ -185,25 +200,31 @@ class ReportDocActivity : AppCompatActivity() {
                         enterOtherInfoEditText.setText(report.otherInfo)
                         enterOtherInfoEditText.isEnabled = false
 
+                        // Fetch and display image attachment from Firebase Storage
                         try {
                             fetchImageFromFirebaseStorage(report.attachmentUrl)
-                            //addPhotoImageView.setImageURI(Uri.parse(report.attachmentUrl))
                         } catch (e: SecurityException) {
                             Log.e(TAG, "SecurityException: ${e.message}")
                             Toast.makeText(this, "Unable to access the image due to security restrictions", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
+                    // Handle case where medical report document does not exist
                     Toast.makeText(this@ReportDocActivity, "Document not found", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Medical report document not found")
                 }
             }
             .addOnFailureListener { exception ->
+                // Handle failure to fetch medical report document
                 Toast.makeText(this@ReportDocActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Failed to fetch medical report document: $exception")
             }
     }
 
+    /**
+     * Fetches an image from Firebase Storage using the provided imageUrl and displays it in ImageView.
+     * @param imageUrl The URL of the image stored in Firebase Storage.
+     */
     private fun fetchImageFromFirebaseStorage(imageUrl: String) {
         Glide.with(this)
             .load(imageUrl)

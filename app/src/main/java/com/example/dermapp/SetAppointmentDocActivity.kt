@@ -28,6 +28,9 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * Activity for doctors to set appointments with patients.
+ */
 class SetAppointmentDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var firestore: FirebaseFirestore
@@ -39,24 +42,29 @@ class SetAppointmentDocActivity : AppCompatActivity() {
     private var selectedDate: Date? = null
     private var selectedTime: String? = null
 
+    /**
+     * Initializes UI components and sets up listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_appointment_doc)
 
+        // Initialize Firestore instance and UI components
         firestore = FirebaseFirestore.getInstance()
         editTextDate = findViewById(R.id.editTextDate)
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
 
+        // Retrieve current user's UID
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
+        // Get doctor details from Firestore based on UID
         val userRef = FirebaseFirestore.getInstance().collection("doctors").document(currentUserUid!!)
-
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
                 val user = documentSnapshot.toObject(Doctor::class.java)
 
-                // Sprawdź, czy udało się pobrać dane użytkownika
+                // Load doctor's available locations and set up booking button
                 user?.let {
                     loadDoctorLocations(user.doctorId)
                     val doctorId = user.doctorId
@@ -67,24 +75,30 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                 }
             }
         }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
+            // Handle errors fetching user data from Firestore
         }
 
+        // Setup autocomplete for location input
         setupAutoCompleteTextView(autoLoc)
 
+        // Handle date selection using DatePickerDialog
         editTextDate.setOnClickListener {
             showDateTimePicker()
         }
 
+        // Set up back button to return to previous activity
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
     }
 
+    /**
+     * Loads the locations associated with the doctor from Firestore.
+     * @param doctorId The ID of the doctor to load locations for.
+     */
     private fun loadDoctorLocations(doctorId: String) {
         val locationsCollection = firestore.collection("locations")
         locationsCollection.whereEqualTo("doctorId", doctorId).get()
@@ -103,10 +117,14 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
+                // Handle failures in loading locations
                 exception.printStackTrace()
             }
     }
 
+    /**
+     * Shows a date and time picker dialog to select appointment date and time.
+     */
     private fun showDateTimePicker() {
         val now = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"))
 
@@ -128,11 +146,12 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                 dateTimeFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
                 editTextDate.setText(dateTimeFormat.format(selectedDate.time))
 
-                // Correctly store the selected date and time in local time
+                // Store the selected date and time
                 this.selectedDate = selectedDate.time
                 selectedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute)
             }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
 
+            // Adjust time picker if date is today
             if (isToday) {
                 timePicker.updateTime(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))
             }
@@ -140,16 +159,22 @@ class SetAppointmentDocActivity : AppCompatActivity() {
             timePicker.show()
         }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))
 
+        // Set minimum date for date picker as today
         datePicker.datePicker.minDate = now.timeInMillis
         datePicker.show()
     }
+
+    /**
+     * Handles booking of an appointment based on user input.
+     * @param doctorId The ID of the doctor booking the appointment.
+     */
     private fun bookAppointment(doctorId: String) {
         if (selectedLocationId == null || selectedDate == null || selectedTime == null) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Calculate the start and end times for the window around the selected time
+        // Calculate start and end times for the appointment window
         val calendar = Calendar.getInstance()
         calendar.time = selectedDate
         val timeParts = selectedTime!!.split(":")
@@ -162,6 +187,7 @@ class SetAppointmentDocActivity : AppCompatActivity() {
         calendar.add(Calendar.MINUTE, 18) // 9 minutes before and after
         val endTimeWindow = calendar.time
 
+        // Check for existing appointments in the selected time window
         firestore.collection("availableDates")
             .whereEqualTo("doctorId", doctorId)
             .whereGreaterThanOrEqualTo("datetime", startTimeWindow)
@@ -169,6 +195,7 @@ class SetAppointmentDocActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { querySnapshot ->
                 if (!querySnapshot.isEmpty) {
+                    // Inform user if appointment slot is already booked
                     Toast.makeText(this@SetAppointmentDocActivity, "Appointment slot is already booked", Toast.LENGTH_SHORT).show()
                 } else {
                     // No overlapping appointment found, proceed to book
@@ -182,6 +209,7 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                         isAvailable = true
                     )
 
+                    // Use coroutine scope to add appointment to Firestore
                     lifecycleScope.launch {
                         firestore.collection("availableDates").add(appointment)
                             .addOnSuccessListener { documentReference ->
@@ -189,9 +217,11 @@ class SetAppointmentDocActivity : AppCompatActivity() {
 
                                 val updatedAppointment = appointment.copy(availableDateId = generatedReportId)
 
+                                // Update appointment with generated ID
                                 documentReference.set(updatedAppointment)
                                     .addOnSuccessListener {
                                         Toast.makeText(this@SetAppointmentDocActivity, "Appointment set successfully", Toast.LENGTH_SHORT).show()
+                                        // Clear input fields after successful booking
                                         editTextDate.setText("")
                                         autoLoc.setText("")
                                         selectedLocationId = null
@@ -199,11 +229,13 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                                         selectedTime = null
                                     }
                                     .addOnFailureListener { exception ->
+                                        // Handle errors updating appointment
                                         exception.printStackTrace()
                                         Toast.makeText(this@SetAppointmentDocActivity, "Failed to set appointment", Toast.LENGTH_SHORT).show()
                                     }
                             }
                             .addOnFailureListener { exception ->
+                                // Handle errors adding appointment
                                 exception.printStackTrace()
                                 Toast.makeText(this@SetAppointmentDocActivity, "Failed to set appointment", Toast.LENGTH_SHORT).show()
                             }
@@ -211,11 +243,16 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
+                // Handle errors checking appointment slot
                 exception.printStackTrace()
                 Toast.makeText(this@SetAppointmentDocActivity, "Failed to check appointment slot", Toast.LENGTH_SHORT).show()
             }
     }
 
+    /**
+     * Sets up an AutoCompleteTextView for location selection.
+     * @param autoCompleteTextView The AutoCompleteTextView instance to set up.
+     */
     private fun setupAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView) {
         autoCompleteTextView.inputType = 0
         autoCompleteTextView.isFocusable = false

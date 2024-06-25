@@ -17,75 +17,90 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.net.URL
 
+/**
+ * Activity to display and edit patient profile information.
+ */
 class ProfilePatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var buttonEditProfilePat: Button
     private lateinit var profileImage: ImageView
-    private lateinit var imageUrl: URL
-    private lateinit var myUrl: URL
+    private lateinit var imageUrl: URL // Placeholder for profile image URL
+    private lateinit var myUrl: URL // Placeholder for user-specific URL
 
+    /**
+     * Initializes the activity layout and sets up UI components.
+     * Also retrieves and displays patient profile information from Firestore.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enable edge-to-edge display
+
+        // Set the activity layout
         setContentView(R.layout.activity_profile_pat)
 
-        profileImage = findViewById<ImageView>(R.id.profileImagePat)
-
-
+        // Initialize views
+        profileImage = findViewById(R.id.profileImagePat)
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
+        // Navigate back to StartPatActivity when back button is clicked
         backButton.setOnClickListener {
             val intent = Intent(this, StartPatActivity::class.java)
             startActivity(intent)
         }
 
+        // Setup edit profile button to navigate to EditProfilePatActivity
         buttonEditProfilePat = findViewById(R.id.buttonEditProfilePat)
-
         buttonEditProfilePat.setOnClickListener {
             val intent = Intent(this, EditProfilePatActivity::class.java)
             startActivity(intent)
         }
 
+        // Apply window insets to handle system UI elements
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Pobierz UID aktualnie zalogowanego użytkownika
+        // Get UID of the currently logged-in user
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Utwórz odwołanie do dokumentu użytkownika w Firestore
+        // Reference to the user document in Firestore
         val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
 
-        // Pobierz dane użytkownika z Firestore
+        // Retrieve user data from Firestore
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                // Konwertuj dane na obiekt użytkownika
+                // Convert data to Patient object
                 val user = documentSnapshot.toObject(Patient::class.java)
 
-                // Sprawdź, czy udało się pobrać dane użytkownika
+                // Check if user data retrieval was successful
                 user?.let {
-                    // Ustaw imię użytkownika
+                    // Set user's first name
                     val NameTextView: TextView = findViewById(R.id.textViewEnteredFirstNameProfilePat)
                     NameTextView.text = user.firstName
 
+                    // Set user's last name
                     val LastNameTextView: TextView = findViewById(R.id.textViewEnteredLastNameProfilePat)
                     LastNameTextView.text = user.lastName
 
+                    // Set user's email address
                     val EmailTextView: TextView = findViewById(R.id.textViewEnteredEmailProfilePat)
                     EmailTextView.text = user.email
 
+                    // Set user's date of birth
                     val BirthTextView: TextView = findViewById(R.id.textViewEnteredBirthProfilePat)
                     BirthTextView.text = user.birthDate
 
+                    // Set user's PESEL (Personal Identification Number)
                     val PeselTextView: TextView = findViewById(R.id.textViewEnteredPeselProfilePat)
                     PeselTextView.text = user.pesel
                 }
             }
         }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
+            // Handle errors in Firestore data retrieval
+            // You might want to log or display an error message
         }
     }
 }

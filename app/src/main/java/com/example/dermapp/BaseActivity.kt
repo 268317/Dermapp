@@ -5,29 +5,29 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 
 /**
- * Klasa bazowa dla wszystkich aktywności w aplikacji.
- * Zawiera metodę do wyświetlania paska Snackbar z komunikatem.
+ * Base class for all activities in the application.
+ * Contains a method to display a Snackbar with a message.
  */
 open class BaseActivity : AppCompatActivity() {
 
     /**
-     * Wyświetla pasek Snackbar z określonym komunikatem.
-     * @param message Wiadomość do wyświetlenia w pasku Snackbar.
-     * @param errorMessage Flaga określająca, czy komunikat jest błędem (true) lub sukcesem (false).
+     * Displays a Snackbar with the specified message.
+     * @param message The message to be displayed in the Snackbar.
+     * @param errorMessage A flag indicating whether the message is an error (true) or a success (false).
      */
-    fun showErrorSnackBar(message: String, errorMessage: Boolean){
+    fun showErrorSnackBar(message: String, errorMessage: Boolean) {
         val snackbar =
-            Snackbar.make(findViewById(android.R.id.content),message,Snackbar.LENGTH_LONG)
+            Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
         val snackbarView = snackbar.view
 
-        // Ustawienie koloru paska Snackbar na podstawie typu komunikatu
+        // Set the color of the Snackbar based on the type of message
         if (errorMessage) {
             snackbarView.setBackgroundColor(
                 ContextCompat.getColor(this@BaseActivity,
                     R.color.colorSnackBarError
                 )
             )
-        }else{
+        } else {
             snackbarView.setBackgroundColor(
                 ContextCompat.getColor(this@BaseActivity,
                     R.color.colorSnackBarSuccess

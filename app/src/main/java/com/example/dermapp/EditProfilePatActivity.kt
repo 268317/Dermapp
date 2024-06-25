@@ -18,12 +18,22 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-
+/**
+ * Activity for editing patient's profile information.
+ * Allows the patient to update their name, last name, email, and password securely.
+ */
 class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.ConfirmationDialogListener {
+
+    // UI elements declaration
     private lateinit var backButton: ImageButton
     private lateinit var updateProfileButton: Button
     private lateinit var profileImage: ImageView
     private lateinit var profileImageButton: ImageButton
+
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements, sets click listeners, and fetches current user's profile data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,21 +41,22 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
         profileImageButton = findViewById(R.id.editProfileImagePat)
 
-
+        // Set padding to handle system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Initialize back button and its click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, StartPatActivity::class.java)
             startActivity(intent)
         }
 
+        // Initialize update profile button and its click listener
         updateProfileButton = findViewById(R.id.buttonUpdateProfilePat)
         updateProfileButton.setOnClickListener {
             if (validateRegisterDetails()) {
@@ -54,14 +65,12 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             }
         }
 
+        // Fetch current user's profile data and populate the UI fields
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
-
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-
                 val user = documentSnapshot.toObject(Patient::class.java)
-
                 user?.let {
                     val firstNameText: EditText = findViewById(R.id.editNamePat)
                     firstNameText.setText(user.firstName)
@@ -76,6 +85,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Callback function invoked when the user confirms password in the confirmation dialog.
+     * Re-authenticates user and updates the profile upon successful re-authentication.
+     */
     override fun onConfirmButtonClicked(password: String, dialog: DialogFragment) {
         dialog.dismiss()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -93,6 +106,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Validates the input fields for updating profile details.
+     * Checks for empty fields, valid name patterns, email format, and password criteria.
+     */
     private fun validateRegisterDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val namePattern = "[a-zA-Z]+"
@@ -154,47 +171,50 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
-
+    /**
+     * Updates the user's profile information in Firestore.
+     * Updates first name, last name, email, and optionally the password.
+     */
     private fun updateUser() {
-            val firstNameText: EditText = findViewById(R.id.editNamePat)
-            val lastNameText: EditText = findViewById(R.id.editLastNamePat)
-            val emailText: EditText = findViewById(R.id.editMailPat)
-            val passwordText: EditText = findViewById(R.id.editPasswordPat)
-            //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
+        val firstNameText: EditText = findViewById(R.id.editNamePat)
+        val lastNameText: EditText = findViewById(R.id.editLastNamePat)
+        val emailText: EditText = findViewById(R.id.editMailPat)
+        val passwordText: EditText = findViewById(R.id.editPasswordPat)
+        //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
 
-            val firstName = firstNameText.text.toString().trim()
-            val lastName = lastNameText.text.toString().trim()
-            val email = emailText.text.toString().trim()
-            val password = passwordText.text.toString().trim()
-            //val passwordRepeat = passwordRepeatText.text.toString().trim()
+        val firstName = firstNameText.text.toString().trim()
+        val lastName = lastNameText.text.toString().trim()
+        val email = emailText.text.toString().trim()
+        val password = passwordText.text.toString().trim()
+        //val passwordRepeat = passwordRepeatText.text.toString().trim()
 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
-            currentUser?.updateEmail(email)?.addOnCompleteListener { emailUpdateTask ->
-                if (emailUpdateTask.isSuccessful) {
-                    if (password != "") {
-                        currentUser.updatePassword(password)
-                    }
-
-                    val currentUserUid = currentUser.uid
-
-                    val userUpdates = hashMapOf<String, Any>(
-                        "firstName" to firstName,
-                        "lastName" to lastName,
-                        "email" to email
-                    )
-
-                    FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
-                        .update(userUpdates)
-                        .addOnSuccessListener {
-                            showErrorSnackBar("Profile updated successfully.", false)
-                        }
-                        .addOnFailureListener { e ->
-                            showErrorSnackBar("Error updating profile: ${e.message}", true)
-                        }
+        // Update email (if changed) and password
+        currentUser?.updateEmail(email)?.addOnCompleteListener { emailUpdateTask ->
+            if (emailUpdateTask.isSuccessful) {
+                if (password != "") {
+                    currentUser.updatePassword(password)
                 }
 
-            }
-    }
+                // Construct updates for Firestore document
+                val currentUserUid = currentUser.uid
+                val userUpdates = hashMapOf<String, Any>(
+                    "firstName" to firstName,
+                    "lastName" to lastName,
+                    "email" to email
+                )
 
+                // Update Firestore document with new profile information
+                FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
+                    .update(userUpdates)
+                    .addOnSuccessListener {
+                        showErrorSnackBar("Profile updated successfully.", false)
+                    }
+                    .addOnFailureListener { e ->
+                        showErrorSnackBar("Error updating profile: ${e.message}", true)
+                    }
+            }
+        }
+    }
 }

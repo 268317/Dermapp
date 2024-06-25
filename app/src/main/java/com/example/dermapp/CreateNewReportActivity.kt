@@ -21,9 +21,12 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Activity to create and send a new medical report.
+ */
 class CreateNewReportActivity : AppCompatActivity() {
 
-    // Deklaracje pól UI i inne zmienne
+    // UI elements and other variables declaration
     private lateinit var checkBoxItching: CheckBox
     private lateinit var checkBoxMoleChanges: CheckBox
     private lateinit var checkBoxRash: CheckBox
@@ -49,25 +52,30 @@ class CreateNewReportActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private lateinit var doctorsList: List<Doctor>
 
+    /**
+     * Called when the activity is starting.
+     * Sets up UI elements, initializes listeners, and retrieves necessary data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_report)
 
-        // Inicjalizacja UI i inne operacje
+        // Initialize UI elements and perform other setup operations
         initializeUI()
 
-        // Przycisk "Send Report"
+        // Send Report Button click listener
         val sendReportButton = findViewById<Button>(R.id.buttonUpdateProfilePat)
         sendReportButton.setOnClickListener {
-            // Przesyłanie zdjęcia do Firebase Storage
+            // Upload selected photo to Firebase Storage
             uploadPhotoToFirebaseStorage()
         }
 
-        // Obsługa kliknięcia na ImageView do dodawania zdjęcia
+        // Handle click on ImageView to add a photo
         addPhotoImageView.setOnClickListener {
             openGallery()
         }
 
+        // Fetch list of doctors from Firestore and populate AutoCompleteTextView
         val doctorsCollection = FirebaseFirestore.getInstance().collection("doctors")
         doctorsCollection.get().addOnSuccessListener { doctorsResult ->
             doctorsList = doctorsResult.toObjects(Doctor::class.java)
@@ -76,11 +84,16 @@ class CreateNewReportActivity : AppCompatActivity() {
             autoDoc.setAdapter(docAdapter)
         }
 
+        // Load doctors list initially
         loadDoctors()
     }
 
+    /**
+     * Initializes UI components.
+     * Binds UI elements from XML layout, sets up click listeners, and AutoCompleteTextView adapter.
+     */
     private fun initializeUI() {
-        // Inicjalizacja pól UI
+        // Initialize UI elements
         checkBoxItching = findViewById(R.id.checkBoxItchingCreateNewReport)
         checkBoxMoleChanges = findViewById(R.id.checkBoxMoleChangesCreateNewReport)
         checkBoxRash = findViewById(R.id.checkBoxRashCreateNewReport)
@@ -98,7 +111,7 @@ class CreateNewReportActivity : AppCompatActivity() {
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
         autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
 
-        // Przycisk back
+        // Back button setup
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -106,11 +119,14 @@ class CreateNewReportActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Inicjalizacja AutoCompleteTextView dla lekarzy
+        // Initialize AutoCompleteTextView for doctors
         setupAutoCompleteTextView()
-
     }
 
+    /**
+     * Sets up the AutoCompleteTextView for doctors selection.
+     * Handles item selection to get the selected doctor's ID.
+     */
     private fun setupAutoCompleteTextView() {
         autoDoc.setOnItemClickListener { _, _, position, _ ->
             val selectedDoctorText = autoDoc.text.toString()
@@ -118,46 +134,46 @@ class CreateNewReportActivity : AppCompatActivity() {
             selectedDoctor?.let {
                 selectedDoctorId = it.doctorId
             } ?: run {
-                Log.e(TAG, "Coudn't find doctor on the list")
+                Log.e(TAG, "Couldn't find doctor in the list")
             }
         }
     }
 
+    /**
+     * Opens the device's image gallery to select a photo.
+     */
     private fun openGallery() {
-        // Otwarcie galerii zdjęć
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
+    /**
+     * Handles the result of selecting an image from the gallery.
+     * Updates the UI with the selected image.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             photoUri = data.data
             addPhotoImageView.setImageURI(photoUri)
-            //photoUri = Uri.parse(data.data.toString())
         }
     }
 
+    /**
+     * Uploads the selected photo to Firebase Storage.
+     * Handles success and failure cases of the upload.
+     */
     private fun uploadPhotoToFirebaseStorage() {
-        // Sprawdzenie czy URI zdjęcia jest null
         photoUri?.let { uri ->
-            // Pobranie referencji do Firebase Storage
             val storageRef = FirebaseStorage.getInstance().reference
-            // Utworzenie nazwy pliku dla zdjęcia w Storage
             val photoRef = storageRef.child("reports/${UUID.randomUUID()}")
-            // Przesłanie zdjęcia do Firebase Storage
             val uploadTask = photoRef.putFile(uri)
-            // Obsługa zdarzenia po przesłaniu zdjęcia
             uploadTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Pobranie URL przesłanego zdjęcia
                     photoRef.downloadUrl.addOnSuccessListener { url ->
-                        // Po udanym przesłaniu zdjęcia, zapisz raport w Firestore
                         saveReport(url.toString())
-
                     }
                 } else {
-                    // Obsługa błędów przy przesyłaniu zdjęcia
                     Toast.makeText(this, "Failed to upload photo: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -166,32 +182,29 @@ class CreateNewReportActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Saves the medical report to Firestore after uploading the photo.
+     * Retrieves current user's information and creates a new MedicalReport object.
+     * Handles success and failure cases of saving the report.
+     */
     private fun saveReport(photoUrl: String) {
-        // Pobierz UID aktualnie zalogowanego użytkownika
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        // Utwórz odwołanie do dokumentu użytkownika w Firestore
         val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
 
-        // Pobierz dane użytkownika z Firestore
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                // Konwertuj dane na obiekt użytkownika
                 val user = documentSnapshot.toObject(Patient::class.java)
-
-                // Sprawdź, czy udało się pobrać dane użytkownika
                 user?.let {
                     val pesel = user.pesel
 
                     val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-                    dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ustaw strefę czasową
+                    dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
 
                     val calendar = Calendar.getInstance()
                     val currentDate = calendar.time
                     val currentDateString = dateFormat.format(currentDate)
                     val doctorId = selectedDoctorId ?: return@addOnSuccessListener
 
-                    // Utwórz obiekt raportu medycznego
                     val report = MedicalReport(
                         doctorId = doctorId,
                         patientPesel = pesel,
@@ -212,42 +225,30 @@ class CreateNewReportActivity : AppCompatActivity() {
                         attachmentUrl = photoUrl
                     )
 
-                    // Zapisz raport w Firestore
                     firestore.collection("report")
                         .add(report)
                         .addOnSuccessListener { documentReference ->
                             val generatedReportId = documentReference.id
-                            // Aktualizacja appointmentId z wygenerowanym ID
                             val updatedReport = report.copy(medicalReportId = generatedReportId)
-                            // Ustawienie appointmentId w dokumencie Firestore
                             documentReference.set(updatedReport)
-                            Toast.makeText(
-                                this,
-                                "Report sent successfully.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            // Wyczyszczenie pól po udanym zapisaniu raportu
+                            Toast.makeText(this, "Report sent successfully.", Toast.LENGTH_SHORT).show()
                             clearFields()
                         }.addOnFailureListener { e ->
-                            Toast.makeText(
-                                this,
-                                "Failed to add report: ${e.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this, "Failed to add report: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                 }
             } else {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             }
         }.addOnFailureListener { exception ->
-            // Obsłuż błędy pobierania danych z Firestore
             exception.printStackTrace()
         }
     }
 
+    /**
+     * Clears all input fields and resets UI elements after sending a report.
+     */
     private fun clearFields() {
-        // Wyczyszczenie pól po wysłaniu raportu
         autoDoc.setText("")
         selectedDoctorId = null
         checkBoxItching.isChecked = false
@@ -267,8 +268,11 @@ class CreateNewReportActivity : AppCompatActivity() {
         addPhotoImageView.setImageURI(null)
     }
 
+    /**
+     * Loads the list of doctors from Firestore.
+     * Updates the AutoCompleteTextView with the list of doctor names.
+     */
     private fun loadDoctors() {
-        // Pobranie listy lekarzy z Firestore
         val doctorsCollection = firestore.collection("doctors")
         doctorsCollection.get()
             .addOnSuccessListener { doctorsResult ->

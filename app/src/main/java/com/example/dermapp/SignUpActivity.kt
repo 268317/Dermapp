@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
+/**
+ * Activity for user sign-up process.
+ */
 class SignUpActivity : BaseActivity() {
     private lateinit var signUpTextView: TextView
     private lateinit var buttonSignUp: Button
@@ -35,6 +38,9 @@ class SignUpActivity : BaseActivity() {
     private lateinit var doctorIdEditText: EditText
     private lateinit var peselEditText: EditText
 
+    /**
+     * Initializes UI components and sets click listeners.
+     */
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +88,10 @@ class SignUpActivity : BaseActivity() {
         }
     }
 
-
-
+    /**
+     * Validates user input during registration.
+     * @return True if all input is valid, false otherwise.
+     */
     private fun validateRegisterDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val peselPattern = "\\d{11}"
@@ -162,13 +170,18 @@ class SignUpActivity : BaseActivity() {
         }
     }
 
-
+    /**
+     * Navigates to the login screen.
+     */
     private fun goToLogin() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * Opens a calendar dialog to select the date of birth.
+     */
     @SuppressLint("SetTextI18n")
     private fun openCalendar() {
         val calendar = Calendar.getInstance()
@@ -189,6 +202,9 @@ class SignUpActivity : BaseActivity() {
         datePickerDialog.show()
     }
 
+    /**
+     * Registers the user in Firebase authentication and Firestore database.
+     */
     private fun registerUser() {
         if (validateRegisterDetails()) {
             val email: String = textEmail.text.toString().trim()
@@ -225,7 +241,7 @@ class SignUpActivity : BaseActivity() {
                         user.password = password
                         user.role = role
 
-                        // Zapisz użytkownika do Firestore
+                        // Save user to Firestore
                         FirebaseFirestore.getInstance().collection("users").document(uid)
                             .set(user)
                             .addOnSuccessListener {
@@ -282,6 +298,10 @@ class SignUpActivity : BaseActivity() {
                 }
         }
     }
+
+    /**
+     * Displays a toast message indicating successful user registration.
+     */
     fun userRegistrationSuccess() {
         Toast.makeText(
             this@SignUpActivity,

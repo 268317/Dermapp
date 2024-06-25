@@ -17,9 +17,12 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Activity for displaying and editing appointment details for doctors.
+ */
 class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
 
-    // Declare UI elements
+    // UI elements declaration
     private lateinit var textViewAppointmentDateDoc: TextView
     private lateinit var textViewDateAppointmentDoc: TextView
     private lateinit var textViewPatientAppointmentDoc: TextView
@@ -30,9 +33,17 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
     private lateinit var editTextMultiLineRecommendationsAppointmentDoc: EditText
     private lateinit var backButton: ImageButton
     private lateinit var editButton: Button
+
+    // Firestore instance
     private val firestore = FirebaseFirestore.getInstance()
+
+    // Appointment ID received from intent
     private var appointmentId: String? = null
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements, sets click listeners, and fetches appointment details.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_appointment_details_doc)
@@ -51,7 +62,6 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
         // Initialize back button and its click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
@@ -78,6 +88,7 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                     val formattedDate = SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault())
                         .format(datetime)
 
+                    // Update UI with fetched data
                     textViewDateAppointmentDoc.text = formattedDate
                     editTextMultiLineDiagnosisAppointmentDoc.setText(diagnosis)
                     editTextMultiLineRecommendationsAppointmentDoc.setText(recommendations)
@@ -93,36 +104,39 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                         val lastName = patientDocument.getString("lastName") ?: ""
                         val pesel = patientDocument.getString("pesel") ?: ""
 
+                        // Update UI with patient details
                         textViewFirstNameAppointmentDoc.text = firstName
                         textViewLastNameAppointmentDoc.text = lastName
                         textViewPeselAppointmentDoc.text = pesel
                     } else {
+                        // Handle case where patient details are missing
                         textViewFirstNameAppointmentDoc.text = "Unknown"
                         textViewLastNameAppointmentDoc.text = "Patient"
-                        textViewPeselAppointmentDoc.text = "patient pesel"
+                        textViewPeselAppointmentDoc.text = "Unknown"
                     }
 
                 } else {
+                    // Handle case where appointment details are missing
                     textViewDateAppointmentDoc.text = "Unknown"
                     textViewFirstNameAppointmentDoc.text = "Unknown"
                     textViewLastNameAppointmentDoc.text = "Patient"
-                    textViewPeselAppointmentDoc.text = "patient pesel"
+                    textViewPeselAppointmentDoc.text = "Unknown"
                 }
             } catch (e: Exception) {
-                // Handle exceptions
+                // Handle exceptions during fetching data
                 textViewDateAppointmentDoc.text = "Unknown"
                 textViewFirstNameAppointmentDoc.text = "Unknown"
                 textViewLastNameAppointmentDoc.text = "Patient"
-                textViewPeselAppointmentDoc.text = "patient pesel"
+                textViewPeselAppointmentDoc.text = "Unknown"
             }
         }
 
-        // Set click listener for editButton
+        // Set click listener for editButton to update appointment details
         editButton.setOnClickListener {
             val diagnosis = editTextMultiLineDiagnosisAppointmentDoc.text.toString()
             val recommendations = editTextMultiLineRecommendationsAppointmentDoc.text.toString()
 
-            // Update firestore document with new values
+            // Update Firestore document with new diagnosis and recommendations
             appointmentId?.let { appointmentId ->
                 firestore.collection("appointment")
                     .document(appointmentId)
@@ -131,12 +145,13 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                         "recommendations" to recommendations
                     ))
                     .addOnSuccessListener {
+                        // Navigate back to AppointmentDetailsDocActivity after successful update
                         val intent = Intent(this, AppointmentDetailsDocActivity::class.java)
                         intent.putExtra("appointmentId", appointmentId)
                         startActivity(intent)
                     }
                     .addOnFailureListener { e ->
-                        // Handle failure
+                        // Handle failure to update appointment details
                     }
             }
         }

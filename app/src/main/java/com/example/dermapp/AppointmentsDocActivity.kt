@@ -19,18 +19,31 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Activity to manage and display appointments for doctors.
+ */
 class AppointmentsDocActivity : AppCompatActivity() {
 
+    // Declare UI elements
     private lateinit var backButton: ImageButton
     private lateinit var calendarView: CalendarView
     private lateinit var appointmentsListView: ListView
 
+    // Firestore instance
     private val firestore = FirebaseFirestore.getInstance()
+    // List to store appointments
     private val appointments = mutableListOf<Appointment>()
+    // Date format for displaying dates
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    // Current doctor's ID
     private lateinit var currentDoctorId : String
+    // Map to cache patient information
     private val patientsMap = mutableMapOf<String, Patient>()
 
+    /**
+     * Called when the activity is starting.
+     * Sets up UI elements, initializes listeners, and retrieves necessary data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointments_doc)
@@ -39,12 +52,15 @@ class AppointmentsDocActivity : AppCompatActivity() {
         calendarView = findViewById(R.id.calendarView)
         appointmentsListView = findViewById(R.id.appointmentsListView)
 
+        // Set click listener for back button
         backButton.setOnClickListener {
             startActivity(Intent(this, StartDocActivity::class.java))
         }
 
+        // Load current doctor's ID
         loadDoctorId()
 
+        // Set date change listener for calendar view
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val selectedDate = Calendar.getInstance()
             selectedDate.set(year, month, dayOfMonth)
@@ -52,6 +68,9 @@ class AppointmentsDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Load the ID of the current doctor from Firestore.
+     */
     private fun loadDoctorId() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         firestore.collection("doctors").document(userId).get()
@@ -70,6 +89,9 @@ class AppointmentsDocActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Load appointments for the current doctor from Firestore.
+     */
     private fun loadAppointments() {
         if (currentDoctorId != null) {
             firestore.collection("appointment")
@@ -88,6 +110,11 @@ class AppointmentsDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Display appointments for the selected date.
+     *
+     * @param date The selected date.
+     */
     private fun displayAppointmentsForDate(date: Date) {
         val appointmentDetails = mutableListOf<String>()
         appointmentsListView.adapter = null
@@ -95,7 +122,6 @@ class AppointmentsDocActivity : AppCompatActivity() {
         val selectedDateAppointments = appointments.filter { appointment ->
             appointment.datetime?.let { dateFormat.format(it) } == dateFormat.format(date)
         }
-
 
         val appointmentCount = selectedDateAppointments.size
         var appointmentsProcessed = 0
@@ -124,6 +150,12 @@ class AppointmentsDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Load patient information from Firestore.
+     *
+     * @param patientId The ID of the patient.
+     * @param callback The callback function to execute after patient info is loaded.
+     */
     private fun loadPatientInfo(patientId: String?, callback: (Patient?) -> Unit) {
         if (patientId != null && patientsMap.containsKey(patientId)) {
             callback(patientsMap[patientId])

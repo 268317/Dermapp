@@ -21,13 +21,23 @@ import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import androidx.activity.enableEdgeToEdge
 
+/**
+ * Activity for editing doctor's profile information.
+ * Allows the doctor to update their name, last name, and password securely.
+ */
 class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.ConfirmationDialogListener {
+
+    // UI elements declaration
     private lateinit var backButton: ImageButton
     private lateinit var updateProfileButton: Button
     private lateinit var profileImage: ImageView
     private lateinit var profileImageButton: AppCompatImageView
+
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements, sets click listeners, and fetches current user's profile data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,21 +45,22 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
         profileImageButton = findViewById(R.id.editProfileImageDoc)
 
-
+        // Set padding to handle system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Initialize back button and its click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
+        // Initialize update profile button and its click listener
         updateProfileButton = findViewById(R.id.buttonUpdateProfileDoc)
         updateProfileButton.setOnClickListener {
             if (validateRegisterDetails()) {
@@ -58,14 +69,12 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             }
         }
 
+        // Fetch current user's profile data and populate the UI fields
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val userRef = FirebaseFirestore.getInstance().collection("doctors").document(currentUserUid!!)
-
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-
                 val user = documentSnapshot.toObject(Doctor::class.java)
-
                 user?.let {
                     val firstNameText: EditText = findViewById(R.id.editNameDoc)
                     firstNameText.setText(user.firstName)
@@ -73,6 +82,7 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                     val lastNameText: EditText = findViewById(R.id.editLastNameDoc)
                     lastNameText.setText(user.lastName)
 
+                    // Uncomment to enable editing email functionality
                     //val emailText: EditText = findViewById(R.id.editMailDoc)
                     //emailText.setText(user.email)
                 }
@@ -80,6 +90,10 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Callback function invoked when the user confirms password in the confirmation dialog.
+     * Re-authenticates user and updates the profile upon successful re-authentication.
+     */
     override fun onConfirmButtonClicked(password: String, dialog: DialogFragment) {
         dialog.dismiss()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -97,6 +111,10 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Validates the input fields for updating profile details.
+     * Checks for empty fields, valid name patterns, and password criteria.
+     */
     private fun validateRegisterDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val namePattern = "[a-zA-Z]+"
@@ -158,7 +176,10 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
-
+    /**
+     * Updates the user's profile information in Firestore.
+     * Updates first name, last name, and optionally the password.
+     */
     private fun updateUser() {
         val firstNameText: EditText = findViewById(R.id.editNameDoc)
         val lastNameText: EditText = findViewById(R.id.editLastNameDoc)
@@ -174,22 +195,23 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        //currentUser?.updateEmail(email)?.addOnCompleteListener { emailUpdateTask ->
-        //if (emailUpdateTask.isSuccessful) {
+        // Update password if provided
         if (password != "") {
             if (currentUser != null) {
                 currentUser.updatePassword(password)
             }
         }
 
+        // Construct updates for Firestore document
         val currentUserUid = currentUser?.uid
-
         val userUpdates = hashMapOf<String, Any>(
             "firstName" to firstName,
-            "lastName" to lastName//,
+            "lastName" to lastName
+            // Uncomment to include email in updates
             //"email" to email
         )
 
+        // Update Firestore document with new profile information
         if (currentUserUid != null) {
             FirebaseFirestore.getInstance().collection("doctors").document(currentUserUid)
                 .update(userUpdates)
@@ -200,9 +222,5 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                     showErrorSnackBar("Error updating profile: ${e.message}", true)
                 }
         }
-        //  }
-
-        //}
     }
-
 }

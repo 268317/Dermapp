@@ -27,37 +27,50 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Activity allowing a doctor to schedule appointments with patients.
+ */
 class MakeAppointmentDocActivity : AppCompatActivity() {
+
+    // UI elements
     private lateinit var backButton: ImageButton
     private lateinit var autoDateTime: AutoCompleteTextView
     private lateinit var autoPat: AutoCompleteTextView
     private lateinit var autoLoc: AutoCompleteTextView
     private lateinit var bookButton: Button
 
+    // Selected IDs
     private var selectedDateTimeId: String? = null
     private var selectedPatientId: String? = null
     private var selectedLocationId: String? = null
 
+    // Firebase
     private val firestore = FirebaseFirestore.getInstance()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI elements and sets up necessary listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_make_appointment_doc)
 
+        // Initialize UI elements
         autoDateTime = findViewById(R.id.autoCompleteTextDate)
         autoPat = findViewById(R.id.autoCompleteTextViewPatient)
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
 
+        // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
-
         backButton.setOnClickListener {
             startActivity(Intent(this, StartDocActivity::class.java))
         }
 
+        // Set listener for selecting date/time
         autoDateTime.setOnClickListener {
             if (selectedPatientId != null && selectedLocationId != null) {
                 loadDoctorAvailableDatetime(currentDocId!!, selectedLocationId!!)
@@ -66,17 +79,23 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
             }
         }
 
+        // Set up auto-complete text views
         setupAutoCompleteTextView(autoPat)
         setupAutoCompleteTextView(autoLoc)
 
+        // Load initial data
         loadCurrentDoctorId()
         loadPatients()
 
+        // Set listener for booking button
         bookButton.setOnClickListener {
             bookAppointment()
         }
     }
 
+    /**
+     * Sets up the auto-complete text view configuration.
+     */
     private fun setupAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView) {
         autoCompleteTextView.inputType = 0
         autoCompleteTextView.isFocusable = false
@@ -86,6 +105,9 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Loads the current doctor's ID from Firestore.
+     */
     private fun loadCurrentDoctorId() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         firestore.collection("doctors").document(userId).get()
@@ -102,6 +124,10 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+    /**
+     * Loads the list of patients from Firestore and sets up the auto-complete adapter.
+     */
     private fun loadPatients() {
         val patientsCollection = firestore.collection("patients")
         patientsCollection.get()
@@ -120,6 +146,10 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Loads the locations associated with the given doctor ID from Firestore and sets up the auto-complete adapter.
+     * @param doctorId The ID of the doctor whose locations are to be loaded.
+     */
     private fun loadDoctorLocations(doctorId: String) {
         val locationsCollection = firestore.collection("locations")
         locationsCollection.whereEqualTo("doctorId", doctorId).get()
@@ -142,6 +172,11 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Loads the available date/time slots for the given doctor and location from Firestore and sets up the auto-complete adapter.
+     * @param doctorId The ID of the doctor.
+     * @param locationId The ID of the location.
+     */
     private fun loadDoctorAvailableDatetime(doctorId: String, locationId: String) {
         coroutineScope.launch {
             try {
@@ -178,6 +213,9 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Attempts to book an appointment based on user selections.
+     */
     private fun bookAppointment() {
         val doctorId = currentDocId ?: return
         val locationId = selectedLocationId ?: return
@@ -215,8 +253,6 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Appointment booked successfully.", Toast.LENGTH_SHORT).show()
 
-                                val generatedAppointmentId = documentReference.id
-
                                 val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
                                 availableDatesRef
                                     .update("isAvailable", false)
@@ -225,6 +261,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
                                         setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
+                                        // Clear fields and reset selections
                                         autoPat.setText("")
                                         autoLoc.setText("")
                                         autoDateTime.setText("")
@@ -254,11 +291,20 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Cancels all coroutines when the activity is destroyed to avoid memory leaks.
+     */
     override fun onDestroy() {
         super.onDestroy()
         coroutineScope.cancel()
     }
 
+    /**
+     * Sets a reminder for the appointment using AlarmManager.
+     * @param appointmentId The ID of the appointment.
+     * @param appointmentTimeInMillis The time of the appointment in milliseconds.
+     * @param location The location of the appointment.
+     */
     @SuppressLint("SuspiciousIndentation")
     private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
         val intent = Intent(this, ReminderBroadcast::class.java)

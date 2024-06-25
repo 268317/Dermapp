@@ -18,6 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+/**
+ * Activity to display the details of an appointment for patients.
+ */
 class AppointmentDetailsPatActivity : AppCompatActivity() {
 
     // Declare UI elements
@@ -30,13 +33,18 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var textRecommendations: TextView
     private lateinit var textDiagnosis: TextView
 
-
+    // Instance of Firebase Firestore
     private val firestore = FirebaseFirestore.getInstance()
+
     // SimpleDateFormat configured for date and time in Warsaw timezone
     private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
+    /**
+     * Called when the activity is starting.
+     * Sets up UI elements, initializes listeners, and retrieves necessary data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_pat)
@@ -76,8 +84,8 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                     val doctorId = appointmentDocument.getString("doctorId") ?: ""
                     val datetime = appointmentDocument.getDate("datetime")
                     val localization = appointmentDocument.getString("localization") ?: ""
-                    val recommendation = appointmentDocument.getString("recommendations") ?:""
-                    val diagnosis = appointmentDocument.getString("diagnosis") ?:""
+                    val recommendation = appointmentDocument.getString("recommendations") ?: ""
+                    val diagnosis = appointmentDocument.getString("diagnosis") ?: ""
 
                     appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
                     appointmentLoc.text = localization
