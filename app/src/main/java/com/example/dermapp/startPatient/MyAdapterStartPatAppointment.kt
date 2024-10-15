@@ -2,6 +2,7 @@ package com.example.dermapp.startPatient
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -9,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Appointment
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
@@ -139,21 +142,29 @@ class MyAdapterStartPatAppointment(
      * Function to delete appointment from Firestore.
      */
     private fun deleteAppointment(appointment: Appointment) {
+
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                // Fetch corresponding availableData document
-                val querySnapshot = firestore.collection("availableData")
-                    .whereEqualTo("datetime", appointment.datetime)
+                Log.d("delete appointment", appointment.datetime.toString())
+
+                val startRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) - 1000) // 1 sekunda wcześniej
+                val endRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) + 1000)   // 1 sekunda później
+
+                val querySnapshot = firestore.collection("availableDates")
+                    .whereGreaterThanOrEqualTo("datetime", startRange)
+                    .whereLessThanOrEqualTo("datetime", endRange)
+                    .whereEqualTo("doctorId", appointment.doctorId)
+                    //.whereEqualTo("patientId", appointment.patientId)
                     .get()
                     .await()
 
                 if (!querySnapshot.isEmpty) {
-                    // Assuming there's only one document matching datetime
+                    Log.d("delete appointment", "OKKKKK")
                     val availableDataDoc = querySnapshot.documents[0]
                     val availableDataDocId = availableDataDoc.id
 
                     // Update isAvailable field to true in availableData
-                    firestore.collection("availableData")
+                    firestore.collection("availableDates")
                         .document(availableDataDocId)
                         .update("isAvailable", true)
                         .await()
