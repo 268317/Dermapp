@@ -226,77 +226,136 @@ class SignUpActivity : BaseActivity() {
                 }
             }
 
-            val user = AppUser(email, password, firstName, lastName, birthday, role)
+            // Check if email and pesel (for patients) or email and doctorId (for doctors) already exist
+            val firestore = FirebaseFirestore.getInstance()
 
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-                        val uid: String = firebaseUser?.uid ?: ""
-                        user.appUserId = uid
-                        user.firstName = firstName
-                        user.lastName = lastName
-                        user.email = email
-                        user.birthDate = birthday
-                        user.password = password
-                        user.role = role
+            if (isPatient) {
+                firestore.collection("patients")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener { emailResult ->
+                        if (!emailResult.isEmpty) {
+                            showErrorSnackBar("Email is already in use.", true)
+                            return@addOnSuccessListener
+                        }
 
-                        // Save user to Firestore
-                        FirebaseFirestore.getInstance().collection("users").document(uid)
-                            .set(user)
+                        firestore.collection("patients")
+                            .whereEqualTo("pesel", pesel)
+                            .get()
+                            .addOnSuccessListener { peselResult ->
+                                if (!peselResult.isEmpty) {
+                                    showErrorSnackBar("PESEL is already in use.", true)
+                                    return@addOnSuccessListener
+                                }
+                                // If both checks pass, proceed with registration
+                                registerNewUser(email, password, firstName, lastName, birthday, pesel, doctorId, role, isPatient, isDoctor)
+                            }
+                            .addOnFailureListener { e ->
+                                showErrorSnackBar(e.message.toString(), true)
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        showErrorSnackBar(e.message.toString(), true)
+                    }
+
+            } else {
+                firestore.collection("doctors")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener { emailResult ->
+                        if (!emailResult.isEmpty) {
+                            showErrorSnackBar("Email is already in use.", true)
+                            return@addOnSuccessListener
+                        }
+
+                        firestore.collection("doctors")
+                            .whereEqualTo("doctorId", doctorId)
+                            .get()
+                            .addOnSuccessListener { doctorIdResult ->
+                                if (!doctorIdResult.isEmpty) {
+                                    showErrorSnackBar("Doctor ID is already in use.", true)
+                                    return@addOnSuccessListener
+                                }
+                                // If both checks pass, proceed with registration
+                                registerNewUser(email, password, firstName, lastName, birthday, pesel, doctorId, role, isPatient, isDoctor)
+                            }
+                            .addOnFailureListener { e ->
+                                showErrorSnackBar(e.message.toString(), true)
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        showErrorSnackBar(e.message.toString(), true)
+                    }
+            }
+        }
+    }
+
+    /**
+     * Registers a new user (patient or doctor) in Firebase Authentication and Firestore.
+     */
+    private fun registerNewUser(
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        birthday: String,
+        pesel: String,
+        doctorId: String,
+        role: String,
+        isPatient: Boolean,
+        isDoctor: Boolean
+    ) {
+        val user = AppUser(email, password, firstName, lastName, birthday, role)
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+                    val uid: String = firebaseUser?.uid ?: ""
+                    user.appUserId = uid
+
+                    // Save user to Firestore
+                    FirebaseFirestore.getInstance().collection("users").document(uid)
+                        .set(user)
+                        .addOnSuccessListener {
+                            showErrorSnackBar("You are registered successfully.", false)
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            showErrorSnackBar(e.message.toString(), true)
+                        }
+
+                    if (isPatient) {
+                        val patient = Patient(email, password, firstName, lastName, birthday, role, pesel)
+                        patient.appUserId = uid
+
+                        FirebaseFirestore.getInstance().collection("patients").document(uid)
+                            .set(patient)
                             .addOnSuccessListener {
-                                showErrorSnackBar(
-                                    "You are registered successfully. Your user id is $uid",
-                                    false
-                                )
                                 finish()
                             }
                             .addOnFailureListener { e ->
                                 showErrorSnackBar(e.message.toString(), true)
                             }
 
-                        if (isPatient) {
-                            val patient = Patient(email, password, firstName, lastName, birthday, role, pesel)
-                            patient.appUserId = uid
-                            patient.pesel = pesel
-                            patient.lastName = lastName
-                            patient.email = email
-                            patient.birthDate = birthday
-                            patient.password = password
-                            patient.role = role
-                            patient.firstName = firstName
-                            FirebaseFirestore.getInstance().collection("patients").document(uid)
-                                .set(patient)
-                                .addOnSuccessListener {
-                                    finish()
-                                }
-                                .addOnFailureListener { e ->
-                                    showErrorSnackBar(e.message.toString(), true)
-                                }
-                        } else if (isDoctor) {
-                            val doctor = Doctor(email, password, firstName, lastName, birthday, role, doctorId)
-                            doctor.doctorId = doctorId
-                            doctor.firstName = firstName
-                            doctor.lastName = lastName
-                            doctor.email = email
-                            doctor.birthDate = birthday
-                            doctor.password = password
-                            doctor.role = role
-                            FirebaseFirestore.getInstance().collection("doctors").document(uid)
-                                .set(doctor)
-                                .addOnSuccessListener {
-                                    finish()
-                                }
-                                .addOnFailureListener { e ->
-                                    showErrorSnackBar(e.message.toString(), true)
-                                }
-                        }
-
                     } else {
-                        showErrorSnackBar(task.exception!!.message.toString(), true)
+                        val doctor = Doctor(email, password, firstName, lastName, birthday, role, doctorId)
+                        doctor.doctorId = doctorId
+
+                        FirebaseFirestore.getInstance().collection("doctors").document(uid)
+                            .set(doctor)
+                            .addOnSuccessListener {
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                showErrorSnackBar(e.message.toString(), true)
+                            }
                     }
+
+                } else {
+                    showErrorSnackBar(task.exception!!.message.toString(), true)
                 }
-        }
+            }
     }
 
     /**
