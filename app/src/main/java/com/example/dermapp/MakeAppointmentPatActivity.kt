@@ -128,6 +128,19 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                     selectedDoctorId = doctorsList[position].doctorId
                     loadDoctorLocations(selectedDoctorId!!)
                 }
+                // Set up auto-complete for selecting doctor
+                autoDoc.setOnItemClickListener { _, _, position, _ ->
+                    selectedDoctorId = doctorsList[position].doctorId
+
+                    // Reset location and datetime when doctor is changed
+                    selectedLocationId = null
+                    autoLoc.setText("") // Clear the location field
+                    autoDateTime.setText("") // Clear the datetime field
+
+                    // Load locations based on selected doctor
+                    loadDoctorLocations(selectedDoctorId!!)
+                }
+
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
@@ -158,6 +171,13 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                         "No locations available for the selected doctor.",
                         Toast.LENGTH_SHORT
                     ).show()
+                }
+                autoLoc.setOnItemClickListener { _, _, position, _ ->
+                    selectedLocationId = locList[position].locationId
+
+                    // Reset datetime when location is changed
+                    selectedDateTimeId = null
+                    autoDateTime.setText("") // Clear the datetime field
                 }
             }
             .addOnFailureListener { exception ->
