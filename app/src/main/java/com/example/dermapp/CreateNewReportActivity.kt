@@ -1,14 +1,18 @@
 package com.example.dermapp
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.database.Patient
@@ -18,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,6 +57,8 @@ class CreateNewReportActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private lateinit var doctorsList: List<Doctor>
 
+    private lateinit var photoFile: File
+
     /**
      * Called when the activity is starting.
      * Sets up UI elements, initializes listeners, and retrieves necessary data.
@@ -70,9 +77,10 @@ class CreateNewReportActivity : AppCompatActivity() {
             uploadPhotoToFirebaseStorage()
         }
 
+
         // Handle click on ImageView to add a photo
         addPhotoImageView.setOnClickListener {
-            openGallery()
+            showImageSelectionDialog()
         }
 
         // Fetch list of doctors from Firestore and populate AutoCompleteTextView
@@ -147,15 +155,51 @@ class CreateNewReportActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
+
     /**
      * Handles the result of selecting an image from the gallery.
      * Updates the UI with the selected image.
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-            photoUri = data.data
-            addPhotoImageView.setImageURI(photoUri)
+        when {
+            requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null -> {
+                photoUri = data.data
+                addPhotoImageView.setImageURI(photoUri)
+            }
+            requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK -> {
+                // Użytkownik zrobił zdjęcie
+                val savedPhotoUri = Uri.fromFile(photoFile) // Użyj photoFile z createImageFile
+                addPhotoImageView.setImageURI(savedPhotoUri)
+                photoUri = savedPhotoUri // Zapisz URI dla przesyłania do Firebase
+            }
+        }
+    }
+
+    private val REQUEST_IMAGE_CAPTURE = 2
+
+    private fun openCamera() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            photoFile = createImageFile() ?: return
+            val photoURI: Uri = FileProvider.getUriForFile(this,
+                "${packageName}.provider",
+                photoFile)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    private fun createImageFile(): File? {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        return File.createTempFile(
+            "JPEG_${timestamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            photoUri = Uri.fromFile(this) // Ustaw URI dla zapisanego zdjęcia
         }
     }
 
@@ -285,5 +329,25 @@ class CreateNewReportActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
             }
+    }
+
+    private fun showImageSelectionDialog() {
+        val options = arrayOf("New photo", "Open gallery")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose option")
+
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> {
+
+                    openCamera()
+                }
+                1 -> {
+                    openGallery()
+                }
+            }
+        }
+
+        builder.show()
     }
 }
