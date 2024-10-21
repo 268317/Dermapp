@@ -52,7 +52,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
+            val intent = Intent(this, ProfilePatActivity::class.java)
             startActivity(intent)
         }
 
@@ -173,49 +173,69 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
      * Updates the user's profile information in Firestore.
      * Updates first name, last name, email, and optionally the password.
      */
+    /**
+     * Updates the user's profile information in Firestore and Firebase Authentication.
+     * Updates first name, last name, and optionally the password.
+     * Ensures password is updated in both the "patients" and "users" collections.
+     */
     private fun updateUser() {
         val firstNameText: EditText = findViewById(R.id.editNamePat)
         val lastNameText: EditText = findViewById(R.id.editLastNamePat)
-//        val emailText: EditText = findViewById(R.id.editMailPat)
         val passwordText: EditText = findViewById(R.id.editPasswordPat)
-        //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
 
         val firstName = firstNameText.text.toString().trim()
         val lastName = lastNameText.text.toString().trim()
-//        val email = emailText.text.toString().trim()
         val password = passwordText.text.toString().trim()
-        //val passwordRepeat = passwordRepeatText.text.toString().trim()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUserUid = currentUser?.uid
 
-        // Update password if provided
-        if (password != "") {
-            if (currentUser != null) {
-                currentUser.updatePassword(password)
+        // Update password in Firebase Authentication if provided
+        if (password.isNotEmpty() && currentUser != null) {
+            currentUser.updatePassword(password).addOnSuccessListener {
+                // Password updated successfully in Firebase Authentication
+            }.addOnFailureListener { e ->
+                showErrorSnackBar("Error updating password: ${e.message}", true)
             }
         }
 
-        // Construct updates for Firestore document
-        val currentUserUid = currentUser?.uid
+        // Construct updates for Firestore documents (both "patients" and "users" collections)
         val userUpdates = hashMapOf<String, Any>(
             "firstName" to firstName,
             "lastName" to lastName
-            // Uncomment to include email in updates
-            //"email" to email
         )
 
-// Update Firestore document with new profile information
+        // Add password to the updates if it's not empty
+        if (password.isNotEmpty()) {
+            userUpdates["password"] = password
+        }
+
+        // Update "patients" collection
         if (currentUserUid != null) {
-            FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
+            val firestore = FirebaseFirestore.getInstance()
+
+            // Update patient data in "patients" collection
+            firestore.collection("patients").document(currentUserUid)
                 .update(userUpdates)
                 .addOnSuccessListener {
-                    showErrorSnackBar("Profile updated successfully.", false)
+                    showErrorSnackBar("Profile updated successfully in 'patients' collection.", false)
                 }
                 .addOnFailureListener { e ->
-                    showErrorSnackBar("Error updating profile: ${e.message}", true)
+                    showErrorSnackBar("Error updating profile in 'patients': ${e.message}", true)
+                }
+
+            // Update user data in "users" collection
+            firestore.collection("users").document(currentUserUid)
+                .update(userUpdates)
+                .addOnSuccessListener {
+                    showErrorSnackBar("Profile updated successfully in 'users' collection.", false)
+                }
+                .addOnFailureListener { e ->
+                    showErrorSnackBar("Error updating profile in 'users': ${e.message}", true)
                 }
         }
     }
+
 }
 
 
