@@ -1,6 +1,7 @@
 package com.example.dermapp
 
 import android.app.AlarmManager
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
@@ -191,7 +192,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
      * @param locationId The ID of the location.
      */
     private fun loadDoctorAvailableDatetime(doctorId: String, locationId: String) {
-        val now = Calendar.getInstance().time
+        val now = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw")).time // Ensure current time is in Warsaw timezone
         coroutineScope.launch {
             try {
                 val availableDatesCollection = firestore.collection("availableDates")
@@ -240,9 +241,6 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Attempts to book an appointment based on user selections.
-     */
     private fun bookAppointment() {
         val doctorId = selectedDoctorId ?: return
         val locationId = selectedLocationId ?: return
@@ -255,11 +253,10 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         if (doctor.isNotEmpty() && location.isNotEmpty() && dateTime.isNotEmpty()) {
             try {
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
+                dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw") // Ensure date format uses Warsaw timezone
 
                 val appointmentDate = dateFormat.parse(dateTime)
-                val appointmentTimeInMillis =
-                    appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
+                val appointmentTimeInMillis = appointmentDate?.time ?: throw ParseException("Invalid date format", 0)
 
                 val appointment = Appointment(
                     doctorId = doctorId,
@@ -275,8 +272,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                     .addOnSuccessListener { documentReference ->
                         val generatedAppointmentId = documentReference.id
 
-                        val updatedAppointment =
-                            appointment.copy(appointmentId = generatedAppointmentId)
+                        val updatedAppointment = appointment.copy(appointmentId = generatedAppointmentId)
 
                         documentReference.set(updatedAppointment)
                             .addOnSuccessListener {
@@ -286,10 +282,8 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
 
-                                val availableDatesRef =
-                                    firestore.collection("availableDates").document(dateTimeId)
-                                availableDatesRef
-                                    .update("isAvailable", false)
+                                val availableDatesRef = firestore.collection("availableDates").document(dateTimeId)
+                                availableDatesRef.update("isAvailable", false)
                                     .addOnSuccessListener {
                                         Toast.makeText(
                                             this,
@@ -299,6 +293,10 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
                                         setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
+                                        // Prompt for another appointment
+                                        showBookingPrompt()
+
+                                        // Reset fields
                                         autoDoc.setText("")
                                         autoLoc.setText("")
                                         autoDateTime.setText("")
@@ -335,42 +333,50 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to parse date: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }
-
         } else {
             Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
         }
     }
 
     /**
-     * Cancels all coroutines when the activity is destroyed to avoid memory leaks.
+     * Shows a dialog asking if the user wants to book another appointment.
      */
-    override fun onDestroy() {
-        super.onDestroy()
-        coroutineScope.cancel()
+    private fun showBookingPrompt() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Do you want to book another appointment?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Stay in the same view to book another appointment
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Navigate back to the main screen
+                startActivity(Intent(this, StartPatActivity::class.java))
+                finish() // Optional: close this activity
+            }
+
+        val alert = builder.create()
+        alert.show()
     }
 
-    /**
-     * Sets a reminder for the appointment using AlarmManager.
-     * @param appointmentId The ID of the appointment.
-     * @param appointmentTimeInMillis The time of the appointment in milliseconds.
-     * @param location The location of the appointment.
-     */
+
     private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
         val intent = Intent(this, ReminderBroadcast::class.java)
 
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000
+        val reminderTimeInMillis = appointmentTimeInMillis - 24 * 60 * 60 * 1000 // 24 hours before
 
         Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
 
         // For testing purposes, set an additional reminder after 10 seconds
-        val calendar = Calendar.getInstance()
-        val currentTime = calendar.timeInMillis
+        val currentTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw")).timeInMillis // Ensure current time is in Warsaw timezone
         val tenSecondsMillis = 10000 // 10 seconds in milliseconds
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, currentTime + tenSecondsMillis, pendingIntent)
     }
+
 }
