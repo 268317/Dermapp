@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
+//import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -27,8 +27,8 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
     // UI elements declaration
     private lateinit var backButton: ImageButton
     private lateinit var updateProfileButton: Button
-    private lateinit var profileImage: ImageView
-    private lateinit var profileImageButton: ImageButton
+//    private lateinit var profileImage: ImageView
+//    private lateinit var profileImageButton: ImageButton
 
     /**
      * Called when the activity is starting.
@@ -39,7 +39,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         enableEdgeToEdge()
         setContentView(R.layout.activity_edit_profile_pat)
 
-        profileImageButton = findViewById(R.id.editProfileImagePat)
+        // profileImageButton = findViewById(R.id.editProfileImagePat)
 
         // Set padding to handle system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -78,8 +78,6 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                     val lastNameText: EditText = findViewById(R.id.editLastNamePat)
                     lastNameText.setText(user.lastName)
 
-                    val emailText: EditText = findViewById(R.id.editMailPat)
-                    emailText.setText(user.email)
                 }
             }
         }
@@ -111,18 +109,18 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
      * Checks for empty fields, valid name patterns, email format, and password criteria.
      */
     private fun validateRegisterDetails(): Boolean {
-        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+//        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         val namePattern = "[a-zA-Z]+"
 
         val firstNameText: EditText = findViewById(R.id.editNamePat)
         val lastNameText: EditText = findViewById(R.id.editLastNamePat)
-        val emailText: EditText = findViewById(R.id.editMailPat)
+        // val emailText: EditText = findViewById(R.id.editMailPat)
         val passwordText: EditText = findViewById(R.id.editPasswordPat)
         val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
 
         val firstName = firstNameText.text.toString().trim { it <= ' ' }
         val lastName = lastNameText.text.toString().trim { it <= ' ' }
-        val email = emailText.text.toString().trim { it <= ' ' }
+        // val email = emailText.text.toString().trim { it <= ' ' }
         val password = passwordText.text.toString()
         val passwordRepeat = passwordRepeatText.text.toString()
 
@@ -147,15 +145,15 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                 false
             }
 
-            TextUtils.isEmpty(email) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
-                false
-            }
+//            TextUtils.isEmpty(email) -> {
+//                showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
+//                false
+//            }
 
-            !email.matches(emailPattern.toRegex()) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_email), true)
-                false
-            }
+//            !email.matches(emailPattern.toRegex()) -> {
+//                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_email), true)
+//                false
+//            }
 
             (password != "" && password.length < 8) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_invalid_password), true)
@@ -178,43 +176,51 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
     private fun updateUser() {
         val firstNameText: EditText = findViewById(R.id.editNamePat)
         val lastNameText: EditText = findViewById(R.id.editLastNamePat)
-        val emailText: EditText = findViewById(R.id.editMailPat)
+//        val emailText: EditText = findViewById(R.id.editMailPat)
         val passwordText: EditText = findViewById(R.id.editPasswordPat)
         //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatPat)
 
         val firstName = firstNameText.text.toString().trim()
         val lastName = lastNameText.text.toString().trim()
-        val email = emailText.text.toString().trim()
+//        val email = emailText.text.toString().trim()
         val password = passwordText.text.toString().trim()
         //val passwordRepeat = passwordRepeatText.text.toString().trim()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        // Update email (if changed) and password
-        currentUser?.updateEmail(email)?.addOnCompleteListener { emailUpdateTask ->
-            if (emailUpdateTask.isSuccessful) {
-                if (password != "") {
-                    currentUser.updatePassword(password)
-                }
-
-                // Construct updates for Firestore document
-                val currentUserUid = currentUser.uid
-                val userUpdates = hashMapOf<String, Any>(
-                    "firstName" to firstName,
-                    "lastName" to lastName,
-                    "email" to email
-                )
-
-                // Update Firestore document with new profile information
-                FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
-                    .update(userUpdates)
-                    .addOnSuccessListener {
-                        showErrorSnackBar("Profile updated successfully.", false)
-                    }
-                    .addOnFailureListener { e ->
-                        showErrorSnackBar("Error updating profile: ${e.message}", true)
-                    }
+        // Update password if provided
+        if (password != "") {
+            if (currentUser != null) {
+                currentUser.updatePassword(password)
             }
+        }
+
+        // Construct updates for Firestore document
+        val currentUserUid = currentUser?.uid
+        val userUpdates = hashMapOf<String, Any>(
+            "firstName" to firstName,
+            "lastName" to lastName
+            // Uncomment to include email in updates
+            //"email" to email
+        )
+
+// Update Firestore document with new profile information
+        if (currentUserUid != null) {
+            FirebaseFirestore.getInstance().collection("patients").document(currentUserUid)
+                .update(userUpdates)
+                .addOnSuccessListener {
+                    showErrorSnackBar("Profile updated successfully.", false)
+                }
+                .addOnFailureListener { e ->
+                    showErrorSnackBar("Error updating profile: ${e.message}", true)
+                }
         }
     }
 }
+
+
+
+
+
+
+

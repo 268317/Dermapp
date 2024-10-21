@@ -25,8 +25,8 @@ import java.util.Calendar
 class SignUpActivity : BaseActivity() {
     private lateinit var signUpTextView: TextView
     private lateinit var buttonSignUp: Button
-    private lateinit var radioButtonDoctor: RadioButton
-    private lateinit var radioButtonPatient: RadioButton
+    private lateinit var radioButton1: RadioButton
+    private lateinit var radioButton2: RadioButton
     private lateinit var logInTextButton: TextView
     private lateinit var appnameTextview: TextView
     private lateinit var textName: EditText
@@ -56,8 +56,8 @@ class SignUpActivity : BaseActivity() {
         editTextDateOfBirth = findViewById(R.id.editTextDateOfBirth)
         editTextTextPassword = findViewById(R.id.editTextTextPassword)
         editTextTextPassword2 = findViewById(R.id.editTextTextPassword2)
-        radioButtonDoctor = findViewById(R.id.radioButton1)
-        radioButtonPatient = findViewById(R.id.radioButton2)
+        radioButton1 = findViewById(R.id.radioButton1)
+        radioButton2 = findViewById(R.id.radioButton2)
         doctorIdEditText = findViewById(R.id.textDoctorId)
         peselEditText = findViewById(R.id.textPesel)
 
@@ -73,14 +73,14 @@ class SignUpActivity : BaseActivity() {
             openCalendar()
         }
 
-        radioButtonDoctor.setOnCheckedChangeListener { _, isChecked ->
+        radioButton2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 doctorIdEditText.visibility = View.VISIBLE
                 peselEditText.visibility = View.GONE
             }
         }
 
-        radioButtonPatient.setOnCheckedChangeListener { _, isChecked ->
+        radioButton2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 peselEditText.visibility = View.VISIBLE
                 doctorIdEditText.visibility = View.GONE
@@ -160,8 +160,8 @@ class SignUpActivity : BaseActivity() {
                 false
             }
 
-            radioButtonPatient.isChecked && !peselEditText.text.toString().trim { it <= ' ' }.matches(peselPattern.toRegex())
-                    || radioButtonPatient.isChecked && peselEditText.text.toString().trim { it <= ' ' }.length != 11 -> {
+            radioButton2.isChecked && !peselEditText.text.toString().trim { it <= ' ' }.matches(peselPattern.toRegex())
+                    || radioButton2.isChecked && peselEditText.text.toString().trim { it <= ' ' }.length != 11 -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_invalid_pesel), true)
                 false
             }
@@ -212,8 +212,8 @@ class SignUpActivity : BaseActivity() {
             val firstName: String = textName.text.toString().trim()
             val lastName: String = textLastName.text.toString().trim()
             val birthday = editTextDateOfBirth.text.toString()
-            val isPatient = radioButtonPatient.isChecked
-            val isDoctor = radioButtonDoctor.isChecked
+            val isPatient = radioButton2.isChecked
+            val isDoctor = radioButton1.isChecked
             val pesel = peselEditText.text.toString().trim()
             val doctorId = doctorIdEditText.text.toString().trim()
 
@@ -305,7 +305,13 @@ class SignUpActivity : BaseActivity() {
         isPatient: Boolean,
         isDoctor: Boolean
     ) {
-        val user = AppUser(email, password, firstName, lastName, birthday, role)
+        val user = AppUser(
+            email,
+            password,
+            firstName,
+            lastName,
+            birthday,
+            role)
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
