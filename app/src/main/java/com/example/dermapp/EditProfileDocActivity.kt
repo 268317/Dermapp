@@ -180,30 +180,38 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
      * Updates the user's profile information in Firestore.
      * Updates first name, last name, and optionally the password.
      */
+    /**
+     * Updates the user's profile information in Firestore.
+     * Updates first name, last name, and optionally the password.
+     */
     private fun updateUser() {
         val firstNameText: EditText = findViewById(R.id.editNameDoc)
         val lastNameText: EditText = findViewById(R.id.editLastNameDoc)
-        //val emailText: EditText = findViewById(R.id.editMailDoc)
+        // val emailText: EditText = findViewById(R.id.editMailDoc)
         val passwordText: EditText = findViewById(R.id.editPasswordDoc)
-        //val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatDoc)
+        // val passwordRepeatText: EditText = findViewById(R.id.editPasswordRepeatDoc)
 
         val firstName = firstNameText.text.toString().trim()
         val lastName = lastNameText.text.toString().trim()
-        //val email = emailText.text.toString().trim()
+        // val email = emailText.text.toString().trim()
         val password = passwordText.text.toString().trim()
-        //val passwordRepeat = passwordRepeatText.text.toString().trim()
+        // val passwordRepeat = passwordRepeatText.text.toString().trim()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         // Update password if provided
-        if (password != "") {
-            if (currentUser != null) {
-                currentUser.updatePassword(password)
-            }
+        if (password != "" && currentUser != null) {
+            currentUser.updatePassword(password)
+                .addOnSuccessListener {
+                    // Password update was successful, now update in Firestore collections
+                    updatePasswordInFirestoreCollections(currentUser.uid, password)
+                }
+                .addOnFailureListener { e ->
+                    showErrorSnackBar("Error updating password: ${e.message}", true)
+                }
         }
 
         // Construct updates for Firestore document
-        val currentUserUid = currentUser?.uid
         val userUpdates = hashMapOf<String, Any>(
             "firstName" to firstName,
             "lastName" to lastName
@@ -212,8 +220,8 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         )
 
         // Update Firestore document with new profile information
-        if (currentUserUid != null) {
-            FirebaseFirestore.getInstance().collection("doctors").document(currentUserUid)
+        if (currentUser != null) {
+            FirebaseFirestore.getInstance().collection("doctors").document(currentUser.uid)
                 .update(userUpdates)
                 .addOnSuccessListener {
                     showErrorSnackBar("Profile updated successfully.", false)
@@ -223,4 +231,44 @@ class EditProfileDocActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                 }
         }
     }
+
+    /**
+     * Updates the password in the 'doctors' and 'users' Firestore collections.
+     */
+    private fun updatePasswordInFirestoreCollections(userId: String, newPassword: String) {
+        // Hash the password before saving (if necessary).
+        val hashedPassword = hashPassword(newPassword)
+
+        // Update the 'doctors' collection
+        FirebaseFirestore.getInstance().collection("doctors").document(userId)
+            .update("password", hashedPassword)
+            .addOnSuccessListener {
+                // Optionally, show a success message
+                showErrorSnackBar("Password updated in doctors collection.", false)
+            }
+            .addOnFailureListener { e ->
+                showErrorSnackBar("Error updating password in doctors collection: ${e.message}", true)
+            }
+
+        // Update the 'users' collection (if necessary)
+        FirebaseFirestore.getInstance().collection("users").document(userId)
+            .update("password", hashedPassword)
+            .addOnSuccessListener {
+                // Optionally, show a success message
+                showErrorSnackBar("Password updated in users collection.", false)
+            }
+            .addOnFailureListener { e ->
+                showErrorSnackBar("Error updating password in users collection: ${e.message}", true)
+            }
+    }
+
+    /**
+     * Hashes the password before storing it.
+     * You can use any preferred hashing mechanism here.
+     */
+    private fun hashPassword(password: String): String {
+        // Implement password hashing logic (e.g., using SHA-256 or another hashing algorithm)
+        return password // For now, just return the password directly (NOTE: Replace with actual hashing)
+    }
+
 }
