@@ -119,6 +119,12 @@ class ManageDocLocationsActivity : AppCompatActivity() {
      * @param address The full address of the new location to add.
      */
     private fun addLocation(address: String) {
+        val addressPattern = Regex("""^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ0-9\s\.\-]+ \d+[A-Za-z]?,\s\d{2}-\d{3}\s[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+${'$'}""")
+
+        if (!addressPattern.matches(address)) {
+            Toast.makeText(this, "Please enter the correct address format", Toast.LENGTH_LONG).show()
+            return
+        }
         val userRef = db.collection("doctors").document(currentUserUid!!)
         userRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {

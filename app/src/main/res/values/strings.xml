@@ -20,5 +20,6 @@
     <string name="err_msg_invalid_last_name">Invalid las name!\n</string>
     <string name="last_name">Last Name</string>
     <string name="e_mail">E-mail</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

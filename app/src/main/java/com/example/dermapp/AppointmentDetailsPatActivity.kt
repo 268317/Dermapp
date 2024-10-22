@@ -3,11 +3,13 @@ package com.example.dermapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.dermapp.MapsActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,6 +19,7 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
+
 
 /**
  * Activity to display the details of an appointment for patients.
@@ -32,6 +35,7 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var textRecommendations: TextView
     private lateinit var textDiagnosis: TextView
+    private lateinit var buttonShowOnMap: Button
 
     // Instance of Firebase Firestore
     private val firestore = FirebaseFirestore.getInstance()
@@ -99,6 +103,8 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                         .get()
                         .await()
 
+
+
                     if (!querySnapshot.isEmpty) {
                         val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
                         val firstName = doctorDocument.getString("firstName") ?: ""
@@ -126,5 +132,16 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                 appointmentDocLastName.text = "Doctor"
             }
         }
+
+        buttonShowOnMap = findViewById(R.id.buttonShowOnMap)
+
+        buttonShowOnMap.setOnClickListener {
+            val address = appointmentLoc.text.toString()
+
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra("address", address)
+            startActivity(intent)
+        }
+
     }
 }
