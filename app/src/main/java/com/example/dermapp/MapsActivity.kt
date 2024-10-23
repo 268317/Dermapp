@@ -65,7 +65,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     getDoctorLocation(destinationAddress ?: "")
                 } else {
-                    Toast.makeText(this, "Nie można uzyskać bieżącej lokalizacji.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Unable to get current location.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -82,7 +82,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.d("doctorLocation", doctorLocation.toString())
 
                     runOnUiThread {
-                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title("Appointment location"))
+                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title(address))
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(doctorLatLng, 15f))
                     }
 
