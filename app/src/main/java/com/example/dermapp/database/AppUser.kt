@@ -14,7 +14,7 @@ import com.google.firebase.firestore.PropertyName
  * @property phone Phone number of the user.
  * @property birthDate Birth date of the user.
  * @property role Role of the user (e.g., doctor, patient).
- * @property avatar Avatar image identifier for the user.
+ * @property profilePhoto
  */
 open class AppUser(
     @get:PropertyName("appUserId") @set:PropertyName("appUserId") open var appUserId: String = "",
@@ -26,5 +26,8 @@ open class AppUser(
     @get:PropertyName("phone") @set:PropertyName("phone") open var phone: String = "",
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
     @get:PropertyName("role") @set:PropertyName("role") open var role: String = "",
-    @get:PropertyName("avatar") @set:PropertyName("avatar") open var avatar: Int = 0
-)
+    @get:PropertyName("profilePhoto") @set:PropertyName("profilePhoto") open var profilePhoto: String = ""
+){
+    constructor() : this("", "", "", "", "", "",
+        "", "", "", "")
+}

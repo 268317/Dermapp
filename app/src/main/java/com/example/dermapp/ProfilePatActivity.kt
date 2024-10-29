@@ -11,11 +11,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.net.URL
 
 /**
  * Activity to display and edit patient profile information.
@@ -24,8 +24,6 @@ class ProfilePatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var buttonEditProfilePat: Button
     private lateinit var profileImage: ImageView
-    private lateinit var imageUrl: URL // Placeholder for profile image URL
-    private lateinit var myUrl: URL // Placeholder for user-specific URL
 
     /**
      * Initializes the activity layout and sets up UI components.
@@ -96,6 +94,18 @@ class ProfilePatActivity : AppCompatActivity() {
                     // Set user's PESEL (Personal Identification Number)
                     val PeselTextView: TextView = findViewById(R.id.textViewEnteredPeselProfilePat)
                     PeselTextView.text = user.pesel
+
+                    // Check if profile photo URL exists and set it using Glide
+                    val profilePhotoUrl = user.profilePhoto
+                    if (!profilePhotoUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(profilePhotoUrl)
+                            .placeholder(R.drawable.black_account_circle) // Optional placeholder
+                            .into(profileImage)
+                    } else {
+                        // Optionally set a default avatar if no URL is available
+                        profileImage.setImageResource(R.drawable.black_account_circle)
+                    }
                 }
             }
         }.addOnFailureListener { exception ->
