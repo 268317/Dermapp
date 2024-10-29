@@ -20,4 +20,30 @@
         android:layout_below="@id/backHeader"
         tools:context=".MapsActivity" />
 
+    <ImageButton
+        android:id="@+id/btnFindPharmacies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnGetDirections"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="Pharmacies"
+        android:padding="10dp"
+        android:src="@drawable/pharmacy" />
+
+    <ImageButton
+        android:id="@+id/btnGetDirections"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/button_background"
+        android:src="@drawable/directions"
+        android:contentDescription="Get Directions"
+        android:padding="10dp" />
+
+
 </RelativeLayout>
