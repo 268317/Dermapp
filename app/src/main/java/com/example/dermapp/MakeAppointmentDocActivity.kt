@@ -57,6 +57,9 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_make_appointment_doc)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         // Initialize UI elements
         autoDateTime = findViewById(R.id.autoCompleteTextDate)
         autoPat = findViewById(R.id.autoCompleteTextViewPatient)
@@ -178,6 +181,8 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
      * @param locationId The ID of the location.
      */
     private fun loadDoctorAvailableDatetime(doctorId: String, locationId: String) {
+
+
         coroutineScope.launch {
             try {
                 val availableDatesCollection = firestore.collection("availableDates")
@@ -191,6 +196,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
                 dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
+
 
                 val dateTimes = availableDates.map { availableDate ->
                     dateFormat.format(availableDate.datetime)

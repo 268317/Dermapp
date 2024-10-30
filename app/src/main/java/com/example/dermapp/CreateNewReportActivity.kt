@@ -67,6 +67,9 @@ class CreateNewReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_report)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         // Initialize UI elements and perform other setup operations
         initializeUI()
 

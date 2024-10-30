@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.android.material.navigation.NavigationView
+import java.util.TimeZone
 
 /**
  * Activity for displaying the patient's main menu.
@@ -25,6 +26,9 @@ class MenuPatActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)

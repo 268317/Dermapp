@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ProfileDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var buttonEditProfileDoc: Button
+    private lateinit var profileImageDoc: ImageView
 
     /**
      * Initializes the activity layout and sets up UI components.
@@ -34,6 +37,8 @@ class ProfileDocActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile_doc)
 
         // Initialize views
+        profileImageDoc = findViewById(R.id.profileImageDoc)
+
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
@@ -90,6 +95,18 @@ class ProfileDocActivity : AppCompatActivity() {
                     // Set user's doctor ID
                     val NumberTextView: TextView = findViewById(R.id.textViewEnteredDoctorIdProfileDoc)
                     NumberTextView.text = user.doctorId
+
+                    // Check if profile photo URL exists and set it using Glide
+                    val profilePhotoUrl = user.profilePhoto
+                    if (!profilePhotoUrl.isNullOrEmpty()) {
+                        Glide.with(this)
+                            .load(profilePhotoUrl)
+                            .placeholder(R.drawable.black_account_circle) // Optional placeholder
+                            .into(profileImageDoc)
+                    } else {
+                        // Optionally set a default avatar if no URL is available
+                        profileImageDoc.setImageResource(R.drawable.black_account_circle)
+                    }
                 }
             }
         }.addOnFailureListener { exception ->

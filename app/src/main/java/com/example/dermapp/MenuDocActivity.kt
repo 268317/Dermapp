@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dermapp.startDoctor.StartDocActivity
+import java.util.TimeZone
 
 /**
  * Activity for displaying the doctor's main menu.
@@ -25,6 +26,9 @@ class MenuDocActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge() // Enable edge-to-edge display
+
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Set up back button click listener
         val header = findViewById<LinearLayout>(R.id.backHeader)

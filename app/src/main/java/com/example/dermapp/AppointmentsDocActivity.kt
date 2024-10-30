@@ -48,6 +48,9 @@ class AppointmentsDocActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointments_doc)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         backButton = findViewById(R.id.arrowButton)
         calendarView = findViewById(R.id.calendarView)
         appointmentsListView = findViewById(R.id.appointmentsListView)

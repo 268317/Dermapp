@@ -60,6 +60,9 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_make_appointment_pat)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         // Initialize UI elements
         autoDateTime = findViewById(R.id.autoCompleteTextDate)
         autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)

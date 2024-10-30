@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 
 /**
  * Activity for displaying and editing appointment details for doctors.
@@ -47,6 +48,9 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_appointment_details_doc)
+
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Initialize UI elements
         textViewAppointmentDateDoc = findViewById(R.id.textViewAppointmentDateDoc)
