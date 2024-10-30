@@ -2,8 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/constraintLayoutStartPatAppointments"
     android:layout_width="250dp"
-    android:layout_height="170dp"
-    android:background="@drawable/rounded_gray_background">
+    android:layout_height="170dp">
 
     <RelativeLayout
         android:layout_width="230dp"
@@ -46,7 +45,8 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/button_background_selector"
+                    android:background="@drawable/start_button"
+                    android:clickable="true"
                     android:text="See details"
                     android:textColor="@color/white" />
 

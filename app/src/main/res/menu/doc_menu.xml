@@ -12,9 +12,6 @@
                 <item
                     android:id="@+id/nav_myLocations"
                     android:title="My locations"/>
-                <item
-                    android:id="@+id/nav_logout"
-                    android:title="Logout"/>
             </menu>
         </item>
 
@@ -39,31 +36,20 @@
         </item>
     </group>
 
-    <group android:checkableBehavior="single">
-
-        <item
-            android:title="Patients">
-
-            <menu>
-                <item
-                    android:id="@+id/nav_writePrescription"
-                    android:title="Write prescription"/>
-                <item
-                    android:id="@+id/nav_myPrescriptions"
-                    android:title="Prescriptions history"/>
-                <item
-                    android:id="@+id/nav_reports"
-                    android:title="Reports"/>
-            </menu>
-        </item>
-
-    </group>
-
     <item android:title="Messages">
         <menu>
             <item
                 android:id="@+id/nav_myMailbox"
                 android:title="My Mailbox"/>
+        </menu>
+
+    </item>
+
+    <item android:title="Logout">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:title="Logout"/>
         </menu>
 
     </item>

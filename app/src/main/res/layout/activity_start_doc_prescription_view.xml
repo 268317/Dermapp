@@ -50,7 +50,7 @@
                 android:layout_width="150dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/button_background"
+                android:background="@drawable/start_button"
                 android:gravity="center"
                 android:text="See details"
                 android:textColor="@color/white" />

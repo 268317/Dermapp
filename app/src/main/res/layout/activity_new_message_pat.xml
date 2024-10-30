@@ -81,9 +81,9 @@
                                 <AutoCompleteTextView
                                     android:id="@+id/autoCompleteTextViewDoctor"
                                     android:layout_width="0dp"
-                                    android:layout_height="35dp"
+                                    android:layout_height="45dp"
                                     android:layout_marginBottom="20dp"
-                                    android:background="@drawable/rounded_gray_background"
+                                    android:background="@color/common_google_signin_btn_text_light_disabled"
                                     android:completionThreshold="1"
                                     android:editable="false"
                                     android:hint="Doctor"
@@ -103,7 +103,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="427dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/grey_background"
+                            android:background="@color/common_google_signin_btn_text_light_disabled"
                             android:orientation="horizontal">
 
                             <androidx.constraintlayout.widget.ConstraintLayout

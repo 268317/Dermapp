@@ -62,9 +62,6 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         appointmentDocLastName = findViewById(R.id.textViewDocLastNameAppointmentPat)
         appointmentDocId = findViewById(R.id.textViewDoctorIDAppointmentPat)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
-        textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
-        textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
-
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentsDocActivity
 import com.example.dermapp.CreateNewReportActivity
+import com.example.dermapp.EditProfileDocActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ManageDocLocationsActivity
@@ -29,7 +31,6 @@ import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.database.Prescription
 import com.example.dermapp.messages.MessagesDocActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -45,17 +46,20 @@ class StartDocActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuButton: ImageButton
     private lateinit var navView: NavigationView
+    private lateinit var startButtonDoc1: ImageView
+    private lateinit var startButtonDoc2: ImageView
+    private lateinit var startButtonDoc3: ImageView
     private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
 
     private lateinit var recyclerViewAppointments: RecyclerView
     private lateinit var recyclerViewReports: RecyclerView
-    private lateinit var recyclerViewPrescriptions: RecyclerView
+//    private lateinit var recyclerViewPrescriptions: RecyclerView
     private lateinit var recyclerViewArchivalAppointments: RecyclerView
 
     private lateinit var appointmentsAdapter: MyAdapterStartDocAppointment
     private lateinit var reportsAdapter: MyAdapterStartDocReport
-    private lateinit var prescriptionsAdapter: MyAdapterStartDocPrescription
+//    private lateinit var prescriptionsAdapter: MyAdapterStartDocPrescription
     private lateinit var archivalAdapter: MyAdapterStartDocArchivalAppointment
 
     /**
@@ -82,10 +86,10 @@ class StartDocActivity : AppCompatActivity() {
         reportsAdapter = MyAdapterStartDocReport(mutableListOf(), this)
         recyclerViewReports.adapter = reportsAdapter
 
-        recyclerViewPrescriptions = findViewById(R.id.RVstartDocPrescription)
-        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        prescriptionsAdapter = MyAdapterStartDocPrescription(mutableListOf(), this)
-        recyclerViewPrescriptions.adapter = prescriptionsAdapter
+//        recyclerViewPrescriptions = findViewById(R.id.RVstartDocPrescription)
+//        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        prescriptionsAdapter = MyAdapterStartDocPrescription(mutableListOf(), this)
+//        recyclerViewPrescriptions.adapter = prescriptionsAdapter
 
         recyclerViewArchivalAppointments = findViewById(R.id.RVstartDocArchival)
         recyclerViewArchivalAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -107,12 +111,31 @@ class StartDocActivity : AppCompatActivity() {
             insets
         }
 
-        // Apply window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartDocPrescription)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        startButtonDoc1 = findViewById(R.id.startButtonDoc1)
+        startButtonDoc1.setOnClickListener {
+            val intent = Intent(this, ProfileDocActivity::class.java)
+            startActivity(intent)
         }
+
+        startButtonDoc2 = findViewById(R.id.startButtonDoc2)
+        startButtonDoc2.setOnClickListener {
+            val intent = Intent(this, ManageDocLocationsActivity::class.java)
+            startActivity(intent)
+        }
+
+        startButtonDoc3 = findViewById(R.id.startButtonDoc3)
+        startButtonDoc3.setOnClickListener {
+            val intent = Intent(this, AppointmentsDocActivity::class.java)
+            startActivity(intent)
+        }
+
+//        // Apply window insets
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartDocPrescription)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
 
         // Initialize header and menu button
         val header = findViewById<RelativeLayout>(R.id.includeHeaderDoc)
@@ -204,7 +227,7 @@ class StartDocActivity : AppCompatActivity() {
                     val doctor = documentSnapshot.toObject(Doctor::class.java)
                     currentDocId = doctor?.doctorId
                     fetchAppointments()
-                    fetchPrescriptions()
+//                    fetchPrescriptions()
                     fetchReports()
                     fetchArchivalAppointments()
                 } else {
@@ -299,27 +322,27 @@ class StartDocActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Fetches prescriptions issued by the current doctor from Firestore.
-     */
-    private fun fetchPrescriptions() {
-        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
-
-        currentDocId?.let { uid ->
-            prescriptionsCollection
-                .whereEqualTo("doctorId", uid)
-                .get()
-                .addOnSuccessListener { documents ->
-                    val prescriptions = mutableListOf<Prescription>()
-                    for (document in documents) {
-                        val prescription = document.toObject(Prescription::class.java)
-                        prescriptions.add(prescription)
-                    }
-                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
-
-                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
-                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
-                }
-        }
-    }
+//    /**
+//     * Fetches prescriptions issued by the current doctor from Firestore.
+//     */
+//    private fun fetchPrescriptions() {
+//        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
+//
+//        currentDocId?.let { uid ->
+//            prescriptionsCollection
+//                .whereEqualTo("doctorId", uid)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    val prescriptions = mutableListOf<Prescription>()
+//                    for (document in documents) {
+//                        val prescription = document.toObject(Prescription::class.java)
+//                        prescriptions.add(prescription)
+//                    }
+//                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
+//
+//                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
+//                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
+//                }
+//        }
+//    }
 }

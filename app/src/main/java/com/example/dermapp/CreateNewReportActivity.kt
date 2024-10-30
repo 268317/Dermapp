@@ -118,7 +118,6 @@ class CreateNewReportActivity : AppCompatActivity() {
         checkBoxSeborrhoea = findViewById(R.id.checkBoxSeborrhoeaCreateNewReport)
         checkBoxNewMole = findViewById(R.id.checkBoxNewMoleCreateNewReport)
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
-        addPhotoTextView = findViewById(R.id.textViewAddPhotoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
         autoDoc = findViewById(R.id.autoCompleteTextViewDoctor)
 

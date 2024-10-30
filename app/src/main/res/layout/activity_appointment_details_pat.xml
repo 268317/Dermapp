@@ -26,40 +26,43 @@
     <!--            app:srcCompat="@drawable/baseline_spa_24" />-->
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="413dp"
+        android:layout_height="601dp"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backHeader">
 
 
-
-    <LinearLayout
+        <LinearLayout
             android:id="@+id/linearLayoutAppointmentPat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_background"
             android:elevation="3dp"
-            android:orientation="vertical"
-            tools:ignore="TextSizeCheck"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/backHeader"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backHeader"
+            tools:ignore="TextSizeCheck">
 
-        <ImageView
+            <ImageView
+                android:id="@+id/imageOrangeSpa"
                 android:layout_width="match_parent"
                 android:layout_height="168dp"
-                app:srcCompat="@drawable/baseline_spa_24"
-                android:id="@+id/imageOrangeSpa"
-                android:contentDescription="TODO" />
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/baseline_spa_24" />
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewAppointmentDatePat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,15 +72,15 @@
                     android:textColor="#FF9800"
                     android:textSize="20sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDateAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,15 +90,15 @@
                     android:textColor="#2C2C2C"
                     android:textSize="16sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDoctorAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,15 +108,15 @@
                     android:textColor="#FF9800"
                     android:textSize="20sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewFirstNameAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,24 +125,24 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDoctorNameAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingRight="10dp"
                     android:text="first name"
                     android:textAlignment="viewEnd"
-                    android:paddingRight="10dp"
                     android:textSize="20sp" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewLastNameAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,24 +151,24 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDocLastNameAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingRight="10dp"
                     android:text="last name"
                     android:textAlignment="viewEnd"
-                    android:paddingRight="10dp"
                     android:textSize="20sp" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDocIDAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -174,96 +177,57 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewDoctorIDAppointmentPat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingRight="10dp"
                     android:text="doctor ID"
                     android:textAlignment="viewEnd"
-                    android:paddingRight="10dp"
                     android:textSize="20sp" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewAppointmentLoc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Address:"
                     android:textColor="#2C2C2C"
                     android:textSize="20sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/textViewAppointmentLocEnter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingRight="10dp"
                     android:text="localization"
                     android:textAlignment="viewEnd"
-                    android:paddingRight="10dp"
                     android:textSize="20sp" />
 
 
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonShowOnMap"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_background_selector"
+                android:gravity="center"
+                android:text="SHOW ON MAP"
+                android:textColor="@color/white" />
+
+
         </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonShowOnMap"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/button_background_selector"
-            android:gravity="center"
-            android:text="SHOW ON MAP"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/textViewDiagnosisPat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Diagnosis:"
-            android:textColor="#FF9800"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/editTextMultiLineDiagnosisAppointmentPat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start|top"
-            android:hint="-"
-            android:inputType="textMultiLine"
-            android:padding="15dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/textViewRecommendationsPat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Recommendations:"
-            android:textColor="#FF9800"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/editTextMultiLineRecommendationsAppointmentPat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start|top"
-            android:hint="-"
-            android:inputType="textMultiLine"
-            android:layout_marginBottom="40dp"
-            android:padding="15dp"
-            android:textSize="16sp" />
-
-
-    </LinearLayout>
 
     </ScrollView>
 

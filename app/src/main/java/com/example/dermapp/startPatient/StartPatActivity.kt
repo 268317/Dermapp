@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.CreateNewReportActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentPatActivity
+import com.example.dermapp.ManageDocLocationsActivity
+import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.ProfilePatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.AppUser
@@ -39,14 +42,16 @@ class StartPatActivity : AppCompatActivity() {
     private lateinit var menuButton: ImageButton
     private lateinit var navView: NavigationView
 
+    private lateinit var startButtonPat1: ImageView
+    private lateinit var startButtonPat2: ImageView
+    private lateinit var startButtonPat3: ImageView
+
     private lateinit var recyclerViewAppointments: RecyclerView
     private lateinit var recyclerViewReports: RecyclerView
-    private lateinit var recyclerViewPrescriptions: RecyclerView
     private lateinit var recyclerViewArchivalAppointments: RecyclerView
 
     private lateinit var appointmentsAdapter: MyAdapterStartPatAppointment
     private lateinit var reportsAdapter: MyAdapterStartPatReport
-    private lateinit var prescriptionsAdapter: MyAdapterStartPatPrescription
     private lateinit var archivalAdapter: MyAdapterStartPatArchivalAppointment
 
     /**
@@ -71,15 +76,33 @@ class StartPatActivity : AppCompatActivity() {
         reportsAdapter = MyAdapterStartPatReport(mutableListOf(), this)
         recyclerViewReports.adapter = reportsAdapter
 
-        recyclerViewPrescriptions = findViewById(R.id.RVstartPatPrescription)
-        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        prescriptionsAdapter = MyAdapterStartPatPrescription(mutableListOf(), this)
-        recyclerViewPrescriptions.adapter = prescriptionsAdapter
+//        recyclerViewPrescriptions = findViewById(R.id.RVstartPatPrescription)
+//        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        prescriptionsAdapter = MyAdapterStartPatPrescription(mutableListOf(), this)
+//        recyclerViewPrescriptions.adapter = prescriptionsAdapter
 
         recyclerViewArchivalAppointments = findViewById(R.id.RVstartPatArchivalAppointments)
         recyclerViewArchivalAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         archivalAdapter = MyAdapterStartPatArchivalAppointment(mutableListOf(), this)
         recyclerViewArchivalAppointments.adapter = archivalAdapter
+
+        startButtonPat1 = findViewById(R.id.startButtonPat1)
+        startButtonPat1.setOnClickListener {
+            val intent = Intent(this, ProfilePatActivity::class.java)
+            startActivity(intent)
+        }
+
+        startButtonPat2 = findViewById(R.id.startButtonPat2)
+        startButtonPat2.setOnClickListener {
+            val intent = Intent(this, MakeAppointmentPatActivity::class.java)
+            startActivity(intent)
+        }
+
+        startButtonPat3 = findViewById(R.id.startButtonPat3)
+        startButtonPat3.setOnClickListener {
+            val intent = Intent(this, CreateNewReportActivity::class.java)
+            startActivity(intent)
+        }
 
         // Initialize menu button in the header to open navigation drawer
         val header = findViewById<RelativeLayout>(R.id.includeHeader)
@@ -126,7 +149,7 @@ class StartPatActivity : AppCompatActivity() {
         // Fetch data for appointments, reports, prescriptions, and archival appointments
         fetchAppointments()
         fetchReports()
-        fetchPrescriptions()
+//        fetchPrescriptions()
         fetchArchivalAppointments()
 
 
@@ -241,28 +264,28 @@ class StartPatActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Fetches prescriptions for the current patient from Firestore.
-     */
-    private fun fetchPrescriptions() {
-        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
-
-        currentUserUid?.let { uid ->
-            prescriptionsCollection
-                .whereEqualTo("patientId", uid)
-                .get()
-                .addOnSuccessListener { documents ->
-                    val prescriptions = mutableListOf<Prescription>()
-                    for (document in documents) {
-                        val prescription = document.toObject(Prescription::class.java)
-                        prescriptions.add(prescription)
-                    }
-                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
-
-                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
-                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
-                }
-        }
-    }
+//    /**
+//     * Fetches prescriptions for the current patient from Firestore.
+//     */
+//    private fun fetchPrescriptions() {
+//        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+//        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
+//
+//        currentUserUid?.let { uid ->
+//            prescriptionsCollection
+//                .whereEqualTo("patientId", uid)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    val prescriptions = mutableListOf<Prescription>()
+//                    for (document in documents) {
+//                        val prescription = document.toObject(Prescription::class.java)
+//                        prescriptions.add(prescription)
+//                    }
+//                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
+//
+////                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
+//                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
+//                }
+//        }
+//    }
 }

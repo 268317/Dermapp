@@ -46,7 +46,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/button_background_selector"
+                    android:background="@drawable/start_button"
                     android:text="See details"
                     android:textColor="@color/white" />
 

@@ -87,14 +87,14 @@
                                     <TextView
                                         android:id="@+id/TextViewPatient"
                                         android:layout_width="match_parent"
-                                        android:layout_height="35dp"
-                                        android:background="@drawable/rounded_gray_background"
+                                        android:layout_height="45dp"
+                                        android:background="@color/common_google_signin_btn_text_light_disabled"
                                         android:completionThreshold="0"
+                                        android:gravity="center_vertical"
                                         android:hint="Patient"
                                         android:paddingStart="16dp"
-                                        android:textSize="16sp"
-                                        android:gravity="center_vertical"
                                         android:textColor="@android:color/black"
+                                        android:textSize="16sp"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
@@ -261,7 +261,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="130dp"
                                 android:layout_margin="10dp"
-                                android:background="@drawable/grey_background"
+                                android:background="@color/common_google_signin_btn_text_light_disabled"
                                 android:orientation="horizontal">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -276,8 +276,8 @@
                                         android:ems="10"
                                         android:gravity="start|top"
                                         android:hint="Enter other info"
-                                        android:paddingStart="16dp"
                                         android:inputType="textMultiLine"
+                                        android:paddingStart="16dp"
                                         android:textColorHint="#989595"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
