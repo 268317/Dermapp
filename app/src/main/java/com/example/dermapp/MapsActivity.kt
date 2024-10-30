@@ -2,6 +2,8 @@ package com.example.dermapp
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.location.Location
 import android.os.AsyncTask
@@ -23,6 +25,8 @@ import java.io.InputStreamReader
 import java.net.URL
 import android.location.Geocoder
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Polyline
 import org.json.JSONObject
@@ -78,14 +82,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isMapToolbarEnabled = false
         getCurrentLocationAndDrawRoute()
 
-        // Ustaw listener na markery
+        //mMap.uiSettings.isZoomControlsEnabled = true
+
         mMap.setOnMarkerClickListener { marker ->
-            if (marker.title != null && marker.title != "Doktor") {
-                // Jeśli kliknięto aptekę, narysuj trasę do niej
+            if (marker.title != null) {// && marker.title != "Appointment localisation") {
                 drawRoute(marker.position)
-                true // Zwracamy true, aby zaznaczyć, że zdarzenie zostało obsłużone
+                true
             } else {
-                false // Pozwól na domyślne zachowanie, jeśli kliknięto doktora
+                false
             }
         }
     }
@@ -116,14 +120,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             try {
                 val addresses = geocoder.getFromLocationName(address, 1)
                 Log.d("addresses", addresses.toString())
-                if (addresses != null && addresses.isNotEmpty()) {
+                if (!addresses.isNullOrEmpty()) {
                     val doctorLatLng = LatLng(addresses[0].latitude, addresses[0].longitude)
                     doctorLocation = doctorLatLng
                     Log.d("doctorLocation", doctorLocation.toString())
 
                     runOnUiThread {
                         // Dodaj marker dla lekarza
-                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title("Doktor"))
+                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title("Appointment localisation"))
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(doctorLatLng, 15f))
                     }
 
@@ -166,15 +170,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun findNearbyPharmacies() {
-        // Upewnij się, że doctorLocation jest ustawione
         doctorLocation?.let { location ->
             val url = getNearbyPharmaciesUrl(location)
             FetchPharmacies().execute(url)
-        } ?: Toast.makeText(this, "Nie znaleziono lokalizacji lekarza", Toast.LENGTH_SHORT).show()
+        } ?: Toast.makeText(this, "Unable to get appointment location.", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getNearbyPharmaciesUrl(location: LatLng): String {
-        val apiKey: String = getApiKey() // Użyj swojego klucza API
+    private fun getNearbyPharmaciesUrl(location: LatLng): String { //5km
+        val apiKey: String = getApiKey()
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=5000&type=pharmacy&key=$apiKey"
     }
 
@@ -199,8 +202,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         override fun onPostExecute(result: String) {
             super.onPostExecute(result)
-            parsePharmaciesResult(result) // Przetwórz odpowiedź
+            parsePharmaciesResult(result)
         }
+    }
+
+    private fun getPharmacyIcon(): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_pharmacies) ?: return BitmapDescriptorFactory.defaultMarker()
+
+        val scale = 0.65f
+        val width = (vectorDrawable.intrinsicWidth * scale).toInt()
+        val height = (vectorDrawable.intrinsicHeight * scale).toInt()
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, width, height)
+        vectorDrawable.draw(canvas)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     private fun parsePharmaciesResult(jsonData: String) {
@@ -210,9 +228,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // Zresetowanie poprzednich markerów
             mMap.clear()
-            // Dodaj marker dla lekarza z powrotem
             doctorLocation?.let {
-                mMap.addMarker(MarkerOptions().position(it).title("Doktor"))
+                mMap.addMarker(MarkerOptions().position(it).title("Appointment localisation"))
             }
 
             // Dodanie nowych markerów dla najbliższych aptek
@@ -227,10 +244,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addMarker(MarkerOptions()
                     .position(pharmacyLatLng)
                     .title(name)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                    .icon(getPharmacyIcon()))
             }
         } catch (e: Exception) {
-            Log.e("MapsActivity", "Błąd podczas przetwarzania odpowiedzi: ${e.message}")
+            Log.e("MapsActivity", "Error during processing the response: ${e.message}")
         }
     }
 
