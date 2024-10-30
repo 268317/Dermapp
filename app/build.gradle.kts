@@ -60,6 +60,7 @@ dependencies {
     implementation ("com.jakewharton.threetenabp:threetenabp:1.3.1")
     implementation ("com.github.bumptech.glide:glide:4.14.2")
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.inappmessaging)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

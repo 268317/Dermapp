@@ -37,8 +37,8 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
     private lateinit var imageButtonProfile: ImageButton
 
     companion object {
-        private const val GALLERY_REQUEST_CODE = 1001
-        private const val CAMERA_REQUEST_CODE = 1002
+        const val GALLERY_REQUEST_CODE = 1001
+        const val CAMERA_REQUEST_CODE = 1002
         private const val REQUEST_IMAGE_CAPTURE = CAMERA_REQUEST_CODE
     }
 
@@ -87,9 +87,9 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
         imageButtonProfile = findViewById(R.id.editProfileImagePat)
         imageButtonProfile.setOnClickListener {
-            val options = arrayOf("Wybierz z galerii", "Otwórz aparat")
+            val options = arrayOf("Open gallery", "New photo")
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Aktualizuj zdjęcie profilowe")
+            builder.setTitle("Update profile picture")
             builder.setItems(options) { _, which ->
                 when (which) {
                     0 -> {
