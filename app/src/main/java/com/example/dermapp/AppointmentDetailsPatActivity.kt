@@ -53,6 +53,9 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_pat)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         // Initialize UI elements with error checking
         appointmentDate = findViewById(R.id.textViewDateAppointmentPat)
         appointmentDocFirstName = findViewById(R.id.textViewDoctorNameAppointmentPat)

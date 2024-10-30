@@ -49,6 +49,9 @@ class SetAppointmentDocActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_appointment_doc)
 
+        // Ustawienie strefy czasowej dla aktywności
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
+
         // Initialize Firestore instance and UI components
         firestore = FirebaseFirestore.getInstance()
         editTextDate = findViewById(R.id.editTextDate)
