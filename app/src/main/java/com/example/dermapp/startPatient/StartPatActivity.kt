@@ -76,11 +76,6 @@ class StartPatActivity : AppCompatActivity() {
         reportsAdapter = MyAdapterStartPatReport(mutableListOf(), this)
         recyclerViewReports.adapter = reportsAdapter
 
-//        recyclerViewPrescriptions = findViewById(R.id.RVstartPatPrescription)
-//        recyclerViewPrescriptions.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        prescriptionsAdapter = MyAdapterStartPatPrescription(mutableListOf(), this)
-//        recyclerViewPrescriptions.adapter = prescriptionsAdapter
-
         recyclerViewArchivalAppointments = findViewById(R.id.RVstartPatArchivalAppointments)
         recyclerViewArchivalAppointments.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         archivalAdapter = MyAdapterStartPatArchivalAppointment(mutableListOf(), this)
