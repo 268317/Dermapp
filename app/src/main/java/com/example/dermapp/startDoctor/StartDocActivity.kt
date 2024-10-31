@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentsDocActivity
 import com.example.dermapp.CreateNewReportActivity
-import com.example.dermapp.EditProfileDocActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentDocActivity
 import com.example.dermapp.ManageDocLocationsActivity

@@ -16,7 +16,4 @@ class MyViewHolderMessagesPat(itemView: View) : RecyclerView.ViewHolder(itemView
     val imageDoc: ImageView = itemView.findViewById(R.id.imageViewDocMessagesPat2)
     val firstNameDoc: TextView = itemView.findViewById(R.id.textViewDocFirstNameMessagesPat)
     val lastNameDoc: TextView = itemView.findViewById(R.id.textViewDocLastNameMessagesPat)
-    val mailDoc: TextView = itemView.findViewById(R.id.textViewDocMailMessagesPat)
-    val phoneDoc: TextView = itemView.findViewById(R.id.textViewDocPhoneMessagesPat)
-    val newMessageButtonPat: Button = itemView.findViewById(R.id.newMessageButtonPat)
 }

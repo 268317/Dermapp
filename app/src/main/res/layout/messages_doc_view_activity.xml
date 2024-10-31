@@ -2,147 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="390dp">
+    android:layout_width="150dp"
+    android:layout_height="150dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_margin="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="414dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewPatFirstNameMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="First Name"
-                    android:textColor="#504D4D"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/textViewPatLastNameMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Last Name"
-                    android:textColor="#FF504D4D"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/textViewPeselMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="PESEL"
-                    android:textColor="#FF504D4D"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/textViewPatMailMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="E-mail"
-                    android:textColor="#FF504D4D"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/textViewPatAddressMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Address"
-                    android:textColor="#FF504D4D"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/textViewPatPhoneMessagesDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Phone number"
-                    android:textColor="#FF504D4D"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageViewPatMessagesDoc2"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/black_account_circle" />
-
-                <ImageView
-                    android:id="@+id/imageViewPatMessagesDoc3"
-                    android:layout_width="30dp"
-                    android:layout_height="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/black_mail" />
-
-                <ImageView
-                    android:id="@+id/imageViewPatMessagesDoc4"
-                    android:layout_width="30dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/black_localization" />
-
-                <ImageView
-                    android:id="@+id/imageViewPatMessagesDoc5"
-                    android:layout_width="30dp"
-                    android:layout_height="5dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/black_phone" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/buttonPatMessagesDoc2"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="@drawable/button_background"
-                android:gravity="center"
-                android:text="New message"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <View
-                android:id="@+id/viewPatMessagesDoc2"
-                android:layout_width="300dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="@drawable/button_background" />
+            <ImageView
+                android:id="@+id/imageViewPatMessagesDoc2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:src="@drawable/black_account_circle" />
+
+            <TextView
+                android:id="@+id/textViewPatFirstNameMessagesDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="First Name"
+                android:textColor="#504D4D"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewPatLastNameMessagesDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Last Name"
+                android:textColor="#FF504D4D"
+                android:textSize="15sp" />
+
         </LinearLayout>
 
     </LinearLayout>

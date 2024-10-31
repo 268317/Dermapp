@@ -1,17 +1,25 @@
 package com.example.dermapp.messages
 
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
+import com.example.dermapp.NewMessagePatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Patient
 
 /**
  * Adapter for populating a RecyclerView with a list of patients for doctor messages.
  *
- * @param patientList The list of Patient objects to be displayed.
+ * @param patientsList The list of Patient objects to be displayed.
  */
-class MyAdapterMessagesDoc (private val patientList: List<Patient>) : RecyclerView.Adapter<MyViewHolderMessagesDoc>()  {
+class MyAdapterMessagesDoc (private val context: Context, private var patientsList: List<Patient>) : RecyclerView.Adapter<MyViewHolderMessagesDoc>()  {
 
     /**
      * Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type to represent an item.
@@ -32,16 +40,24 @@ class MyAdapterMessagesDoc (private val patientList: List<Patient>) : RecyclerVi
      * @param position The position of the item within the adapter's data set.
      */
     override fun onBindViewHolder(holder: MyViewHolderMessagesDoc, position: Int) {
-        val doctor = patientList[position]
-        holder.firstNamePat.text = doctor.firstName
-        holder.lastNamePat.text = doctor.lastName
-        holder.peselPat.text = doctor.pesel
-        holder.mailPat.text = doctor.email
-        holder.addressPat.text = doctor.address
-        holder.phonePat.text = doctor.phone
-//        holder.imagePatMail.text = doctor.imageViewPatMessagesDoc3)
-//        holder.imagePatLocalization.text = doctor.imageViewPatMessagesDoc4)
-//        holder.imagePatPhone.text = doctor.imageViewPatMessagesDoc5)
+        val patient = patientsList[position]
+        holder.firstNamePat.text = patient.firstName
+        holder.lastNamePat.text = patient.lastName
+
+        // Use Glide to load the profile photo URL into imageDoc
+        Glide.with(context)
+            .load(patient.profilePhoto) // Assuming doctor.profilePhoto contains the URL
+            .apply(RequestOptions.bitmapTransform(CircleCrop())) // Make image circular
+            .placeholder(R.drawable.black_account_circle) // Optional: Add a placeholder
+            .error(R.drawable.black_account_circle) // Optional: Add an error image if URL fails
+            .into(holder.imagePat)
+
+        // Set OnClickListener for the imageDoc
+        holder.imagePat.setOnClickListener {
+            val intent = Intent(context, NewMessagePatActivity::class.java)
+            intent.putExtra("patientId", patient.appUserId)
+            context.startActivity(intent)
+        }
     }
 
     /**
@@ -50,6 +66,17 @@ class MyAdapterMessagesDoc (private val patientList: List<Patient>) : RecyclerVi
      * @return The total number of items in the data set.
      */
     override fun getItemCount(): Int {
-        return patientList.size
+        return patientsList.size
+    }
+
+    /**
+     * Update the list of patients displayed by the adapter.
+     *
+     * @param patients The new list of Doctor objects to be displayed.
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun setPatientsList(patients: List<Patient>) {
+        this.patientsList = patients
+        notifyDataSetChanged()
     }
 }

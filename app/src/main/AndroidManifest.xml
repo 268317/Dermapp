@@ -57,6 +57,9 @@
             android:name=".messages.MessagesPatActivity"
             android:exported="false" />
         <activity
+            android:name=".messages.MessagesDocActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateAppointmentDetailsDocActivity"
             android:exported="false" />
         <activity

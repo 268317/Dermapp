@@ -36,9 +36,10 @@ class MessagesPatActivity : AppCompatActivity() {
 
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerViewMessagesPat)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         adapter = MyAdapterMessagesPat(this, mutableListOf())
         recyclerView.adapter = adapter
+
 
         // Setup back button click listener to navigate back to StartPatActivity
         val header = findViewById<LinearLayout>(R.id.backHeaderPat)
