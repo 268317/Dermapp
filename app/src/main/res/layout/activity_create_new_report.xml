@@ -299,7 +299,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="24dp"
-                                android:background="@drawable/button_background"
+                                android:background="@drawable/start_button"
                                 android:text="Send report"
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
