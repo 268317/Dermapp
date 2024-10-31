@@ -1,6 +1,5 @@
 package com.example.dermapp
 
-import com.example.dermapp.database.Doctor
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -13,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.example.dermapp.database.Doctor
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -96,12 +97,13 @@ class ProfileDocActivity : AppCompatActivity() {
                     val NumberTextView: TextView = findViewById(R.id.textViewEnteredDoctorIdProfileDoc)
                     NumberTextView.text = user.doctorId
 
-                    // Check if profile photo URL exists and set it using Glide
+                    // Check if profile photo URL exists and set it using Glide with circular crop
                     val profilePhotoUrl = user.profilePhoto
-                    if (!profilePhotoUrl.isNullOrEmpty()) {
+                    if (profilePhotoUrl.isNotEmpty()) {
                         Glide.with(this)
                             .load(profilePhotoUrl)
                             .placeholder(R.drawable.black_account_circle) // Optional placeholder
+                            .transform(CircleCrop()) // Apply circular crop
                             .into(profileImageDoc)
                     } else {
                         // Optionally set a default avatar if no URL is available

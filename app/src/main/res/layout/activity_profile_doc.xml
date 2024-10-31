@@ -37,6 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/circle_background"
             app:srcCompat="@drawable/black_account_circle" />
 
         <LinearLayout

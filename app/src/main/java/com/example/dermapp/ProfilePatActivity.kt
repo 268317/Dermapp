@@ -38,6 +38,7 @@ class ProfilePatActivity : AppCompatActivity() {
 
         // Initialize views
         profileImage = findViewById(R.id.profileImagePat)
+
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
@@ -76,31 +77,32 @@ class ProfilePatActivity : AppCompatActivity() {
                 // Check if user data retrieval was successful
                 user?.let {
                     // Set user's first name
-                    val NameTextView: TextView = findViewById(R.id.textViewEnteredFirstNameProfilePat)
-                    NameTextView.text = user.firstName
+                    val nameTextView: TextView = findViewById(R.id.textViewEnteredFirstNameProfilePat)
+                    nameTextView.text = user.firstName
 
                     // Set user's last name
-                    val LastNameTextView: TextView = findViewById(R.id.textViewEnteredLastNameProfilePat)
-                    LastNameTextView.text = user.lastName
+                    val lastNameTextView: TextView = findViewById(R.id.textViewEnteredLastNameProfilePat)
+                    lastNameTextView.text = user.lastName
 
                     // Set user's email address
-                    val EmailTextView: TextView = findViewById(R.id.textViewEnteredEmailProfilePat)
-                    EmailTextView.text = user.email
+                    val emailTextView: TextView = findViewById(R.id.textViewEnteredEmailProfilePat)
+                    emailTextView.text = user.email
 
                     // Set user's date of birth
-                    val BirthTextView: TextView = findViewById(R.id.textViewEnteredBirthProfilePat)
-                    BirthTextView.text = user.birthDate
+                    val birthTextView: TextView = findViewById(R.id.textViewEnteredBirthProfilePat)
+                    birthTextView.text = user.birthDate
 
                     // Set user's PESEL (Personal Identification Number)
-                    val PeselTextView: TextView = findViewById(R.id.textViewEnteredPeselProfilePat)
-                    PeselTextView.text = user.pesel
+                    val peselTextView: TextView = findViewById(R.id.textViewEnteredPeselProfilePat)
+                    peselTextView.text = user.pesel
 
-                    // Check if profile photo URL exists and set it using Glide
+                    // Check if profile photo URL exists and set it using Glide with circular cropping
                     val profilePhotoUrl = user.profilePhoto
-                    if (!profilePhotoUrl.isNullOrEmpty()) {
+                    if (profilePhotoUrl.isNotEmpty()) {
                         Glide.with(this)
                             .load(profilePhotoUrl)
                             .placeholder(R.drawable.black_account_circle) // Optional placeholder
+                            .circleCrop()  // Makes the image circular
                             .into(profileImage)
                     } else {
                         // Optionally set a default avatar if no URL is available

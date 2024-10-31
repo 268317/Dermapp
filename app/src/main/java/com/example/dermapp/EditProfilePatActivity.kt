@@ -2,7 +2,6 @@ package com.example.dermapp
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,7 +22,6 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -139,6 +137,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         if (!profilePhotoUrl.isNullOrEmpty()) {
             Glide.with(this)
                 .load(profilePhotoUrl)
+                .circleCrop() // Apply circular crop
                 .into(imageButtonProfile)
         }
     }
@@ -150,13 +149,19 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
                 GALLERY_REQUEST_CODE -> {
                     val selectedImageUri = data?.data
                     selectedImageUri?.let {
-                        imageButtonProfile.setImageURI(it)
+                        Glide.with(this)
+                            .load(it)
+                            .circleCrop() // Apply circular crop
+                            .into(imageButtonProfile)
                         uploadImageToFirestore(it)
                     }
                 }
                 CAMERA_REQUEST_CODE -> {
                     val photoURI = Uri.fromFile(photoFile)
-                    imageButtonProfile.setImageURI(photoURI)
+                    Glide.with(this)
+                        .load(photoURI)
+                        .circleCrop() // Apply circular crop
+                        .into(imageButtonProfile)
                     uploadImageToFirestore(photoURI)
                 }
             }
@@ -259,21 +264,14 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
     }
 
     private fun uploadImageToFirestore(imageUri: Uri) {
-        val storageReference = FirebaseStorage.getInstance().reference
-        val profileImagesRef = storageReference.child("profile_images/${System.currentTimeMillis()}.jpg")
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val storageRef = FirebaseStorage.getInstance().reference.child("profile_images/$currentUserUid.jpg")
 
-        profileImagesRef.putFile(imageUri)
+        storageRef.putFile(imageUri)
             .addOnSuccessListener {
-                profileImagesRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
                     val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
-                    userRef.update("profilePhoto", downloadUri.toString())
-                        .addOnSuccessListener {
-                            showErrorSnackBar("Profile photo updated successfully", false)
-                        }
-                        .addOnFailureListener { e ->
-                            showErrorSnackBar("Error saving photo URL: ${e.message}", true)
-                        }
+                    userRef.update("profilePhoto", uri.toString())
                 }
             }
             .addOnFailureListener { e ->
