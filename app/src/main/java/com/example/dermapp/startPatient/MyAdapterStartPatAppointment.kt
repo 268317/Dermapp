@@ -66,21 +66,18 @@ class MyAdapterStartPatAppointment(
 
                 if (!querySnapshot.isEmpty) {
                     val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
-                    val firstName = doctorDocument.getString("firstName") ?: ""
-                    val lastName = doctorDocument.getString("lastName") ?: ""
+                    val name = "${doctorDocument.getString("firstName") ?: ""} ${doctorDocument.getString("lastName") ?: ""}".trim()
+
 
                     // Update ViewHolder with doctor's name
-                    holder.firstNameDoc.text = firstName
-                    holder.lastNameDoc.text = lastName
+                    holder.firstNameDoc.text = name
                 } else {
                     // Handle case where no matching doctor document is found
-                    holder.firstNameDoc.text = "Unknown"
-                    holder.lastNameDoc.text = "Doctor"
+                    holder.firstNameDoc.text = "Unknown Doctor"
                 }
             } catch (e: Exception) {
                 // Handle Firestore fetch errors
-                holder.firstNameDoc.text = "Unknown"
-                holder.lastNameDoc.text = "Doctor"
+                holder.firstNameDoc.text = "Unknown Doctor"
             }
         }
 
