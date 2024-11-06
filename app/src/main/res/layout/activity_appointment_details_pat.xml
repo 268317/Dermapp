@@ -192,7 +192,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewAppointmentLoc"
@@ -203,19 +203,45 @@
                     android:textColor="#2C2C2C"
                     android:textSize="20sp" />
 
+
                 <TextView
                     android:id="@+id/textViewAppointmentLocEnter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingRight="10dp"
-                    android:text="localization"
+                    android:text="Localisation"
                     android:textAlignment="viewEnd"
                     android:textSize="20sp" />
 
+            </LinearLayout>
 
+            <TextView
+                android:id="@+id/textViewAppointmentLoc2Enter"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:text="Localisation 2"
+                android:textAlignment="viewEnd"
+                android:textSize="20sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:paddingTop="20dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
+                <Button
+                    android:id="@+id/buttonShowOnMap"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/start_button"
+                    android:gravity="center"
+                    android:text="SHOW ON MAP"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <LinearLayout
@@ -277,22 +303,7 @@
                 android:layout_height="30dp"
                 android:orientation="vertical"></LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/buttonShowOnMap"
-                    android:layout_width="180dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/start_button"
-                    android:gravity="center"
-                    android:text="SHOW ON MAP"
-                    android:textColor="@color/white" />
-            </LinearLayout>
 
 
         </LinearLayout>

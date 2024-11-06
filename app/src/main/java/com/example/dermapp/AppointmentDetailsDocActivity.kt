@@ -29,6 +29,7 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
     private lateinit var appointmentPatLastName: TextView
     private lateinit var appointmentPatPesel: TextView
     private lateinit var appointmentLoc: TextView
+    private lateinit var appointmentLoc2: TextView
     private lateinit var backButton: ImageButton
     private lateinit var textRecommendations: TextView
     private lateinit var textDiagnosis: TextView
@@ -58,6 +59,7 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
         appointmentPatLastName = findViewById(R.id.textViewPatLastNameAppointmentDoc)
         appointmentPatPesel = findViewById(R.id.textViewPatPeselAppointmentDoc)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
+        appointmentLoc2 = findViewById(R.id.textViewAppointmentLoc2Enter)
         textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
         textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
 
@@ -91,9 +93,20 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
                     val diagnosis = appointmentDocument.getString("diagnosis") ?: ""
 
                     appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
-                    appointmentLoc.text = localization
                     textRecommendations.text = recommendation
                     textDiagnosis.text = diagnosis
+
+                    val addressParts = localization.split(",")
+                    if (addressParts.size >= 2) {
+                        val streetAndNumber = addressParts[0].trim()
+                        val postalAndCity = addressParts[1].trim()
+
+                        appointmentLoc.text = "$streetAndNumber,"
+                        appointmentLoc2.text = postalAndCity
+                    } else {
+                        appointmentLoc.text = localization
+                        appointmentLoc2.text = ""
+                    }
 
                     // Fetch patient details
                     val querySnapshot = firestore.collection("patients")

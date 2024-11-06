@@ -146,7 +146,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartDocAppointment"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
 
                 <TextView
@@ -161,7 +161,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartDocReport"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
 
                 <!--                <TextView-->
@@ -191,7 +191,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/RVstartDocArchival"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:scrollbars="horizontal" />
             </LinearLayout>
         </ScrollView>

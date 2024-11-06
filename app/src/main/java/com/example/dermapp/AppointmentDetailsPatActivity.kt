@@ -32,6 +32,7 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
     private lateinit var appointmentDocLastName: TextView
     private lateinit var appointmentDocId: TextView
     private lateinit var appointmentLoc: TextView
+    private lateinit var appointmentLoc2: TextView
     private lateinit var backButton: ImageButton
     private lateinit var textRecommendations: TextView
     private lateinit var textDiagnosis: TextView
@@ -62,6 +63,7 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         appointmentDocLastName = findViewById(R.id.textViewDocLastNameAppointmentPat)
         appointmentDocId = findViewById(R.id.textViewDoctorIDAppointmentPat)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
+        appointmentLoc2 = findViewById(R.id.textViewAppointmentLoc2Enter)
         textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
         textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
 
@@ -95,12 +97,24 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                     val diagnosis = appointmentDocument.getString("diagnosis") ?: ""
 
                     appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
-                    appointmentLoc.text = localization
                     textRecommendations.text = recommendation
                     textDiagnosis.text = diagnosis
 
                     appointmentDocId.text = doctorId
                     // Fetch doctor details
+
+                    val addressParts = localization.split(",")
+                    if (addressParts.size >= 2) {
+                        val streetAndNumber = addressParts[0].trim()
+                        val postalAndCity = addressParts[1].trim()
+
+                        appointmentLoc.text = "$streetAndNumber,"
+                        appointmentLoc2.text = postalAndCity
+                    } else {
+                        appointmentLoc.text = localization
+                        appointmentLoc2.text = ""
+                    }
+
                     val querySnapshot = firestore.collection("doctors")
                         .whereEqualTo("doctorId", doctorId)
                         .get()
@@ -138,7 +152,7 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         buttonShowOnMap = findViewById(R.id.buttonShowOnMap)
 
         buttonShowOnMap.setOnClickListener {
-            val address = appointmentLoc.text.toString()
+            val address = appointmentLoc.text.toString() + " " + appointmentLoc2.text.toString()
 
             val intent = Intent(this, MapsActivity::class.java)
             intent.putExtra("address", address)
