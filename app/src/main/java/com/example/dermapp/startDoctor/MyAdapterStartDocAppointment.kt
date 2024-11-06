@@ -85,6 +85,10 @@ class MyAdapterStartDocAppointment(
             holder.appointmentDate.text = formattedDateTime
         }
 
+        appointment.localization.let { appointmentLocalization ->
+            holder.appointmentLoc.text = appointmentLocalization
+        }
+
         // Handle delete button click
         holder.deleteButton.setOnClickListener {
             showDeleteConfirmationDialog(appointment)

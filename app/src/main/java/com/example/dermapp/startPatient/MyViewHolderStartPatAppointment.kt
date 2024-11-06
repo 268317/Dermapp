@@ -12,12 +12,14 @@ import com.example.dermapp.R
 class MyViewHolderStartPatAppointment(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val firstNameDoc : TextView
     val appointmentDate : TextView
+    val appointmentLoc : TextView
     val deleteButton: Button
     val seeDetailsButton: Button
 
     init {
         firstNameDoc = itemView.findViewById(R.id.textViewDoctorStartPatAppointments)
         appointmentDate = itemView.findViewById(R.id.textViewDateStartPatAppointments)
+        appointmentLoc = itemView.findViewById(R.id.textViewAddressStartPatAppointments)
         deleteButton = itemView.findViewById(R.id.buttonDeleteAppointmentPat)
         seeDetailsButton = itemView.findViewById(R.id.seeDetailsButtonStartAppointmentPat)
     }

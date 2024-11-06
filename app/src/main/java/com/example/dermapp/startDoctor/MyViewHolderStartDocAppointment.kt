@@ -14,12 +14,14 @@ class MyViewHolderStartDocAppointment(itemView: View) : RecyclerView.ViewHolder(
     val firstNamePat : TextView
     //val lastNamePat : TextView
     val appointmentDate : TextView
+    val appointmentLoc : TextView
     val deleteButton: Button
     val seeDetailsButton: Button
     init {
         firstNamePat = itemView.findViewById(R.id.textViewPatientStartDocAppointments)
         //lastNamePat = itemView.findViewById(R.id.textViewSurnameStartDocAppointments)
         appointmentDate = itemView.findViewById(R.id.textViewDateStartDocAppointments)
+        appointmentLoc = itemView.findViewById(R.id.textViewAddressStartDocAppointments)
         deleteButton = itemView.findViewById(R.id.buttonDeleteAppointmentDoc)
         seeDetailsButton = itemView.findViewById(R.id.seeDetailsButtonStartAppointmentDoc)
     }

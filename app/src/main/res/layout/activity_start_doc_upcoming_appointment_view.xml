@@ -18,20 +18,32 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textViewDateStartDocAppointments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="Date, time"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
                 android:id="@+id/textViewPatientStartDocAppointments"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="Patient name" />
 
-
             <TextView
-                android:id="@+id/textViewDateStartDocAppointments"
+                android:id="@+id/textViewAddressStartDocAppointments"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="Date, time"
-                android:textSize="14sp" />
+                android:text="Address"
+                android:textAlignment="center" />
+
 
             <LinearLayout
                 android:layout_width="217dp"

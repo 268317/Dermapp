@@ -19,6 +19,7 @@ import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
+import kotlin.math.log
 
 
 /**
@@ -102,7 +103,6 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
                         .whereEqualTo("doctorId", doctorId)
                         .get()
                         .await()
-
 
 
                     if (!querySnapshot.isEmpty) {

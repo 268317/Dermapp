@@ -2,12 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/constraintLayoutStartDocReports"
     android:layout_width="250dp"
-    android:layout_height="170dp"
+    android:layout_height="120dp"
     android:background="@drawable/rounded_gray_background">
 
     <RelativeLayout
         android:layout_width="230dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_gravity="center">
 
         <LinearLayout
@@ -20,7 +20,8 @@
             <TextView
                 android:id="@+id/textViewPatientStartDocReports"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Patient name" />
 
@@ -28,22 +29,24 @@
             <TextView
                 android:id="@+id/textViewDateStartDocReports"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Date, time" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_width="217dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/buttonSeeFullReportStartDocReports"
-                    android:layout_width="180dp"
+                    android:layout_width="116dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="@drawable/start_button"
                     android:gravity="center"
                     android:text="SEE FULL REPORT"
