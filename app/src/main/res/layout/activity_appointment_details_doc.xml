@@ -188,13 +188,13 @@
 
             <LinearLayout
                 android:layout_width="300dp"
-                android:layout_height="85dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewAppointmentLoc"
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Address:"
@@ -203,27 +203,70 @@
 
                 <TextView
                     android:id="@+id/textViewAppointmentLocEnter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingRight="10dp"
                     android:text="localization"
                     android:textAlignment="viewEnd"
                     android:textSize="20sp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewDiagnosisPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Diagnosis:"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/editTextMultiLineDiagnosisAppointmentPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:hint="-"
+                    android:inputType="textMultiLine"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/editTextMultiLineDiagnosisAppointmentPat"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:gravity="start|top"
-                android:hint="-"
-                android:inputType="textMultiLine"
-                android:padding="15dp"
-                android:textSize="16sp" />
+                android:layout_margin="10dp"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textViewRecommendationsPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recommendations:"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/editTextMultiLineRecommendationsAppointmentPat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:hint="-"
+                    android:inputType="textMultiLine"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
         </LinearLayout>
 

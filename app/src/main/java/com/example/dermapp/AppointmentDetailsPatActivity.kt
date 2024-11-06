@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.dermapp.MapsActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,6 +62,9 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
         appointmentDocLastName = findViewById(R.id.textViewDocLastNameAppointmentPat)
         appointmentDocId = findViewById(R.id.textViewDoctorIDAppointmentPat)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
+        textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
+        textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
+
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 

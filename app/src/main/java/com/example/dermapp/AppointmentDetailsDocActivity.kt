@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.dermapp.startDoctor.StartDocActivity
-import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +58,8 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
         appointmentPatLastName = findViewById(R.id.textViewPatLastNameAppointmentDoc)
         appointmentPatPesel = findViewById(R.id.textViewPatPeselAppointmentDoc)
         appointmentLoc = findViewById(R.id.textViewAppointmentLocEnter)
+        textRecommendations = findViewById(R.id.editTextMultiLineRecommendationsAppointmentPat)
+        textDiagnosis = findViewById(R.id.editTextMultiLineDiagnosisAppointmentPat)
 
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
