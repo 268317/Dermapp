@@ -3,6 +3,7 @@ package com.example.dermapp
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.example.dermapp.messages.MessagesPatActivity
@@ -10,6 +11,7 @@ import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 /**
  * Activity responsible for user login using Firebase Authentication.
@@ -29,6 +31,24 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // Testowe połączenie z Firestore
+        FirebaseFirestore.getInstance().collection("Test").add(mapOf("testKey" to "testValue"))
+            .addOnSuccessListener {
+                Log.d("FirebaseTest", "Połączenie z Firestore działa!")
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseTest", "Błąd połączenia: ${it.message}")
+            }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM Token", "Token urządzenia: $token")
+            } else {
+                Log.e("FCM Token", "Błąd podczas pobierania tokenu", task.exception)
+            }
+        }
 
         // Initialize input fields and login button
         inputEmail = findViewById(R.id.editTextEmailAddress)
