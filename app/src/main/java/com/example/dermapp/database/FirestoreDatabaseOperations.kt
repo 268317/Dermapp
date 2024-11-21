@@ -1,5 +1,7 @@
 package com.example.dermapp.database
 
+import Conversation
+import Message
 import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore

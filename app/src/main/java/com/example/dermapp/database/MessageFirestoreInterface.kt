@@ -1,5 +1,7 @@
 package com.example.dermapp.database
 
+import Message
+
 /**
  * Interface defining Firestore operations for managing messages.
  */

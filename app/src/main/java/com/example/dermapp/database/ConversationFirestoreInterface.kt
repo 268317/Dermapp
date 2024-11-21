@@ -1,5 +1,7 @@
 package com.example.dermapp.database
 
+import Conversation
+
 /**
  * Interface for handling Firestore operations related to conversations between doctors and patients.
  */

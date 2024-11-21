@@ -14,7 +14,8 @@ import com.google.firebase.firestore.PropertyName
  * @property phone Phone number of the user.
  * @property birthDate Birth date of the user.
  * @property role Role of the user (e.g., doctor, patient).
- * @property profilePhoto
+ * @property profilePhoto URL of the user's profile photo.
+ * @property isOnline Indicates whether the user is currently online.
  */
 open class AppUser(
     @get:PropertyName("appUserId") @set:PropertyName("appUserId") open var appUserId: String = "",
@@ -26,8 +27,8 @@ open class AppUser(
     @get:PropertyName("phone") @set:PropertyName("phone") open var phone: String = "",
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
     @get:PropertyName("role") @set:PropertyName("role") open var role: String = "",
-    @get:PropertyName("profilePhoto") @set:PropertyName("profilePhoto") open var profilePhoto: String = ""
-){
-    constructor() : this("", "", "", "", "", "",
-        "", "", "", "")
+    @get:PropertyName("profilePhoto") @set:PropertyName("profilePhoto") open var profilePhoto: String = "",
+    @get:PropertyName("isOnline") @set:PropertyName("isOnline") open var isOnline: Boolean = false // Nowe pole
+) {
+    constructor() : this("", "", "", "", "", "", "", "", "", "", false)
 }
