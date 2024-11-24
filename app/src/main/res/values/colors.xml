@@ -20,4 +20,8 @@
     <color name="colorSnackBarSuccess">#03A9F4</color>
     <color name="colorSnackBarError">#EB1B63</color>
 
+    <color name="onlineColor">#00FF00</color>
+    <color name="offlineColor">#FF0000</color>
+
+
 </resources>

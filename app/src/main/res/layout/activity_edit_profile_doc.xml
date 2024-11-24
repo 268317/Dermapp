@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/circle_background"
         app:layout_constraintTop_toBottomOf="@+id/backHeader"
-        app:srcCompat="@drawable/account_circle" />
+        app:srcCompat="@drawable/black_account_circle" />
 
     <ScrollView
         android:id="@+id/scrollViewEditDoc"

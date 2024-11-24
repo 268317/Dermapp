@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_messages_pat"
+    android:id="@+id/activity_messages_doc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f5f5f5"
-    tools:context=".messages.MessagesPatActivity">
+    tools:context=".messages.MessagesDocActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/backHeaderPat"
+            android:id="@+id/backHeaderDoc"
             layout="@layout/header_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,20 +40,16 @@
                 android:layout_gravity="center"
                 android:background="@drawable/grey_background"
                 android:gravity="center"
-                android:queryHint="Find your doctor" />
+                android:queryHint="Find your patient" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutMessagesPat"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="0dp"
-            android:background="@drawable/white_background"
-            android:elevation="3dp"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewMessagesPat"
+                android:id="@+id/recyclerViewMessagesDoc"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -61,9 +57,28 @@
 
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="15dp"
+            android:orientation="vertical">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRecentChatsDoc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scrollbars="horizontal"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

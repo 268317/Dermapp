@@ -16,7 +16,7 @@ import com.example.dermapp.database.Doctor
 class MyAdapterMessagesPat(private val context: Context, private var doctorsList: List<Doctor>) : RecyclerView.Adapter<MyViewHolderMessagesPat>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesPat {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.messages_pat_view_activity, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_pat_view_activity, parent, false)
         return MyViewHolderMessagesPat(view)
     }
 

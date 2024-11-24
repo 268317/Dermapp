@@ -29,7 +29,7 @@ class MyAdapterMessagesDoc (private val context: Context, private var patientsLi
      * @return A new MyViewHolderMessagesDoc that holds a View of the given view type.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesDoc {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.messages_doc_view_activity, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_doc_view_activity, parent, false)
         return MyViewHolderMessagesDoc(view)
     }
 

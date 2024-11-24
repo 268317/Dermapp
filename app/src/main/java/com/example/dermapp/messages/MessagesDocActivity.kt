@@ -33,7 +33,7 @@ class MessagesDocActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_messages_doc)
+        setContentView(R.layout.chat_activity_messages_doc)
 
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerViewMessagesDoc)
