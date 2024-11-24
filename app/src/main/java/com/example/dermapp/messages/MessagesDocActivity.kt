@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 import com.example.dermapp.database.Patient
+import com.example.dermapp.messages.adapter.MyAdapterMessagesDoc
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

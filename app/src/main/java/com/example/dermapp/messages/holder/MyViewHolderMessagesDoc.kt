@@ -1,4 +1,4 @@
-package com.example.dermapp.messages
+package com.example.dermapp.messages.holder
 
 import android.view.View
 import android.widget.ImageView
@@ -12,13 +12,8 @@ import com.example.dermapp.R
  * @param itemView The view corresponding to each item in the RecyclerView.
  */
 class MyViewHolderMessagesDoc(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val imagePat : ImageView
-    val firstNamePat : TextView
-    val lastNamePat : TextView
-
-    init {
-        imagePat = itemView.findViewById(R.id.imageViewPatMessagesDoc2)
-        firstNamePat = itemView.findViewById(R.id.textViewPatFirstNameMessagesDoc)
-        lastNamePat = itemView.findViewById(R.id.textViewPatLastNameMessagesDoc)
-    }
+    val imagePat: ImageView = itemView.findViewById(R.id.imageViewPatMessagesDoc2)
+    val firstNamePat: TextView = itemView.findViewById(R.id.textViewPatFirstNameMessagesDoc)
+    val lastNamePat: TextView = itemView.findViewById(R.id.textViewPatLastNameMessagesDoc)
+    val statusIndicatorDoc: View = itemView.findViewById(R.id.statusIndicatorDoc)
 }

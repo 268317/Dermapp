@@ -17,14 +17,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.CreateNewReportActivity
 import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentPatActivity
-import com.example.dermapp.ManageDocLocationsActivity
-import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.ProfilePatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.database.Prescription
 import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -113,8 +110,34 @@ class StartPatActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_logout -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    // Zaktualizuj status na offline przed wylogowaniem
+                    val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+                    if (currentUserUid != null) {
+                        FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(currentUserUid)
+                            .update("isOnline", false)
+                            .addOnSuccessListener {
+                                Log.d("Logout", "Status isOnline ustawiony na false")
+
+                                // Wyloguj użytkownika i przejdź do ekranu logowania
+                                FirebaseAuth.getInstance().signOut()
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Logout", "Błąd ustawiania statusu isOnline: ${e.message}")
+                            }
+                    } else {
+                        // Wyloguj użytkownika, jeśli UID jest null
+                        FirebaseAuth.getInstance().signOut()
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
                     true
                 }
                 R.id.nav_myProfile -> {
@@ -140,6 +163,7 @@ class StartPatActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
 
         // Fetch data for appointments, reports, prescriptions, and archival appointments
         fetchAppointments()

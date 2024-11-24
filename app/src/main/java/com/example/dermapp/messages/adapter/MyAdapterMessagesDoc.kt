@@ -1,4 +1,4 @@
-package com.example.dermapp.messages
+package com.example.dermapp.messages.adapter
 
 
 import android.annotation.SuppressLint
@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.example.dermapp.NewMessagePatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Patient
+import com.example.dermapp.messages.NewMessagePatActivity
+import com.example.dermapp.messages.holder.MyViewHolderMessagesDoc
 
 /**
  * Adapter for populating a RecyclerView with a list of patients for doctor messages.
@@ -51,6 +52,10 @@ class MyAdapterMessagesDoc (private val context: Context, private var patientsLi
             .placeholder(R.drawable.black_account_circle) // Optional: Add a placeholder
             .error(R.drawable.black_account_circle) // Optional: Add an error image if URL fails
             .into(holder.imagePat)
+
+        // Set status indicator drawable based on the `isOnline` field
+        val statusDrawable = if (patient.isOnline) R.drawable.status_indicator_background_online else R.drawable.status_indicator_background_offline
+        holder.statusIndicatorDoc.setBackgroundResource(statusDrawable)
 
         // Set OnClickListener for the imageDoc
         holder.imagePat.setOnClickListener {

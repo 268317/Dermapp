@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="110dp"
     android:layout_height="150dp">
 
     <LinearLayout
+        android:id="@+id/linearLayoutPatView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -22,10 +24,9 @@
 
             <ImageView
                 android:id="@+id/imageViewDocMessagesPat2"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
                 android:src="@drawable/black_account_circle" />
 
             <TextView
@@ -51,5 +52,29 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/statusIndicatorBackgroundPat"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutPatView"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutPatView"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutPatView"
+        app:layout_constraintTop_toTopOf="@+id/linearLayoutPatView" />
+
+    <View
+        android:id="@+id/statusIndicatorPat"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/status_indicator_background_offline"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutPatView"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutPatView"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutPatView"
+        app:layout_constraintTop_toTopOf="@+id/linearLayoutPatView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,10 +48,10 @@
             android:name=".CreateNewReportActivity"
             android:exported="false" />
         <activity
-            android:name=".NewMessagePatActivity"
+            android:name=".messages.NewMessagePatActivity"
             android:exported="false" />
         <activity
-            android:name=".NewMessageDocActivity"
+            android:name=".messages.NewMessageDocActivity"
             android:exported="false" />
         <activity
             android:name=".messages.MessagesPatActivity"

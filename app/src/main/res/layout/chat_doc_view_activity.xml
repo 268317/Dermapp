@@ -6,6 +6,7 @@
     android:layout_height="150dp">
 
     <LinearLayout
+        android:id="@+id/linearLayoutDocView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -22,7 +23,7 @@
 
             <ImageView
                 android:id="@+id/imageViewPatMessagesDoc2"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
                 android:src="@drawable/black_account_circle" />
@@ -50,5 +51,29 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/statusIndicatorBackgroundDoc"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/circle_background"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutDocView"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutDocView"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutDocView"
+        app:layout_constraintTop_toTopOf="@+id/linearLayoutDocView" />
+
+    <View
+        android:id="@+id/statusIndicatorDoc"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/status_indicator_background_offline"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutDocView"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutDocView"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutDocView"
+        app:layout_constraintTop_toTopOf="@+id/linearLayoutDocView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

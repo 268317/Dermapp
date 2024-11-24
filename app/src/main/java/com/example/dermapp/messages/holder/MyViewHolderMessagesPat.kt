@@ -1,7 +1,6 @@
-package com.example.dermapp.messages
+package com.example.dermapp.messages.holder
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,4 +15,5 @@ class MyViewHolderMessagesPat(itemView: View) : RecyclerView.ViewHolder(itemView
     val imageDoc: ImageView = itemView.findViewById(R.id.imageViewDocMessagesPat2)
     val firstNameDoc: TextView = itemView.findViewById(R.id.textViewDocFirstNameMessagesPat)
     val lastNameDoc: TextView = itemView.findViewById(R.id.textViewDocLastNameMessagesPat)
+    val statusIndicatorPat: View = itemView.findViewById(R.id.statusIndicatorPat)
 }
