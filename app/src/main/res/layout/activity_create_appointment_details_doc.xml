@@ -59,7 +59,7 @@
 
                         <LinearLayout
                             android:id="@+id/linearLayoutAppointmentDoc"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="610dp"
                             android:layout_marginStart="24dp"
                             android:layout_marginTop="20dp"
@@ -221,14 +221,15 @@
                                 android:orientation="horizontal" />
 
                             <LinearLayout
-                                android:layout_width="350dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_margin="15dp"
                                 android:background="@drawable/grey_background"
                                 android:orientation="horizontal">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
                                     android:background="@drawable/grey_background">
@@ -253,17 +254,13 @@
 
                             </LinearLayout>
 
+
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal" />
-
-
-                            <LinearLayout
-                                android:layout_width="350dp"
-                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:layout_margin="15dp"
                                 android:background="@drawable/grey_background"
                                 android:orientation="horizontal">
 

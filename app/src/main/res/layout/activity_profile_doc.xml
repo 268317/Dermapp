@@ -9,6 +9,12 @@
     android:background="#f5f5f5"
     tools:context=".ProfileDocActivity">
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
     <LinearLayout
         android:id="@+id/linearLayoutProfileDoc"
         android:layout_width="match_parent"
@@ -42,7 +48,8 @@
 
         <LinearLayout
             android:id="@+id/whiteBackgroundProfileDoc"
-            android:layout_width="365dp"
+            android:layout_width="match_parent"
+            android:layout_margin="20dp"
             android:layout_height="match_parent"
             android:background="@drawable/white_background"
             android:elevation="3dp"
@@ -193,4 +200,5 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

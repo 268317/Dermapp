@@ -2,6 +2,7 @@ package com.example.dermapp
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Location
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startDoctor.StartDocActivity
+import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
@@ -265,6 +267,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
                                     .addOnSuccessListener {
                                         Toast.makeText(this, "Availability updated successfully.", Toast.LENGTH_SHORT).show()
 
+                                        showBookingPrompt()
                                         setAppointmentReminder(generatedAppointmentId, appointmentTimeInMillis, location)
 
                                         // Clear fields and reset selections
@@ -322,5 +325,27 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         Log.d("setAppointmentReminder", "Setting reminder for appointmentId: $appointmentId at time: $reminderTimeInMillis")
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeInMillis, pendingIntent)
+    }
+
+    /**
+     * Shows a dialog asking if the user wants to book another appointment.
+     */
+    private fun showBookingPrompt() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Do you want to book another appointment?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Stay in the same view to book another appointment
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Navigate back to the main screen
+                startActivity(Intent(this, StartDocActivity::class.java))
+                finish() // Optional: close this activity
+            }
+
+        val alert = builder.create()
+        alert.show()
     }
 }

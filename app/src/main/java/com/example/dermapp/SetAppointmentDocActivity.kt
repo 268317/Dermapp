@@ -1,5 +1,6 @@
 package com.example.dermapp
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -230,6 +231,7 @@ class SetAppointmentDocActivity : AppCompatActivity() {
                                         selectedLocationId = null
                                         selectedDate = null
                                         selectedTime = null
+                                        showBookingPrompt()
                                     }
                                     .addOnFailureListener { exception ->
                                         // Handle errors updating appointment
@@ -263,5 +265,27 @@ class SetAppointmentDocActivity : AppCompatActivity() {
         autoCompleteTextView.setOnClickListener {
             autoCompleteTextView.showDropDown()
         }
+    }
+
+    /**
+     * Shows a dialog asking if the user wants to book another appointment.
+     */
+    private fun showBookingPrompt() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Do you want to book another appointment?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Stay in the same view to book another appointment
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+                // Navigate back to the main screen
+                startActivity(Intent(this, StartDocActivity::class.java))
+                finish() // Optional: close this activity
+            }
+
+        val alert = builder.create()
+        alert.show()
     }
 }

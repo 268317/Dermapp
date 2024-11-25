@@ -21,7 +21,7 @@
 
     <ImageButton
         android:id="@+id/editProfileImageDoc"
-        android:layout_width="217dp"
+        android:layout_width="204dp"
         android:layout_height="204dp"
         android:layout_marginTop="36dp"
         android:clickable="true"
@@ -35,7 +35,8 @@
 
     <ScrollView
         android:id="@+id/scrollViewEditDoc"
-        android:layout_width="384dp"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
         android:layout_height="293dp"
         android:layout_marginTop="28dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonUpdateProfileDoc"
