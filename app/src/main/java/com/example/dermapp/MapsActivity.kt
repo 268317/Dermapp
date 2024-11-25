@@ -1,6 +1,7 @@
 package com.example.dermapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -24,8 +25,11 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import android.location.Geocoder
+import android.net.Uri
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import com.example.dermapp.startPatient.StartPatActivity
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Polyline
@@ -40,6 +44,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var destinationAddress: String? = null
     private var doctorLocation: LatLng? = null
     private var currentPolyline: Polyline? = null
+    private lateinit var backButton: ImageButton
+    private var selectedLocation: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +57,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val header = findViewById<LinearLayout>(R.id.backHeader)
+        backButton = header.findViewById(R.id.arrowButton)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, StartPatActivity::class.java)
+            startActivity(intent)
+        }
+
+
         val btnGetDirections: ImageButton = findViewById(R.id.btnGetDirections)
         btnGetDirections.setOnClickListener {
-            doctorLocation?.let {
-                drawRoute(it)
-            } ?: Toast.makeText(this, "Doctor's localisation not found", Toast.LENGTH_SHORT).show()
+            selectedLocation?.let { location ->
+                // Tworzymy URI dla Google Maps z lokalizacją klikniętego markera
+                val gmmIntentUri = Uri.parse("google.navigation:q=${location.latitude},${location.longitude}")
+
+                // Tworzymy intencję
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps") // Upewniamy się, że otworzymy Google Maps
+
+                // Sprawdzamy, czy aplikacja Google Maps jest zainstalowana
+                if (mapIntent.resolveActivity(packageManager) != null) {
+                    startActivity(mapIntent)
+                } else {
+                    Toast.makeText(this, "Google Maps not installed", Toast.LENGTH_SHORT).show()
+                }
+            } ?: Toast.makeText(this, "Location not selected", Toast.LENGTH_SHORT).show()
         }
 
         val btnFindPharmacies: ImageButton = findViewById(R.id.btnFindPharmacies)
         btnFindPharmacies.setOnClickListener {
-            findNearbyPharmacies() // Ustaw akcję dla naciśnięcia przycisku
+            findNearbyPharmacies()
+        }
+
+        findViewById<ImageButton>(R.id.btnFindDoctor).setOnClickListener {
+            if (destinationAddress != null) {
+                getDoctorLocation(destinationAddress ?: "") // Get doctor location if available
+            } else {
+                Toast.makeText(this, "Unable to get current location.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Set up the map
@@ -72,6 +107,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        mMap.uiSettings.isMapToolbarEnabled = true
+
         // Enable the My Location layer on the map
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -79,22 +116,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             getCurrentLocationAndDrawRoute() // Get the current location and draw the route
         }
 
-        mMap.uiSettings.isMapToolbarEnabled = false
         getCurrentLocationAndDrawRoute()
 
-        //mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isMapToolbarEnabled = true
 
         mMap.setOnMarkerClickListener { marker ->
-            if (marker.title != null) {// && marker.title != "Appointment localisation") {
+            if (marker.title != null) {
+                marker.showInfoWindow()
+                selectedLocation = marker.position
                 drawRoute(marker.position)
                 true
             } else {
                 false
             }
         }
+
     }
 
     private fun getCurrentLocationAndDrawRoute() {
+        mMap.uiSettings.isMapToolbarEnabled = true
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
@@ -115,6 +155,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getDoctorLocation(address: String) {
+        mMap.uiSettings.isMapToolbarEnabled = true
         val geocoder = Geocoder(this, Locale.getDefault())
         Thread {
             try {
@@ -126,8 +167,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.d("doctorLocation", doctorLocation.toString())
 
                     runOnUiThread {
-                        // Dodaj marker dla lekarza
-                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title("Appointment localisation"))
+                        mMap.addMarker(MarkerOptions().position(doctorLatLng).title("Appointment localisation").snippet(address))
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(doctorLatLng, 15f))
                     }
 
@@ -226,13 +266,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val jsonObject = JSONObject(jsonData)
             val resultsArray = jsonObject.getJSONArray("results")
 
-            // Zresetowanie poprzednich markerów
             mMap.clear()
             doctorLocation?.let {
                 mMap.addMarker(MarkerOptions().position(it).title("Appointment localisation"))
             }
 
-            // Dodanie nowych markerów dla najbliższych aptek
             for (i in 0 until resultsArray.length()) {
                 val pharmacy = resultsArray.getJSONObject(i)
                 val name = pharmacy.getString("name")
@@ -240,6 +278,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val lat = location.getDouble("lat")
                 val lng = location.getDouble("lng")
                 val pharmacyLatLng = LatLng(lat, lng)
+
 
                 mMap.addMarker(MarkerOptions()
                     .position(pharmacyLatLng)

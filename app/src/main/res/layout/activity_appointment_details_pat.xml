@@ -169,32 +169,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewDocIDAppointmentPat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Doctor ID:"
-                    android:textColor="#2C2C2C"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/textViewDoctorIDAppointmentPat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingRight="10dp"
-                    android:text="doctor ID"
-                    android:textAlignment="viewEnd"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
-
-                <TextView
                     android:id="@+id/textViewAppointmentLoc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -216,6 +190,8 @@
 
             </LinearLayout>
 
+
+
             <TextView
                 android:id="@+id/textViewAppointmentLoc2Enter"
                 android:layout_width="300dp"
@@ -225,6 +201,33 @@
                 android:text="Localisation 2"
                 android:textAlignment="viewEnd"
                 android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewDocIDAppointmentPat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Doctor ID:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textViewDoctorIDAppointmentPat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:text="doctor ID"
+                    android:textColor="#FFFFFF"
+                    android:textAlignment="viewEnd"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

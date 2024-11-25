@@ -153,6 +153,7 @@ class AppointmentDetailsPatActivity : AppCompatActivity() {
 
         buttonShowOnMap.setOnClickListener {
             val address = appointmentLoc.text.toString() + " " + appointmentLoc2.text.toString()
+            Log.e("ADDRESS", address)
 
             val intent = Intent(this, MapsActivity::class.java)
             intent.putExtra("address", address)
