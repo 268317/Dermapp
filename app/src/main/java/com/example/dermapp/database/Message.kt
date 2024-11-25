@@ -1,3 +1,5 @@
+package com.example.dermapp.database
+
 import com.google.firebase.firestore.PropertyName
 
 open class Message(
