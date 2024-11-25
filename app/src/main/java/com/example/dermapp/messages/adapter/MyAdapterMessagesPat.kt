@@ -13,8 +13,10 @@ import com.example.dermapp.R
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.messages.NewMessagePatActivity
 import com.example.dermapp.messages.holder.MyViewHolderMessagesPat
+import com.google.firebase.auth.FirebaseAuth
 
-class MyAdapterMessagesPat(private val context: Context, private var doctorsList: List<Doctor>) : RecyclerView.Adapter<MyViewHolderMessagesPat>() {
+class MyAdapterMessagesPat(private val context: Context, private var doctorsList: List<Doctor>) :
+    RecyclerView.Adapter<MyViewHolderMessagesPat>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesPat {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_pat_view_activity, parent, false)
@@ -41,15 +43,23 @@ class MyAdapterMessagesPat(private val context: Context, private var doctorsList
             .into(holder.imageDoc)
 
         // Set status indicator drawable based on the `isOnline` field
-        val statusDrawable = if (doctor.isOnline) R.drawable.status_indicator_background_online else R.drawable.status_indicator_background_offline
+        val statusDrawable =
+            if (doctor.isOnline) R.drawable.status_indicator_background_online else R.drawable.status_indicator_background_offline
         holder.statusIndicatorPat.setBackgroundResource(statusDrawable)
-
 
         // Set OnClickListener for the imageDoc
         holder.imageDoc.setOnClickListener {
-            val intent = Intent(context, NewMessagePatActivity::class.java)
-            intent.putExtra("doctorId", doctor.doctorId)
-            context.startActivity(intent)
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            if (currentUserId != null) {
+                // Generate conversationId
+                val conversationId = "$currentUserId${doctor.doctorId}"
+
+                // Open NewMessagePatActivity with doctorId and conversationId
+                val intent = Intent(context, NewMessagePatActivity::class.java)
+                intent.putExtra("receiverId", doctor.doctorId)
+                intent.putExtra("conversationId", conversationId)
+                context.startActivity(intent)
+            }
         }
     }
 

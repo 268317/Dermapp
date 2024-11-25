@@ -23,9 +23,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-/**
- * Activity for displaying patient messages and interacting with doctors.
- */
 class MessagesPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var recyclerView: RecyclerView
@@ -36,9 +33,6 @@ class MessagesPatActivity : AppCompatActivity() {
     private lateinit var searchAdapter: SearchDoctorsAdapterPat
     private var allDoctorsList: MutableList<Doctor> = mutableListOf()
 
-    /**
-     * Initializes the activity, sets up the RecyclerView, and fetches the list of doctors.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_messages_pat)
@@ -48,7 +42,6 @@ class MessagesPatActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         adapter = MyAdapterMessagesPat(this, mutableListOf())
         recyclerView.adapter = adapter
-
 
         // Setup back button click listener to navigate back to StartPatActivity
         val header = findViewById<LinearLayout>(R.id.backHeaderPat)
@@ -71,10 +64,13 @@ class MessagesPatActivity : AppCompatActivity() {
         searchResultsRecyclerView = findViewById(R.id.recyclerViewSearchResults)
         searchResultsRecyclerView.layoutManager = LinearLayoutManager(this)
         searchAdapter = SearchDoctorsAdapterPat(this, mutableListOf()) { doctor ->
-            // Save doctorId and navigate to NewMessageActivityPat
-            val intent = Intent(this, NewMessagePatActivity::class.java)
-            intent.putExtra("DOCTOR_ID", doctor.doctorId) // Pass the doctor ID to the new activity
-            startActivity(intent)
+            // Ensure conversation exists or create a new one, then navigate
+            ensureConversationExists(doctor.doctorId) { conversationId ->
+                val intent = Intent(this, NewMessagePatActivity::class.java)
+                intent.putExtra("conversationId", conversationId) // Pass the conversation ID
+                intent.putExtra("receiverId", doctor.doctorId) // Pass the receiver ID
+                startActivity(intent)
+            }
         }
         searchResultsRecyclerView.adapter = searchAdapter
 
@@ -96,6 +92,48 @@ class MessagesPatActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    /**
+     * Ensures that a conversation exists between the current user and the given doctor.
+     * If it does not exist, a new conversation is created.
+     */
+    private fun ensureConversationExists(receiverId: String, onComplete: (conversationId: String) -> Unit) {
+        val conversationRef = FirebaseFirestore.getInstance().collection("conversations")
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+        // Check if a conversation already exists
+        conversationRef
+            .whereEqualTo("senderId", currentUserId)
+            .whereEqualTo("receiverId", receiverId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Existing conversation found
+                    val existingConversationId = querySnapshot.documents[0].id
+                    onComplete(existingConversationId)
+                } else {
+                    // Create a new conversation
+                    val newConversationId = conversationRef.document().id
+                    val newConversation = mapOf(
+                        "conversationId" to newConversationId,
+                        "senderId" to currentUserId,
+                        "receiverId" to receiverId,
+                        "lastMessage" to "",
+                        "lastMessageTimestamp" to com.google.firebase.Timestamp.now()
+                    )
+                    conversationRef.document(newConversationId).set(newConversation)
+                        .addOnSuccessListener {
+                            onComplete(newConversationId)
+                        }
+                        .addOnFailureListener { exception ->
+                            exception.printStackTrace()
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+            }
     }
 
     /**
@@ -125,9 +163,6 @@ class MessagesPatActivity : AppCompatActivity() {
 
                 } catch (e: Exception) {
                     // Handle Firestore fetch errors
-                    // For example:
-                    // Log.e(TAG, "Error fetching doctors", e)
-                    // Toast.makeText(this@MessagesPatActivity, "Error fetching doctors", Toast.LENGTH_SHORT).show()
                 }
             }
         }
