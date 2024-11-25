@@ -1,6 +1,5 @@
 package com.example.dermapp.messages.adapter
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -12,23 +11,13 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.dermapp.R
 import com.example.dermapp.database.Patient
-import com.example.dermapp.messages.NewMessagePatActivity
+import com.example.dermapp.messages.NewMessageDocActivity
 import com.example.dermapp.messages.holder.MyViewHolderMessagesDoc
+import com.google.firebase.auth.FirebaseAuth
 
-/**
- * Adapter for populating a RecyclerView with a list of patients for doctor messages.
- *
- * @param patientsList The list of Patient objects to be displayed.
- */
-class MyAdapterMessagesDoc (private val context: Context, private var patientsList: List<Patient>) : RecyclerView.Adapter<MyViewHolderMessagesDoc>()  {
+class MyAdapterMessagesDoc(private val context: Context, private var patientsList: List<Patient>) :
+    RecyclerView.Adapter<MyViewHolderMessagesDoc>() {
 
-    /**
-     * Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type to represent an item.
-     *
-     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
-     * @param viewType The view type of the new View.
-     * @return A new MyViewHolderMessagesDoc that holds a View of the given view type.
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderMessagesDoc {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_doc_view_activity, parent, false)
         return MyViewHolderMessagesDoc(view)
@@ -54,14 +43,23 @@ class MyAdapterMessagesDoc (private val context: Context, private var patientsLi
             .into(holder.imagePat)
 
         // Set status indicator drawable based on the `isOnline` field
-        val statusDrawable = if (patient.isOnline) R.drawable.status_indicator_background_online else R.drawable.status_indicator_background_offline
+        val statusDrawable =
+            if (patient.isOnline) R.drawable.status_indicator_background_online else R.drawable.status_indicator_background_offline
         holder.statusIndicatorDoc.setBackgroundResource(statusDrawable)
 
         // Set OnClickListener for the imageDoc
         holder.imagePat.setOnClickListener {
-            val intent = Intent(context, NewMessagePatActivity::class.java)
-            intent.putExtra("patientId", patient.appUserId)
-            context.startActivity(intent)
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            if (currentUserId != null) {
+                // Generate conversationId
+                val conversationId = "$currentUserId${patient.appUserId}"
+
+                // Open NewMessagePatActivity with patientId and conversationId
+                val intent = Intent(context, NewMessageDocActivity::class.java)
+                intent.putExtra("receiverId", patient.appUserId)
+                intent.putExtra("conversationId", conversationId)
+                context.startActivity(intent)
+            }
         }
     }
 
