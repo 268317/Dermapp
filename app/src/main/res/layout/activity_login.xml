@@ -38,6 +38,19 @@
         app:layout_constraintTop_toBottomOf="@+id/LogInButton"
         app:rippleColor="@color/light_gray" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="107dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toEndOf="@+id/AppName_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/spa" />
+
     <Button
         android:id="@+id/LogInButton"
         android:layout_width="135dp"
@@ -58,12 +71,15 @@
         android:id="@+id/AppName_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="106dp"
         android:text="DERMAPP"
         android:textColor="#FFFFFF"
         android:textSize="38sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
