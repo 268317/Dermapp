@@ -7,11 +7,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
-import com.example.dermapp.database.Doctor
-import com.example.dermapp.database.Patient
 import com.example.dermapp.database.AppUser
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.Calendar

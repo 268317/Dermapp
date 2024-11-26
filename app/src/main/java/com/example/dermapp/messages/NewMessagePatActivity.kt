@@ -1,14 +1,23 @@
 package com.example.dermapp.messages
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.dermapp.R
 import com.example.dermapp.database.AppUser
@@ -16,11 +25,7 @@ import com.example.dermapp.database.Message
 import com.example.dermapp.messages.adapter.NewMessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import org.json.JSONObject
-import android.util.Log
 
 class NewMessagePatActivity : AppCompatActivity() {
 
@@ -97,44 +102,42 @@ class NewMessagePatActivity : AppCompatActivity() {
             timestamp = com.google.firebase.Timestamp.now()
         )
 
-        // Zapisanie wiadomości w Firestore
         firestore.collection("messages").document(message.messageId).set(message).addOnSuccessListener {
+            // Update the last message in the conversation
             firestore.collection("conversation").document(conversationId).update(
                 mapOf(
                     "lastMessage" to messageText,
                     "lastMessageTimestamp" to message.timestamp
                 )
-            ).addOnFailureListener {
-                firestore.collection("conversation").document(conversationId).set(
-                    mapOf(
-                        "conversationId" to conversationId,
-                        "doctorId" to doctorId,
-                        "patientId" to currentPatientId,
-                        "lastMessage" to messageText,
-                        "lastMessageTimestamp" to message.timestamp
-                    )
-                )
-            }
+            ).addOnSuccessListener {
+                // Local notification for the sender
+                showLocalNotification("Message Sent", "Your message was successfully sent.")
 
-            // Wywołanie funkcji do wysyłania powiadomienia
-            sendNotificationToReceiver(doctorId, messageText)
+                // Notification for the receiver
+                sendNotificationToReceiver(messageText)
+            }.addOnFailureListener {
+                showLocalNotification("Error", "Failed to update the conversation.")
+            }
+        }.addOnFailureListener { e ->
+            showLocalNotification("Error", "Failed to send the message: ${e.message}")
         }
     }
 
-    private fun sendNotificationToReceiver(receiverId: String, messageText: String) {
+    private fun sendNotificationToReceiver(messageText: String) {
         val firestore = FirebaseFirestore.getInstance()
-        firestore.collection("users").document(receiverId).get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                val fcmToken = document.getString("fcmToken") ?: return@addOnSuccessListener
-                // Przygotowanie powiadomienia do wysłania
-                val payload = hashMapOf(
+        firestore.collection("users").document(doctorId).get().addOnSuccessListener { document ->
+            val fcmToken = document.getString("fcmToken")
+
+            if (!fcmToken.isNullOrEmpty()) {
+                val notificationData = mapOf(
                     "to" to fcmToken,
                     "notification" to mapOf(
-                        "title" to "Nowa wiadomość",
+                        "title" to "New Message",
                         "body" to messageText
                     )
                 )
-                sendNotificationRequest(payload)
+
+                sendNotificationRequest(notificationData)
             }
         }
     }
@@ -145,19 +148,42 @@ class NewMessagePatActivity : AppCompatActivity() {
         val request = object : JsonObjectRequest(
             Request.Method.POST, url, JSONObject(payload),
             { response ->
-                Log.d("Notification", "Powiadomienie wysłane: $response")
+                Log.d("Notification", "Notification sent: $response")
             },
             { error ->
-                Log.e("Notification", "Błąd wysyłania powiadomienia: ${error.message}")
+                Log.e("Notification", "Error sending notification: ${error.message}")
             }) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = mutableMapOf<String, String>()
                 headers["Content-Type"] = "application/json"
-                headers["Authorization"] = "key=b37d19e1b0bcbad045304282e6ebfc0477cf206a"
+                headers["Authorization"] = "key=YOUR_SERVER_KEY"
                 return headers
             }
         }
         requestQueue.add(request)
+    }
+
+    private fun showLocalNotification(title: String, message: String) {
+        val channelId = "default_channel"
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Default Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 
     private fun setupHeader() {
