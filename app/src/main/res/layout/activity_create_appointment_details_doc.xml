@@ -8,319 +8,199 @@
     android:background="#f5f5f5"
     tools:context=".CreateAppointmentDetailsDocActivity">
 
-
+    <!-- Header Back -->
     <include
         android:id="@+id/backHeader"
         layout="@layout/header_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView4"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Application Logo -->
+    <ImageView
+        android:id="@+id/appLogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/baseline_spa_24"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/backHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Scrollable Content -->
     <ScrollView
-        android:id="@+id/scrollView4"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="683dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backHeader">
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/appLogo"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- Appointment Card -->
+            <LinearLayout
+                android:id="@+id/linearLayoutAppointmentDoc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_background"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <!-- Appointment Date -->
+                <TextView
+                    android:id="@+id/textViewAppointmentDateDoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Appointment Date:"
+                    android:textColor="#FF9800"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewDateAppointmentDoc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:text="DD MONTH YYYY, 00:00"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp" />
 
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="641dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FF9800"
+                    android:layout_marginVertical="12dp" />
 
+                <!-- Patient Info -->
+                <TextView
+                    android:id="@+id/textViewPatientAppointmentDoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Patient:"
+                    android:textColor="#FF9800"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:id="@+id/linearLayoutAppointmentDoc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="610dp"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginEnd="24dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/white_background"
-                            android:elevation="3dp"
-                            android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="1.0">
+                <!-- Patient Details -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="First Name:"
+                        android:textColor="#2C2C2C"
+                        android:textSize="16sp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textViewPatientFirstNameAppointmentDoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="First Name"
+                        android:textAlignment="viewEnd"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/textViewAppointmentDateDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Appointment date:"
-                                    android:textAlignment="center"
-                                    android:textColor="#FF9800"
-                                    android:textSize="20sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
-                            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Last Name:"
+                        android:textColor="#2C2C2C"
+                        android:textSize="16sp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textViewPatientLastNameAppointmentDoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Last Name"
+                        android:textAlignment="viewEnd"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/textViewDateAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="DD MONTH YYYY, 00:00"
-                                    android:textAlignment="center"
-                                    android:textColor="#2C2C2C"
-                                    android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
-                            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="PESEL:"
+                        android:textColor="#2C2C2C"
+                        android:textSize="16sp" />
 
-                            <View
-                                android:id="@+id/view1AppointmentDoc"
-                                android:layout_width="match_parent"
-                                android:layout_height="2dp"
-                                android:layout_margin="10dp"
-                                android:background="#FF9800"
-                                tools:layout_editor_absoluteX="22dp"
-                                tools:layout_editor_absoluteY="337dp" />
+                    <TextView
+                        android:id="@+id/textViewPatientPeselAppointmentDoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="PESEL"
+                        android:textAlignment="viewEnd"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
+                <!-- Diagnosis Section -->
+                <EditText
+                    android:id="@+id/editTextTextMultiLineDiagnosisAppointmentDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Diagnosis"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/grey_background"
+                    android:padding="12dp"
+                    android:textColor="#000"
+                    android:textColorHint="#989595"
+                    android:layout_marginTop="16dp" />
 
-                                <TextView
-                                    android:id="@+id/textViewPatientAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Patient:"
-                                    android:textAlignment="center"
-                                    android:textColor="#FF9800"
-                                    android:textSize="20sp" />
+                <!-- Recommendations Section -->
+                <EditText
+                    android:id="@+id/editTextTextMultiLineRecommendationsAppointmentDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Recommendations"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/grey_background"
+                    android:padding="12dp"
+                    android:textColor="#000"
+                    android:textColorHint="#989595"
+                    android:layout_marginTop="16dp" />
 
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/textViewFirstNameAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="First name:"
-                                    android:textColor="#2C2C2C"
-                                    android:textSize="16sp" />
-
-                                <TextView
-                                    android:id="@+id/textViewPatientFirstNameAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="first name"
-                                    android:textAlignment="viewEnd"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/textViewLastNameAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Last name:"
-                                    android:textColor="#2C2C2C"
-                                    android:textSize="16sp" />
-
-                                <TextView
-                                    android:id="@+id/textViewPatientLastNameAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="last name"
-                                    android:textAlignment="viewEnd"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/textViewPeselAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="PESEL:"
-                                    android:textColor="#2C2C2C"
-                                    android:textSize="16sp" />
-
-                                <TextView
-                                    android:id="@+id/textViewPatientPeselAppointmentDoc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="PESEL"
-                                    android:textAlignment="viewEnd"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:orientation="horizontal" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="15dp"
-                                android:background="@drawable/grey_background"
-                                android:orientation="horizontal">
-
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/grey_background">
-
-                                    <EditText
-                                        android:id="@+id/editTextTextMultiLineDiagnosisAppointmentDoc"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:ems="10"
-                                        android:gravity="start|top"
-                                        android:hint="Diagnosis"
-                                        android:inputType="textMultiLine"
-                                        android:paddingLeft="10dp"
-                                        android:textColor="#000000"
-                                        android:textColorHint="#989595"
-                                        android:textSize="16sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                            </LinearLayout>
-
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="15dp"
-                                android:background="@drawable/grey_background"
-                                android:orientation="horizontal">
-
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/grey_background">
-
-                                    <EditText
-                                        android:id="@+id/editTextTextMultiLineRecommendationsAppointmentDoc"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:ems="10"
-                                        android:gravity="start|top"
-                                        android:hint="Recommendations"
-                                        android:inputType="textMultiLine"
-                                        android:paddingLeft="10dp"
-                                        android:textColor="#000000"
-                                        android:textColorHint="#989595"
-                                        android:textSize="16sp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="40dp"
-                                android:orientation="horizontal">
-
-                                <Button
-                                    android:id="@+id/bookButton"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="40dp"
-                                    android:layout_margin="24dp"
-                                    android:background="@drawable/start_button"
-                                    android:text="Edit"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-                    </ScrollView>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+                <!-- Button -->
+                <Button
+                    android:id="@+id/bookButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/start_button"
+                    android:text="Edit"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
