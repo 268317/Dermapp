@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Tło przycisku -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#FFC107" /> <!-- Kolor domyślny -->
+            <stroke android:width="2dp" android:color="#FFA726" />
+        </shape>
+    </item>
+
+    <!-- Ikona strzałki -->
+    <item
+        android:drawable="@drawable/ic_send"
+        android:gravity="center" />
+</layer-list>

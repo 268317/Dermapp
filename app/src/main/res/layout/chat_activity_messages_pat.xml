@@ -8,90 +8,75 @@
     android:background="#f5f5f5"
     tools:context=".messages.MessagesPatActivity">
 
+    <!-- Główny układ liniowy -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical">
 
+        <!-- Header z przyciskiem powrotu -->
         <include
             android:id="@+id/backHeaderPat"
             layout="@layout/header_back"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBottomOf="parent" />
+            android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:orientation="vertical"></LinearLayout>
-
+        <!-- SearchView i wyniki wyszukiwania -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="10dp">
+            android:padding="8dp">
 
             <SearchView
                 android:id="@+id/searchViewDoctorsPat"
-                android:layout_width="380dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:background="@drawable/grey_background"
-                android:queryHint="Search doctor by name or surname" />
+                android:queryHint="Search doctor by name or surname"
+                android:iconifiedByDefault="false"
+                android:layout_marginBottom="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewSearchResults"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:paddingTop="8dp"
                 android:visibility="gone" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutMessagesPat"
+        <!-- Sekcja wiadomości -->
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMessagesPat"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/white_background"
-            android:elevation="3dp"
-            android:orientation="vertical">
+            android:scrollbars="horizontal" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewMessagesPat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:scrollbars="horizontal"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="15dp"
-            android:orientation="vertical">
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Sekcja ostatnich czatów -->
+        <TextView
+            android:id="@+id/recentChatsHeader"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Recent Chats"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewRecentChatsPat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:scrollbars="horizontal"/>
-
-        </LinearLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView2"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewRecentChatsPat"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:scrollbars="horizontal" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

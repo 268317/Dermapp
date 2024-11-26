@@ -2,33 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#f5f5f5">
 
+    <!-- Nagłówek -->
     <include
         android:id="@+id/backHeader"
         layout="@layout/header_back"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
+    <!-- Kalendarz -->
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:background="@drawable/card_background"
+        android:elevation="4dp" />
 
+    <!-- Nagłówek dla listy -->
     <TextView
+        android:id="@+id/bookedAppointmentsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:paddingLeft="16dp"
-        android:text="Booked appointments"
-        android:textSize="20sp">
-    </TextView>
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="Booked Appointments"
+        android:textColor="#FF9800"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
+    <!-- Lista wizyt -->
     <ListView
         android:id="@+id/appointmentsListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:dividerHeight="1dp"/>
+        android:layout_weight="1"
+        android:divider="@color/greyLight"
+        android:dividerHeight="1dp"
+        android:background="@drawable/white_background"
+        android:elevation="4dp"
+        android:padding="8dp" />
 </LinearLayout>

@@ -11,27 +11,35 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom">
 
-        <TextView
-            android:id="@+id/spa"
+        <!-- Ikona lub logo aplikacji -->
+        <ImageView
+            android:id="@+id/spa_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@android:color/transparent"
-            android:drawableRight="@drawable/spa"
+            android:src="@drawable/spa"
+            android:contentDescription="App Icon"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"></TextView>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="10dp" />
 
+        <!-- Nazwa aplikacji -->
         <TextView
             android:id="@+id/AppName_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DERMAPP"
             android:textColor="#FFFFFF"
-            android:textSize="38sp"
+            android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/spa" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toEndOf="@id/spa_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
