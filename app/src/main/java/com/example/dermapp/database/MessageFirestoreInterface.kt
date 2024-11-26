@@ -33,4 +33,7 @@ interface MessageFirestoreInterface {
      * @return The retrieved message object, or null if not found.
      */
     suspend fun getMessage(messageId: String): Message?
+
+    suspend fun getMessagesForConversation(conversationId: String): List<Message>
+
 }

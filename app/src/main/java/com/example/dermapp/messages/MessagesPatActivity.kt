@@ -9,24 +9,31 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
+import com.example.dermapp.database.Conversation
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.messages.adapter.MyAdapterMessagesPat
+import com.example.dermapp.messages.adapter.RecentChatsAdapter
 import com.example.dermapp.messages.adapter.SearchDoctorsAdapterPat
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class MessagesPatActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: MyAdapterMessagesPat
+
+    private lateinit var recyclerViewDoctorsList: RecyclerView
+    private lateinit var adapterDoctorsList: MyAdapterMessagesPat
+
+    private lateinit var recyclerViewRecentChats: RecyclerView
+    private lateinit var adapterRecentChats: RecentChatsAdapter
 
     private lateinit var searchView: SearchView
     private lateinit var searchResultsRecyclerView: RecyclerView
@@ -37,48 +44,53 @@ class MessagesPatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_messages_pat)
 
-        // Initialize RecyclerView and its adapter
-        recyclerView = findViewById(R.id.recyclerViewMessagesPat)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        adapter = MyAdapterMessagesPat(this, mutableListOf())
-        recyclerView.adapter = adapter
+        recyclerViewDoctorsList = findViewById(R.id.recyclerViewMessagesPat)
+        recyclerViewDoctorsList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        adapterDoctorsList = MyAdapterMessagesPat(this, mutableListOf())
+        recyclerViewDoctorsList.adapter = adapterDoctorsList
 
-        // Setup back button click listener to navigate back to StartPatActivity
-        val header = findViewById<LinearLayout>(R.id.backHeaderPat)
-        backButton = header.findViewById(R.id.arrowButton)
-
-        backButton.setOnClickListener {
-            val intent = Intent(this, StartPatActivity::class.java)
+        recyclerViewRecentChats = findViewById(R.id.recyclerViewRecentChatsPat)
+        recyclerViewRecentChats.layoutManager = LinearLayoutManager(this)
+        adapterRecentChats = RecentChatsAdapter(this, mutableListOf()) { conversation ->
+            val intent = Intent(this, NewMessagePatActivity::class.java)
+            intent.putExtra("conversationId", conversation.conversationId)
+            intent.putExtra("doctorId", conversation.doctorId)
             startActivity(intent)
         }
+        recyclerViewRecentChats.adapter = adapterRecentChats
 
-        // Apply system bars insets to the main layout
+        backButton = findViewById<LinearLayout>(R.id.backHeaderPat).findViewById(R.id.arrowButton)
+        backButton.setOnClickListener {
+            startActivity(Intent(this, StartPatActivity::class.java))
+        }
+
+        fetchRecentChats()
+        setupSearch()
+        fetchDoctorsList()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_messages_pat)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
-        // Search View and RecyclerView setup
+    private fun setupSearch() {
         searchView = findViewById(R.id.searchViewDoctorsPat)
         searchResultsRecyclerView = findViewById(R.id.recyclerViewSearchResults)
         searchResultsRecyclerView.layoutManager = LinearLayoutManager(this)
         searchAdapter = SearchDoctorsAdapterPat(this, mutableListOf()) { doctor ->
-            // Ensure conversation exists or create a new one, then navigate
-            ensureConversationExists(doctor.doctorId) { conversationId ->
+            val currentPatientId = FirebaseAuth.getInstance().currentUser?.uid ?: return@SearchDoctorsAdapterPat
+            val conversationId = "${doctor.doctorId}-$currentPatientId"
+            ensureConversationExists(doctor.doctorId, currentPatientId) {
                 val intent = Intent(this, NewMessagePatActivity::class.java)
-                intent.putExtra("conversationId", conversationId) // Pass the conversation ID
-                intent.putExtra("receiverId", doctor.doctorId) // Pass the receiver ID
+                intent.putExtra("conversationId", conversationId)
+                intent.putExtra("doctorId", doctor.doctorId)
                 startActivity(intent)
             }
         }
         searchResultsRecyclerView.adapter = searchAdapter
 
-        // Fetch doctors list and populate RecyclerView
-        fetchDoctorsList()
-        fetchDoctorsList2()
-
-        // Search listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
@@ -94,90 +106,58 @@ class MessagesPatActivity : AppCompatActivity() {
         })
     }
 
-    /**
-     * Ensures that a conversation exists between the current user and the given doctor.
-     * If it does not exist, a new conversation is created.
-     */
-    private fun ensureConversationExists(receiverId: String, onComplete: (conversationId: String) -> Unit) {
-        val conversationRef = FirebaseFirestore.getInstance().collection("conversations")
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-        // Check if a conversation already exists
-        conversationRef
-            .whereEqualTo("senderId", currentUserId)
-            .whereEqualTo("receiverId", receiverId)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    // Existing conversation found
-                    val existingConversationId = querySnapshot.documents[0].id
-                    onComplete(existingConversationId)
-                } else {
-                    // Create a new conversation
-                    val newConversationId = conversationRef.document().id
-                    val newConversation = mapOf(
-                        "conversationId" to newConversationId,
-                        "senderId" to currentUserId,
-                        "receiverId" to receiverId,
-                        "lastMessage" to "",
-                        "lastMessageTimestamp" to com.google.firebase.Timestamp.now()
-                    )
-                    conversationRef.document(newConversationId).set(newConversation)
-                        .addOnSuccessListener {
-                            onComplete(newConversationId)
-                        }
-                        .addOnFailureListener { exception ->
-                            exception.printStackTrace()
-                        }
+    private fun fetchRecentChats() {
+        val currentPatientId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        FirebaseFirestore.getInstance().collection("conversation")
+            .whereEqualTo("patientId", currentPatientId)
+            .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    e.printStackTrace()
+                    return@addSnapshotListener
                 }
-            }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
+                if (snapshots != null) {
+                    val conversations = snapshots.documents.mapNotNull { it.toObject(Conversation::class.java) }
+                        .filter { !it.lastMessage.isNullOrEmpty() }
+                    adapterRecentChats.updateConversations(conversations.toMutableList())
+                }
             }
     }
 
-    /**
-     * Fetches the list of doctors from Firestore and updates the RecyclerView adapter.
-     */
     private fun fetchDoctorsList() {
-        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-
-        currentUserUid?.let { uid ->
-            val doctorsList = mutableListOf<Doctor>()
-
-            // Fetch doctors from Firestore using coroutines
-            GlobalScope.launch(Dispatchers.Main) {
-                try {
-                    val doctorsSnapshot = FirebaseFirestore.getInstance().collection("doctors").get().await()
-
-                    for (document in doctorsSnapshot.documents) {
-                        val doctor = document.toObject(Doctor::class.java)
-                        doctor?.let {
-                            it.doctorId = document.id // Assign Firestore document ID to doctorId field
-                            doctorsList.add(it)
-                        }
-                    }
-
-                    // Set doctors list in the RecyclerView adapter
-                    adapter.setDoctorsList(doctorsList)
-
-                } catch (e: Exception) {
-                    // Handle Firestore fetch errors
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val doctorsSnapshot = FirebaseFirestore.getInstance().collection("doctors").get().await()
+                val doctorsList = doctorsSnapshot.documents.mapNotNull { it.toObject(Doctor::class.java) }
+                allDoctorsList = doctorsList.toMutableList()
+                launch(Dispatchers.Main) {
+                    adapterDoctorsList.setDoctorsList(allDoctorsList)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
-    private fun fetchDoctorsList2() {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                val doctorsSnapshot = FirebaseFirestore.getInstance().collection("doctors").get().await()
-                allDoctorsList = doctorsSnapshot.documents.mapNotNull { document ->
-                    document.toObject(Doctor::class.java)?.apply { doctorId = document.id }
-                }.toMutableList()
-                adapter.setDoctorsList(allDoctorsList) // Main adapter
-            } catch (e: Exception) {
-                // Handle errors
+    private fun ensureConversationExists(doctorId: String, patientId: String, onComplete: (String) -> Unit) {
+        val firestore = FirebaseFirestore.getInstance()
+        val conversationRef = firestore.collection("conversation")
+        val conversationId = "$doctorId-$patientId"
+
+        conversationRef.document(conversationId).get().addOnSuccessListener { document ->
+            if (!document.exists()) {
+                val newConversation = mapOf(
+                    "conversationId" to conversationId,
+                    "doctorId" to doctorId,
+                    "patientId" to patientId,
+                    "lastMessage" to "",
+                    "lastMessageTimestamp" to null
+                )
+                conversationRef.document(conversationId).set(newConversation).addOnSuccessListener {
+                    onComplete(conversationId)
+                }
+            } else {
+                onComplete(conversationId)
             }
         }
     }

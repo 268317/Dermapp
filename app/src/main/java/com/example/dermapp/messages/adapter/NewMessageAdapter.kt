@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 import com.example.dermapp.database.Message
@@ -45,35 +46,52 @@ class NewMessageAdapter(
 
     override fun getItemCount(): Int = messagesList.size
 
-    /**
-     * ViewHolder for sent messages
-     */
     class SentMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val messageTextView: TextView = itemView.findViewById(R.id.show_message)
+        private val timeTextView: TextView = itemView.findViewById(R.id.timeView)
+
         fun bind(message: Message) {
             val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            itemView.findViewById<TextView>(R.id.show_message).text = message.messageText
-            itemView.findViewById<TextView>(R.id.timeView).text = message.timestamp?.toDate()?.let { sdf.format(it) }
+            sdf.timeZone = TimeZone.getDefault() // Ustawienie lokalnej strefy czasowej
+            messageTextView.text = message.messageText
+            timeTextView.text = message.timestamp?.toDate()?.let { sdf.format(it) } ?: "--:--"
         }
     }
 
-
-
-    /**
-     * ViewHolder for received messages
-     */
     class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val messageTextView: TextView = itemView.findViewById(R.id.show_message)
+        private val timeTextView: TextView = itemView.findViewById(R.id.timeView)
+
         fun bind(message: Message) {
             val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            itemView.findViewById<TextView>(R.id.show_message).text = message.messageText
-            itemView.findViewById<TextView>(R.id.timeView).text = message.timestamp?.toDate()?.let { sdf.format(it) }
+            sdf.timeZone = TimeZone.getDefault() // Ustawienie lokalnej strefy czasowej
+            messageTextView.text = message.messageText
+            timeTextView.text = message.timestamp?.toDate()?.let { sdf.format(it) } ?: "--:--"
         }
     }
 
-    /**
-     * Update the list of messages in the adapter and refresh the RecyclerView
-     */
     fun updateMessages(newMessagesList: List<Message>) {
+        val diffCallback = MessageDiffCallback(this.messagesList, newMessagesList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.messagesList = newMessagesList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class MessageDiffCallback(
+        private val oldList: List<Message>,
+        private val newList: List<Message>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].messageId == newList[newItemPosition].messageId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
 }

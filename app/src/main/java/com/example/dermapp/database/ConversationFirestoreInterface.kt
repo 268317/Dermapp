@@ -33,4 +33,7 @@ interface ConversationFirestoreInterface {
      * @return The retrieved conversation, or null if no conversation is found.
      */
     suspend fun getConversation(conversationId: String): Conversation?
+
+    suspend fun getUserConversations(userId: String): List<Conversation>
+
 }

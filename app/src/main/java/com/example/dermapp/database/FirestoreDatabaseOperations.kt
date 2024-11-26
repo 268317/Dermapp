@@ -11,7 +11,7 @@ import kotlinx.coroutines.tasks.await
  *
  * @property db Instance of FirebaseFirestore used to interact with Firestore database.
  */
-class FirestoreDatabaseOperations(private val db: FirebaseFirestore) :
+abstract class FirestoreDatabaseOperations(private val db: FirebaseFirestore) :
     AppointmentFirestoreInterface,
     AppUserFirestoreInterface,
     DoctorFirestoreInterface,
