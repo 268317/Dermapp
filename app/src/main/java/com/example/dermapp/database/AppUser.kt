@@ -16,6 +16,7 @@ import com.google.firebase.firestore.PropertyName
  * @property role Role of the user (e.g., doctor, patient).
  * @property profilePhoto URL of the user's profile photo.
  * @property isOnline Indicates whether the user is currently online.
+ * @property fcmToken FCM token for sending notifications to the user.
  */
 open class AppUser(
     @get:PropertyName("appUserId") @set:PropertyName("appUserId") open var appUserId: String = "",
@@ -28,7 +29,8 @@ open class AppUser(
     @get:PropertyName("birthDate") @set:PropertyName("birthDate") open var birthDate: String = "",
     @get:PropertyName("role") @set:PropertyName("role") open var role: String = "",
     @get:PropertyName("profilePhoto") @set:PropertyName("profilePhoto") open var profilePhoto: String = "",
-    @get:PropertyName("isOnline") @set:PropertyName("isOnline") open var isOnline: Boolean = false // Nowe pole
+    @get:PropertyName("isOnline") @set:PropertyName("isOnline") open var isOnline: Boolean = false,
+    @get:PropertyName("fcmToken") @set:PropertyName("fcmToken") open var fcmToken: String = "" // Nowe pole
 ) {
-    constructor() : this("", "", "", "", "", "", "", "", "", "", false)
+    constructor() : this("", "", "", "", "", "", "", "", "", "", false, "")
 }

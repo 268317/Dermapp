@@ -15,6 +15,7 @@ import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 /**
  * Activity responsible for user login using Firebase Authentication.
@@ -88,8 +89,10 @@ class MainActivity : BaseActivity() {
                     if (task.isSuccessful) {
                         showErrorSnackBar("You are logged in successfully.", false)
 
-                        // Ustaw status online dopiero po zalogowaniu
                         val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                        updateFcmToken(userId) // Aktualizacja tokenu FCM
+
+                        // Ustaw status online dopiero po zalogowaniu
                         setUserOnlineState(userId, true)
 
                         // Dodaj nasłuch stanu aplikacji (tylko dla zalogowanego użytkownika)
@@ -102,6 +105,28 @@ class MainActivity : BaseActivity() {
                         showErrorSnackBar(task.exception!!.message.toString(), true)
                     }
                 }
+        }
+    }
+
+    /**
+     * Updates the FCM token for the logged-in user in Firestore.
+     * @param userId The user's unique identifier.
+     */
+    private fun updateFcmToken(userId: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                firestore.collection("users").document(userId)
+                    .update("fcmToken", token)
+                    .addOnSuccessListener {
+                        Log.d("FCM", "Token FCM został zaktualizowany: $token")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("FCM", "Błąd podczas aktualizacji tokenu FCM: ${e.message}")
+                    }
+            } else {
+                Log.e("FCM", "Nie udało się pobrać tokenu FCM: ${task.exception?.message}")
+            }
         }
     }
 

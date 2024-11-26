@@ -73,5 +73,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-messaging:24.1.0")
     implementation("com.google.gms:google-services:4.4.2")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
 }

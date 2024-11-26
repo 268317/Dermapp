@@ -1,22 +1,19 @@
 package com.example.dermapp
 
-import com.example.dermapp.database.Doctor
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Patient
 import com.example.dermapp.database.AppUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.Calendar
 
 /**
@@ -28,7 +25,6 @@ class SignUpActivity : BaseActivity() {
     private lateinit var radioButtonPatient: RadioButton
     private lateinit var radioButtonDoctor: RadioButton
     private lateinit var logInTextButton: TextView
-    private lateinit var appnameTextview: TextView
     private lateinit var textName: EditText
     private lateinit var textLastName: EditText
     private lateinit var textEmail: EditText
@@ -38,18 +34,15 @@ class SignUpActivity : BaseActivity() {
     private lateinit var doctorIdEditText: EditText
     private lateinit var peselEditText: EditText
 
-    /**
-     * Initializes UI components and sets click listeners.
-     */
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
+        // Initialize UI elements
         signUpTextView = findViewById(R.id.SignUp_textView)
         buttonSignUp = findViewById(R.id.buttonSignUp)
         logInTextButton = findViewById(R.id.logInTextButton)
-        appnameTextview = findViewById(R.id.AppName_textView)
         textName = findViewById(R.id.TextName)
         textLastName = findViewById(R.id.TextLastName)
         textEmail = findViewById(R.id.TextEmail)
@@ -61,17 +54,10 @@ class SignUpActivity : BaseActivity() {
         doctorIdEditText = findViewById(R.id.textDoctorId)
         peselEditText = findViewById(R.id.textPesel)
 
-        buttonSignUp.setOnClickListener {
-            registerUser()
-        }
-
-        logInTextButton.setOnClickListener {
-            goToLogin()
-        }
-
-        editTextDateOfBirth.setOnClickListener {
-            openCalendar()
-        }
+        // Set click listeners
+        buttonSignUp.setOnClickListener { registerUser() }
+        logInTextButton.setOnClickListener { goToLogin() }
+        editTextDateOfBirth.setOnClickListener { openCalendar() }
 
         radioButtonPatient.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -90,7 +76,6 @@ class SignUpActivity : BaseActivity() {
 
     /**
      * Validates user input during registration.
-     * @return True if all input is valid, false otherwise.
      */
     private fun validateRegisterDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
@@ -98,75 +83,101 @@ class SignUpActivity : BaseActivity() {
         val namePattern = "[a-zA-Z]+"
 
         return when {
-            TextUtils.isEmpty(textName.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_name), true)
+            TextUtils.isEmpty(textName.text.toString().trim()) -> {
+                showErrorSnackBar("Please enter your name.", true)
                 false
             }
-
-            !textName.text.toString().trim { it <= ' ' }.matches(namePattern.toRegex()) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_name), true)
+            !textName.text.toString().trim().matches(namePattern.toRegex()) -> {
+                showErrorSnackBar("Invalid name format.", true)
                 false
             }
-
-            TextUtils.isEmpty(textLastName.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name), true)
+            TextUtils.isEmpty(textLastName.text.toString().trim()) -> {
+                showErrorSnackBar("Please enter your last name.", true)
                 false
             }
-
-            !textLastName.text.toString().trim { it <= ' ' }.matches(namePattern.toRegex()) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_last_name), true)
+            !textLastName.text.toString().trim().matches(namePattern.toRegex()) -> {
+                showErrorSnackBar("Invalid last name format.", true)
                 false
             }
-
-            TextUtils.isEmpty(textEmail.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
+            TextUtils.isEmpty(textEmail.text.toString().trim()) -> {
+                showErrorSnackBar("Please enter your email.", true)
                 false
             }
-
-            !textEmail.text.toString().trim { it <= ' ' }.matches(emailPattern.toRegex()) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_email), true)
+            !textEmail.text.toString().trim().matches(emailPattern.toRegex()) -> {
+                showErrorSnackBar("Invalid email format.", true)
                 false
             }
-
-            TextUtils.isEmpty(editTextTextPassword.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_password), true)
+            TextUtils.isEmpty(editTextTextPassword.text.toString().trim()) -> {
+                showErrorSnackBar("Please enter your password.", true)
                 false
             }
-
-            editTextTextPassword.text.toString().trim { it <= ' ' }.length < 8 -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_password), true)
+            editTextTextPassword.text.toString().trim().length < 8 -> {
+                showErrorSnackBar("Password must be at least 8 characters.", true)
                 false
             }
-
-            TextUtils.isEmpty(editTextTextPassword2.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_reppassword), true)
+            editTextTextPassword.text.toString().trim() != editTextTextPassword2.text.toString().trim() -> {
+                showErrorSnackBar("Passwords do not match.", true)
                 false
             }
-
-            editTextTextPassword.text.toString()
-                .trim { it <= ' ' } != editTextTextPassword2.text.toString()
-                .trim { it <= ' ' } -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_password_mismatch), true)
+            radioButtonPatient.isChecked && !peselEditText.text.toString().trim().matches(peselPattern.toRegex()) -> {
+                showErrorSnackBar("Invalid PESEL format.", true)
                 false
             }
-
-            radioButtonPatient.isChecked && !peselEditText.text.toString().trim { it <= ' ' }.matches(peselPattern.toRegex())
-                    || radioButtonPatient.isChecked && peselEditText.text.toString().trim { it <= ' ' }.length != 11 -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_invalid_pesel), true)
-                false
-            }
-
             else -> true
         }
     }
 
     /**
-     * Navigates to the login screen.
+     * Registers the user in Firebase authentication and Firestore database.
      */
-    private fun goToLogin() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun registerUser() {
+        if (validateRegisterDetails()) {
+            val email = textEmail.text.toString().trim()
+            val password = editTextTextPassword.text.toString().trim()
+            val firstName = textName.text.toString().trim()
+            val lastName = textLastName.text.toString().trim()
+            val birthday = editTextDateOfBirth.text.toString().trim()
+            val isPatient = radioButtonPatient.isChecked
+            val pesel = peselEditText.text.toString().trim()
+            val doctorId = doctorIdEditText.text.toString().trim()
+            val role = if (isPatient) "Patient" else "Doctor"
+
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@addOnCompleteListener
+
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
+                            if (tokenTask.isSuccessful) {
+                                val token = tokenTask.result
+
+                                val user = AppUser(
+                                    appUserId = userId,
+                                    email = email,
+                                    password = password,
+                                    firstName = firstName,
+                                    lastName = lastName,
+                                    birthDate = birthday,
+                                    role = role,
+                                    fcmToken = token
+                                )
+
+                                FirebaseFirestore.getInstance().collection("users").document(userId)
+                                    .set(user)
+                                    .addOnSuccessListener {
+                                        showErrorSnackBar("Registration successful.", false)
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        showErrorSnackBar(e.message.toString(), true)
+                                    }
+                            }
+                        }
+                    } else {
+                        showErrorSnackBar(task.exception?.message.toString(), true)
+                    }
+                }
+        }
     }
 
     /**
@@ -193,192 +204,11 @@ class SignUpActivity : BaseActivity() {
     }
 
     /**
-     * Registers the user in Firebase authentication and Firestore database.
+     * Navigates to the login screen.
      */
-    private fun registerUser() {
-        if (validateRegisterDetails()) {
-            val email: String = textEmail.text.toString().trim()
-            val password: String = editTextTextPassword.text.toString().trim()
-            val firstName: String = textName.text.toString().trim()
-            val lastName: String = textLastName.text.toString().trim()
-            val birthday = editTextDateOfBirth.text.toString()
-            val isPatient = radioButtonPatient.isChecked
-            val isDoctor = radioButtonDoctor.isChecked
-            val pesel = peselEditText.text.toString().trim()
-            val doctorId = doctorIdEditText.text.toString().trim()
-
-            val role: String = when {
-                isPatient && !isDoctor -> "Patient"
-                !isPatient && isDoctor -> "Doctor"
-                else -> {
-                    Toast.makeText(this, "Please select a role.", Toast.LENGTH_SHORT).show()
-                    return
-                }
-            }
-
-            // Check if email and pesel (for patients) or email and doctorId (for doctors) already exist
-            val firestore = FirebaseFirestore.getInstance()
-
-            if (isPatient) {
-                firestore.collection("patients")
-                    .whereEqualTo("email", email)
-                    .get()
-                    .addOnSuccessListener { emailResult ->
-                        if (!emailResult.isEmpty) {
-                            showErrorSnackBar("Email is already in use.", true)
-                            return@addOnSuccessListener
-                        }
-
-                        firestore.collection("patients")
-                            .whereEqualTo("pesel", pesel)
-                            .get()
-                            .addOnSuccessListener { peselResult ->
-                                if (!peselResult.isEmpty) {
-                                    showErrorSnackBar("PESEL is already in use.", true)
-                                    return@addOnSuccessListener
-                                }
-                                // If both checks pass, proceed with registration
-                                registerNewUser(
-                                    email = email,
-                                    password = password,
-                                    firstName = firstName,
-                                    lastName = lastName,
-                                    birthday = birthday,
-                                    pesel = pesel,
-                                    doctorId = doctorId,
-                                    role = role,
-                                    isPatient = isPatient,
-                                    isDoctor = isDoctor
-                                )
-                            }
-                    }
-            } else if (isDoctor) {
-                firestore.collection("doctors")
-                    .whereEqualTo("email", email)
-                    .get()
-                    .addOnSuccessListener { emailResult ->
-                        if (!emailResult.isEmpty) {
-                            showErrorSnackBar("Email is already in use.", true)
-                            return@addOnSuccessListener
-                        }
-
-                        firestore.collection("doctors")
-                            .whereEqualTo("doctorId", doctorId)
-                            .get()
-                            .addOnSuccessListener { idResult ->
-                                if (!idResult.isEmpty) {
-                                    showErrorSnackBar("Doctor ID is already in use.", true)
-                                    return@addOnSuccessListener
-                                }
-                                // If both checks pass, proceed with registration
-                                registerNewUser(
-                                    email = email,
-                                    password = password,
-                                    firstName = firstName,
-                                    lastName = lastName,
-                                    birthday = birthday,
-                                    pesel = pesel,
-                                    doctorId = doctorId,
-                                    role = role,
-                                    isPatient = isPatient,
-                                    isDoctor = isDoctor
-                                )
-                            }
-                    }
-            }
-        }
-    }
-
-    /**
-     * Registers a new user (patient or doctor) in Firebase Authentication and Firestore.
-     */
-    private fun registerNewUser(
-        email: String,
-        password: String,
-        firstName: String,
-        lastName: String,
-        birthday: String,
-        pesel: String,
-        doctorId: String,
-        role: String,
-        isPatient: Boolean,
-        isDoctor: Boolean
-    ) {
-        val user = AppUser(
-            email = email,
-            password = password,
-            firstName = firstName,
-            lastName = lastName,
-            birthDate = birthday,
-            role = role
-        )
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-                    val uid: String = firebaseUser?.uid ?: ""
-                    user.appUserId = uid
-
-                    // Save user to Firestore 'users' collection
-                    FirebaseFirestore.getInstance().collection("users").document(uid)
-                        .set(user)
-                        .addOnSuccessListener {
-                            showErrorSnackBar("You are registered successfully.", false)
-                            finish()
-                        }
-                        .addOnFailureListener { e ->
-                            showErrorSnackBar(e.message.toString(), true)
-                        }
-
-                    // Registering Patient
-                    if (isPatient) {
-                        val patient = Patient(
-                            email = email,
-                            password = password,
-                            firstName = firstName,
-                            lastName = lastName,
-                            birthDate = birthday,
-                            pesel = pesel
-                        )
-                        patient.appUserId = uid
-
-                        // Save patient data to Firestore 'patients' collection
-                        FirebaseFirestore.getInstance().collection("patients").document(uid)
-                            .set(patient)
-                            .addOnSuccessListener {
-                                finish()
-                            }
-                            .addOnFailureListener { e ->
-                                showErrorSnackBar(e.message.toString(), true)
-                            }
-
-                        // Registering Doctor
-                    } else {
-                        val doctor = Doctor(
-                            email = email,
-                            password = password,
-                            firstName = firstName,
-                            lastName = lastName,
-                            birthDate = birthday,
-                            doctorId = doctorId
-                        )
-                        doctor.appUserId = uid
-
-                        // Save doctor data to Firestore 'doctors' collection
-                        FirebaseFirestore.getInstance().collection("doctors").document(uid)
-                            .set(doctor)
-                            .addOnSuccessListener {
-                                finish()
-                            }
-                            .addOnFailureListener { e ->
-                                showErrorSnackBar(e.message.toString(), true)
-                            }
-                    }
-
-                } else {
-                    showErrorSnackBar(task.exception!!.message.toString(), true)
-                }
-            }
+    private fun goToLogin() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

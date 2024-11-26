@@ -2,6 +2,7 @@ package com.example.dermapp.messages
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -9,6 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.dermapp.R
 import com.example.dermapp.database.AppUser
@@ -16,6 +20,7 @@ import com.example.dermapp.database.Message
 import com.example.dermapp.messages.adapter.NewMessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import org.json.JSONObject
 
 class NewMessageDocActivity : AppCompatActivity() {
 
@@ -92,6 +97,7 @@ class NewMessageDocActivity : AppCompatActivity() {
             timestamp = com.google.firebase.Timestamp.now()
         )
 
+        // Zapisanie wiadomości w Firestore
         firestore.collection("messages").document(message.messageId).set(message).addOnSuccessListener {
             firestore.collection("conversation").document(conversationId).update(
                 mapOf(
@@ -109,7 +115,49 @@ class NewMessageDocActivity : AppCompatActivity() {
                     )
                 )
             }
+
+            // Wywołanie funkcji do wysyłania powiadomienia
+            sendNotificationToReceiver(patientId, messageText)
         }
+    }
+
+    private fun sendNotificationToReceiver(receiverId: String, messageText: String) {
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.collection("users").document(receiverId).get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val fcmToken = document.getString("fcmToken") ?: return@addOnSuccessListener
+                // Przygotowanie powiadomienia do wysłania
+                val payload = hashMapOf(
+                    "to" to fcmToken,
+                    "notification" to mapOf(
+                        "title" to "Nowa wiadomość",
+                        "body" to messageText
+                    )
+                )
+                sendNotificationRequest(payload)
+            }
+        }
+    }
+
+    private fun sendNotificationRequest(payload: Map<String, Any>) {
+        val url = "https://fcm.googleapis.com/fcm/send"
+        val requestQueue = Volley.newRequestQueue(this)
+        val request = object : JsonObjectRequest(
+            Request.Method.POST, url, JSONObject(payload),
+            { response ->
+                Log.d("Notification", "Powiadomienie wysłane: $response")
+            },
+            { error ->
+                Log.e("Notification", "Błąd wysyłania powiadomienia: ${error.message}")
+            }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = mutableMapOf<String, String>()
+                headers["Content-Type"] = "application/json"
+                headers["Authorization"] = "key=b37d19e1b0bcbad045304282e6ebfc0477cf206a"
+                return headers
+            }
+        }
+        requestQueue.add(request)
     }
 
     private fun setupHeader() {
@@ -124,7 +172,6 @@ class NewMessageDocActivity : AppCompatActivity() {
                     return@addSnapshotListener
                 }
 
-                // Sprawdzenie, czy aktywność nie została zniszczona
                 if (!isFinishing && !isDestroyed) {
                     val user = document?.toObject(AppUser::class.java)
                     if (user != null) {
