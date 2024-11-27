@@ -1,6 +1,7 @@
 package com.example.dermapp
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -25,10 +26,17 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import android.location.Geocoder
+import android.location.LocationManager
 import android.net.Uri
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -36,6 +44,12 @@ import com.google.android.gms.maps.model.Polyline
 import org.json.JSONObject
 import java.util.*
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.android.libraries.places.api.net.PlacesClient
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -46,6 +60,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var currentPolyline: Polyline? = null
     private lateinit var backButton: ImageButton
     private var selectedLocation: LatLng? = null
+    private var selectedDistance: Int = 1000
+    private lateinit var placesClient: PlacesClient
+    private lateinit var autocompleteSessionToken: AutocompleteSessionToken
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +119,50 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val seekBar: SeekBar = findViewById(R.id.distanceSeekBar) // Twoje ID suwaka
+        val distanceText: TextView = findViewById(R.id.distanceLabel) // Tekst do wyświetlenia odległości
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                selectedDistance = (progress + 1) * 1000
+                distanceText.text = "${progress + 1} km"
+                findNearbyPharmacies()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        if (!Places.isInitialized()) {
+            val apiKey: String = getApiKey()
+            Places.initialize(applicationContext, apiKey)
+        }
+        placesClient = Places.createClient(this)
+        autocompleteSessionToken = AutocompleteSessionToken.newInstance()
+
+        val btnMyLocation: ImageButton = findViewById(R.id.btnMyLocation)
+
+        btnMyLocation.setOnClickListener {
+            if (::mMap.isInitialized) {
+                // Sprawdź, czy mamy uprawnienia do lokalizacji
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    mMap.isMyLocationEnabled = false
+                    val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+                    location?.let {
+                        val myLatLng = LatLng(location.latitude, location.longitude)
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15f))
+                    } ?: Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -112,7 +173,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Enable the My Location layer on the map
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true // Enable My Location layer
+            mMap.isMyLocationEnabled = false
             getCurrentLocationAndDrawRoute() // Get the current location and draw the route
         }
 
@@ -130,6 +191,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 false
             }
         }
+
+        setupSearchBar()
 
     }
 
@@ -155,7 +218,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getDoctorLocation(address: String) {
-        mMap.uiSettings.isMapToolbarEnabled = true
         val geocoder = Geocoder(this, Locale.getDefault())
         Thread {
             try {
@@ -216,9 +278,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } ?: Toast.makeText(this, "Unable to get appointment location.", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getNearbyPharmaciesUrl(location: LatLng): String { //5km
+    private fun getNearbyPharmaciesUrl(location: LatLng): String {
         val apiKey: String = getApiKey()
-        return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=5000&type=pharmacy&key=$apiKey"
+        return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=${selectedDistance}&type=pharmacy&key=$apiKey"
     }
 
     private inner class FetchPharmacies : AsyncTask<String, Void, String>() {
@@ -393,5 +455,72 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         return poly
+    }
+
+    private fun setupSearchBar() {
+        val searchBar: EditText = findViewById(R.id.searchBar)
+
+        searchBar.addTextChangedListener { text ->
+            val query = text.toString()
+            if (query.isNotEmpty()) {
+                fetchAutocompleteSuggestions(query)
+            }
+        }
+    }
+
+
+    private fun searchForPlace(placeId: String) {
+        val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.NAME)
+        val request = FetchPlaceRequest.builder(placeId, placeFields).build()
+
+        placesClient.fetchPlace(request)
+            .addOnSuccessListener { response ->
+                val place = response.place
+                val latLng = place.latLng
+
+                if (latLng != null) {
+                    mMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(place.name)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    )
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Failed to fetch place details: $exception", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun fetchAutocompleteSuggestions(query: String) {
+        val listView: ListView = findViewById(R.id.searchResultsListView)
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setSessionToken(autocompleteSessionToken)
+            .setQuery(query)
+            .build()
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
+            val predictions = response.autocompletePredictions
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ArrayList<String>())
+            val placeIds = mutableListOf<String>() // Lista do przechowywania placeId dla każdego wyniku
+            for (prediction in predictions) {
+                val placeName = prediction.getPrimaryText(null).toString()
+                val placeId = prediction.placeId
+
+                adapter.add(placeName) // Dodaj nazwę do adaptera
+                placeIds.add(placeId)  // Dodaj placeId do listy
+            }
+            listView.adapter = adapter
+
+            listView.setOnItemClickListener { parent, view, position, id ->
+                val selectedPlaceId = placeIds[position]
+                searchForPlace(selectedPlaceId)
+
+                val emptyList = emptyList<String>()
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, emptyList)
+                listView.adapter = adapter
+            }
+        }
     }
 }

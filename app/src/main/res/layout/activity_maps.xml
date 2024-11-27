@@ -6,24 +6,67 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Header with Back Button -->
     <include
         android:id="@+id/backHeader"
         layout="@layout/header_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-
+    <!-- Map Fragment -->
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/backHeader"
+        tools:context=".MapsActivity" />
+
+    <!-- Search Bar at the Top -->
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/backHeader"
+        android:layout_margin="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="-33dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/btnMyLocation"
+        android:background="@drawable/button_background"
+        android:drawableStart="@drawable/ic_search_white"
+        android:drawablePadding="8dp"
+        android:hint="Search"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF" />
+
+    <ListView
+        android:id="@+id/searchResultsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchBar"
+        android:layout_alignStart="@+id/searchBar"
+        android:layout_alignEnd="@+id/searchBar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btnMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backHeader"
         android:layout_alignParentEnd="true"
-        tools:context=".MapsActivity"
-        />
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="My location"
+        android:padding="10dp"
+        android:src="@drawable/ic_my_location" />
 
-
+    <!-- Buttons for Actions -->
     <ImageButton
         android:id="@+id/btnFindDoctor"
         android:layout_width="wrap_content"
@@ -33,7 +76,7 @@
         android:layout_margin="10dp"
         android:layout_marginEnd="357dp"
         android:background="@drawable/button_background"
-        android:contentDescription="Pharmacies"
+        android:contentDescription="Find Doctor"
         android:padding="10dp"
         android:src="@drawable/location" />
 
@@ -46,7 +89,7 @@
         android:layout_margin="10dp"
         android:layout_marginEnd="357dp"
         android:background="@drawable/button_background"
-        android:contentDescription="Pharmacies"
+        android:contentDescription="Find Pharmacies"
         android:padding="10dp"
         android:src="@drawable/pharmacy" />
 
@@ -64,11 +107,40 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:layout_marginEnd="357dp"
-        android:layout_marginBottom="628dp"
         android:background="@drawable/button_background"
         android:contentDescription="Get Directions"
         android:padding="10dp"
         android:src="@drawable/directions" />
 
+    <!-- Slider for Distance -->
+    <RelativeLayout
+        android:id="@+id/seekBarContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp">
+
+        <SeekBar
+            android:id="@+id/distanceSeekBar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:max="9"
+            android:progress="0"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/distanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/distanceSeekBar"
+            android:layout_alignBottom="@id/distanceSeekBar"
+            android:paddingStart="8dp"
+            android:text="1 km"
+            android:textSize="14sp"
+            android:textColor="@color/black" />
+    </RelativeLayout>
 
 </RelativeLayout>
