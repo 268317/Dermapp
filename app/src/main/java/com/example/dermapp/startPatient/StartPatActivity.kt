@@ -19,10 +19,10 @@ import com.example.dermapp.MainActivity
 import com.example.dermapp.MakeAppointmentPatActivity
 import com.example.dermapp.ProfilePatActivity
 import com.example.dermapp.R
+import com.example.dermapp.chat.activity.ChatsActivityPat
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.messages.MessagesPatActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -156,7 +156,7 @@ class StartPatActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_myMailbox -> {
-                    val intent = Intent(this, MessagesPatActivity::class.java)
+                    val intent = Intent(this, ChatsActivityPat::class.java)
                     startActivity(intent)
                     true
                 }

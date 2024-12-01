@@ -2,20 +2,15 @@ package com.example.dermapp
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.dermapp.database.MedicalReport
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import android.Manifest
 import com.example.dermapp.database.Doctor
-import java.io.FileNotFoundException
 import com.bumptech.glide.Glide
 
 /**

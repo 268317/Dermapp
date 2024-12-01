@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.dermapp.database.Doctor
 import java.io.FileNotFoundException

@@ -20,7 +20,6 @@ import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.Location
 import com.example.dermapp.database.Patient
 import com.example.dermapp.startDoctor.StartDocActivity
-import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*

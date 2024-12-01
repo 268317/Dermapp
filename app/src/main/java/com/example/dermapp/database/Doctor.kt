@@ -24,5 +24,8 @@ data class Doctor(
     @get:PropertyName("address") @set:PropertyName("address") override var address: String = "",
     @get:PropertyName("phone") @set:PropertyName("phone") override var phone: String = "",
     @get:PropertyName("dateOfBirth") @set:PropertyName("dateOfBirth") override var birthDate: String = "",
-    @get:PropertyName("doctorId") @set:PropertyName("doctorId") var doctorId: String = ""
-) : AppUser(appUserId, email, password, firstName, lastName, address, phone, birthDate)
+    @get:PropertyName("doctorId") @set:PropertyName("doctorId") var doctorId: String = "",
+    @get:PropertyName("role") @set:PropertyName("role") override var role: String = "",
+    @get:PropertyName("profilePhoto") @set:PropertyName("profilePhoto") override var profilePhoto: String = "",
+    @get:PropertyName("isOnline") @set:PropertyName("isOnline") override var isOnline: Boolean = false
+) : AppUser(appUserId, email, password, firstName, lastName, address, phone, birthDate, role, profilePhoto, isOnline)

@@ -26,11 +26,11 @@ import com.example.dermapp.ManageDocLocationsActivity
 import com.example.dermapp.ProfileDocActivity
 import com.example.dermapp.R
 import com.example.dermapp.SetAppointmentDocActivity
+import com.example.dermapp.chat.activity.ChatsActivityDoc
 import com.example.dermapp.database.AppUser
 import com.example.dermapp.database.Appointment
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.database.MedicalReport
-import com.example.dermapp.messages.MessagesDocActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -202,7 +202,7 @@ class StartDocActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_myMailbox -> {
-                    val intent = Intent(this, MessagesDocActivity::class.java)
+                    val intent = Intent(this, ChatsActivityDoc::class.java)
                     startActivity(intent)
                     true
                 }

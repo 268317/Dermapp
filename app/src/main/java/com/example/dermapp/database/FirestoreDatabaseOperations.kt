@@ -1,6 +1,10 @@
 package com.example.dermapp.database
 
 import android.util.Log
+import com.example.dermapp.chat.database.Conversation
+import com.example.dermapp.chat.database.ConversationFirestoreInterface
+import com.example.dermapp.chat.database.Message
+import com.example.dermapp.chat.database.MessageFirestoreInterface
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
@@ -144,7 +148,7 @@ abstract class FirestoreDatabaseOperations(private val db: FirebaseFirestore) :
      */
     override suspend fun addConversation(conversation: Conversation) {
         try {
-            db.collection("conversation").document(conversation.conversationId).set(conversation).await()
+            db.collection("conversation").document(conversation.conversationId.toString()).set(conversation).await()
         } catch (e: Exception) {
             Log.e(TAG, "Error adding conversation", e)
         }

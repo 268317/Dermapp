@@ -2,35 +2,54 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
+    android:layout_gravity="right"
     android:padding="8dp">
 
     <!-- Czas wiadomości -->
     <TextView
-        android:id="@+id/timeView"
+        android:id="@+id/messageTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         android:text="14:00"
-        android:textStyle="italic"
-        android:textSize="12sp"
         android:textColor="#999999"
-        app:layout_constraintEnd_toStartOf="@id/show_message"
-        app:layout_constraintBottom_toBottomOf="@id/show_message" />
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="@id/messageText"
+        app:layout_constraintEnd_toStartOf="@id/messageText" />
 
     <!-- Wiadomość -->
     <TextView
-        android:id="@+id/show_message"
+        android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_rectangle_primary"
         android:padding="12dp"
         android:text="Hello"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:maxWidth="250dp"
+        android:ellipsize="none"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/messageSeen"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Czy odczytana -->
+    <TextView
+        android:id="@+id/messageSeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="seen"
+        android:textColor="#999999"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

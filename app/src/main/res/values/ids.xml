@@ -30,6 +30,9 @@
     <item name="backHeaderDoc" type="id" />
     <item name="linearLayoutMessagesDoc" type="id" />
     <item name="recyclerViewMessagesDoc" type="id" />
-    <item name="newMessageButtonPat" type="id">
-    </item>
+    <item name="newMessageButtonPat" type="id"/>
+    <item name="patientsListItemProfileImage" type="id"/>
+    <item name="patientsListItemFirstName" type="id"/>
+    <item name="patientsListItemLastName" type="id"/>
+    <item name="patientsListItemStatus" type="id"/>
 </resources>

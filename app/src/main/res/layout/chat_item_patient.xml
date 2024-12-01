@@ -8,7 +8,7 @@
 
     <!-- Imię i nazwisko pacjenta -->
     <TextView
-        android:id="@+id/patientName"
+        android:id="@+id/patientItemName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="John Smith"

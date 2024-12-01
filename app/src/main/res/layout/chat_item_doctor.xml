@@ -10,7 +10,7 @@
 
     <!-- Imię i nazwisko lekarza -->
     <TextView
-        android:id="@+id/doctorName"
+        android:id="@+id/doctorItemName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Dr. John Doe"
