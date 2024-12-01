@@ -6,6 +6,13 @@ plugins {
 }
 
 android {
+
+    packaging {
+        resources {
+            excludes += "/META-INF/DEPENDENCIES"
+        }
+    }
+
     namespace = "com.example.dermapp"
     compileSdk = 34
 
@@ -79,5 +86,7 @@ dependencies {
     // OkHttp (dla niestandardowych nagłówków i logowania żądań)
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.16.0")
 
 }

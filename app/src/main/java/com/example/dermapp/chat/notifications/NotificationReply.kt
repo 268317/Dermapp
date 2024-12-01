@@ -10,84 +10,115 @@ import com.example.dermapp.R
 import com.example.dermapp.chat.SharedPrefs
 import com.example.dermapp.chat.Utils
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Random
 
 private const val CHANNEL_ID = "my_channel"
 
-class NotificationReply  : BroadcastReceiver(){
+class NotificationReply : BroadcastReceiver() {
 
-
-    val firestor = FirebaseFirestore.getInstance()
-
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        if (context == null || intent == null) return
 
-
-        val notificationManager : NotificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val remoteInput = RemoteInput.getResultsFromIntent(intent)
 
-        if (remoteInput!=null){
+        if (remoteInput != null) {
+            val repliedText = remoteInput.getString("KEY_REPLY_TEXT") ?: return
 
-            val repliedText = remoteInput.getString("KEY_REPLY_TEXT")
+            val sharedPrefs = SharedPrefs(context)
+            val friendId = sharedPrefs.getValue("friendid") ?: return
+            val chatRoomId = sharedPrefs.getValue("chatroomid") ?: return
+            val friendName = sharedPrefs.getValue("friendname") ?: "Unknown"
+            val friendImage = sharedPrefs.getValue("friendimage") ?: ""
 
+            val currentTime = Utils.getTime()
 
-
-            val mysharedPrefs = SharedPrefs(context)
-            val friendid = mysharedPrefs.getValue("friendid")
-            val chatroomid = mysharedPrefs.getValue("chatroomid")
-            val friendname = mysharedPrefs.getValue("friendname")
-            val friendimage = mysharedPrefs.getValue("friendimage")
-
-
-            val hashMap = hashMapOf<String, Any>("sender" to Utils.getUidLoggedIn(),
-                "time" to Utils.getTime(),
-                "receiver" to friendid!!,
-                "message" to repliedText!!)
-
-            firestor.collection("messages").document(chatroomid!!)
-                .collection("conversation").document(Utils.getTime()).set(hashMap).addOnCompleteListener {
-                    if (it.isSuccessful){
-                    }
-                }
-            // this can be further improved if user in other chatroom and message comes, he can use notification
-            // reply to send that exact room
-
-            val setHashap = hashMapOf<String, Any>(
-                "friendid" to friendid,
-                "time" to Utils.getTime(),
+            // Tworzenie wiadomości
+            val messageData = hashMapOf(
                 "sender" to Utils.getUidLoggedIn(),
-                "message" to repliedText,
-                "friendsimage" to friendimage!!,
-                "name" to friendname!!,
-                "person" to "you",
+                "time" to currentTime,
+                "receiver" to friendId,
+                "message" to repliedText
             )
 
-
-
-            firestor.collection("Conversation${Utils.getUidLoggedIn()}").document(friendid)
-                .set(setHashap)
-
-
-
-            val updateHashMap =
-                hashMapOf<String, Any>("messages" to repliedText, "time" to Utils.getTime(), "person" to friendname!!)
-
-
-
-            firestor.collection("Conversation${friendid}").document(Utils.getUidLoggedIn())
-                .update(updateHashMap)
-
-            val sharedCustomPref = SharedPrefs(context)
-            val replyid : Int = sharedCustomPref.getIntValue("values", 0)
-
-
-            val repliedNotification  =
-                NotificationCompat
-                    .Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.logo_foreground)
-                    .setContentText("Reply Sent").build()
-
-            notificationManager.notify(replyid, repliedNotification)
-
+            // Zapisanie wiadomości w Firestore
+            firestore.collection("messages")
+                .document(chatRoomId)
+                .collection("conversation")
+                .document(currentTime)
+                .set(messageData)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        updateConversation(context, friendId, chatRoomId, repliedText, friendName, friendImage)
+                    } else {
+                        showErrorNotification(context, notificationManager)
+                    }
+                }
         }
+    }
+
+    private fun updateConversation(
+        context: Context,
+        friendId: String,
+        chatRoomId: String,
+        repliedText: String,
+        friendName: String,
+        friendImage: String
+    ) {
+        val currentTime = Utils.getTime()
+
+        // Ustawienie danych w konwersacji użytkownika
+        val userConversationData = hashMapOf(
+            "friendid" to friendId,
+            "time" to currentTime,
+            "sender" to Utils.getUidLoggedIn(),
+            "message" to repliedText,
+            "friendsimage" to friendImage,
+            "name" to friendName,
+            "person" to "you"
+        )
+
+        firestore.collection("Conversation${Utils.getUidLoggedIn()}")
+            .document(friendId)
+            .set(userConversationData)
+
+        // Ustawienie danych w konwersacji odbiorcy
+        val friendConversationData = hashMapOf(
+            "messages" to repliedText,
+            "time" to currentTime,
+            "person" to friendName
+        )
+
+        firestore.collection("Conversation$friendId")
+            .document(Utils.getUidLoggedIn())
+            .update(friendConversationData as Map<String, Any>)
+
+        // Wyświetlenie powiadomienia o wysłaniu odpowiedzi
+        showReplyNotification(context)
+    }
+
+    private fun showReplyNotification(context: Context) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo_foreground)
+            .setContentText("Reply Sent")
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(Random().nextInt(), notification)
+    }
+
+    private fun showErrorNotification(context: Context, notificationManager: NotificationManager) {
+        val errorNotification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo_foreground)
+            .setContentText("Error sending reply")
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(Random().nextInt(), errorNotification)
     }
 }

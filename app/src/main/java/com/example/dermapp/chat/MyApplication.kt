@@ -1,16 +1,17 @@
 package com.example.dermapp
 
 import android.app.Application
+import android.content.Context
 
 class MyApplication : Application() {
 
     companion object {
-        lateinit var instance: MyApplication
+        lateinit var appContext: Context
             private set
     }
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        appContext = applicationContext
     }
 }

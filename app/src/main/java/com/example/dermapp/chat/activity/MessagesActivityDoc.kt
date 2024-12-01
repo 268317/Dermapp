@@ -15,9 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.dermapp.R
 import com.example.dermapp.chat.adapter.MessagesAdapter
 import com.example.dermapp.chat.database.Message
+import com.example.dermapp.chat.notifications.entity.MessageContent
+import com.example.dermapp.chat.notifications.entity.NotificationContent
+import com.example.dermapp.chat.notifications.entity.PushNotificationRequest
 import com.example.dermapp.chat.notifications.network.RetrofitInstance
-import com.example.dermapp.chat.notifications.entity.NotificationData
-import com.example.dermapp.chat.notifications.entity.PushNotification
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -44,7 +45,6 @@ class MessagesActivityDoc : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_new_message)
 
-        // Obsługa przycisku powrotu
         val backHeader = findViewById<LinearLayout>(R.id.header_chat)
         backButton = backHeader.findViewById(R.id.chatBackBtn)
         backButton.setOnClickListener {
@@ -52,19 +52,9 @@ class MessagesActivityDoc : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Pobieranie danych z Intent
         conversationId = intent.getStringExtra("conversationId")
         patientId = intent.getStringExtra("patientId")
 
-        Log.d("MessagesActivityDoc", "Received conversationId: $conversationId")
-        Log.d("MessagesActivityDoc", "Received patientId: $patientId")
-
-        if (conversationId == null) {
-            Log.e("MessagesActivityDoc", "conversationId is null!")
-            return
-        }
-
-        // Inicjalizacja widoków
         recyclerView = findViewById(R.id.messagesRecyclerViewPat)
         messageInput = findViewById(R.id.editTextMessagePat)
         sendButton = findViewById(R.id.sendBtnPat)
@@ -91,6 +81,7 @@ class MessagesActivityDoc : AppCompatActivity() {
                 .circleCrop()
                 .into(headerProfileImage)
         }
+
         fetchMessages()
 
         sendButton.setOnClickListener {
@@ -150,7 +141,6 @@ class MessagesActivityDoc : AppCompatActivity() {
     }
 
     private fun saveMessageAndUpdateConversation(messageText: String) {
-        val senderProfileImage = intent.getStringExtra("doctorProfilePhoto")
         val message = hashMapOf(
             "messageId" to firestore.collection("messages").document().id,
             "conversationId" to conversationId,
@@ -158,15 +148,13 @@ class MessagesActivityDoc : AppCompatActivity() {
             "receiverId" to patientId,
             "messageText" to messageText,
             "timestamp" to FieldValue.serverTimestamp(),
-            "isRead" to false,
-            "senderProfileImage" to senderProfileImage
+            "isRead" to false
         )
 
         firestore.collection("messages")
             .add(message)
             .addOnSuccessListener {
                 messageInput.text.clear()
-
                 firestore.collection("conversation")
                     .document(conversationId!!)
                     .update(
@@ -176,8 +164,7 @@ class MessagesActivityDoc : AppCompatActivity() {
                         )
                     )
                     .addOnSuccessListener {
-                        Log.d("MessagesActivityDoc", "Conversation updated successfully.")
-                        sendPushNotification(patientId!!, "Nowa wiadomość", messageText)
+                        fetchFcmTokenAndSendNotification(patientId!!, "Nowa wiadomość", messageText)
                     }
                     .addOnFailureListener { e ->
                         Log.e("MessagesActivityDoc", "Error updating conversation", e)
@@ -207,20 +194,52 @@ class MessagesActivityDoc : AppCompatActivity() {
             }
     }
 
+    private fun fetchFcmTokenAndSendNotification(userId: String, title: String, message: String) {
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val receiverToken = document.getString("fcmToken")
+                    if (!receiverToken.isNullOrEmpty()) {
+                        sendPushNotification(receiverToken, title, message)
+                    } else {
+                        Log.e("MessagesActivityDoc", "No FCM token found for user: $userId")
+                    }
+                } else {
+                    Log.e("MessagesActivityDoc", "User document not found for userId: $userId")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesActivityDoc", "Error fetching user token: ${e.message}")
+            }
+    }
+
     private fun sendPushNotification(receiverToken: String, title: String, message: String) {
-        val notificationData = NotificationData(title, message)
-        val pushNotification = PushNotification(notificationData, receiverToken)
+        val notificationRequest = PushNotificationRequest(
+            message = MessageContent(
+                token = receiverToken,
+                notification = NotificationContent(
+                    title = title,
+                    body = message
+                ),
+                data = mapOf(
+                    "key1" to "value1",
+                    "key2" to "value2"
+                )
+            )
+        )
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitInstance.api.postNotification(pushNotification)
+                val response = RetrofitInstance.api.postNotification(notificationRequest)
                 if (response.isSuccessful) {
-                    Log.d("MessagesActivityDoc", "Push notification sent successfully")
+                    Log.d("FCM", "Notification sent successfully")
                 } else {
-                    Log.e("MessagesActivityDoc", "Error sending push notification: ${response.errorBody()?.string()}")
+                    Log.e("FCM", "Error sending notification: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.e("MessagesActivityDoc", "Exception while sending push notification", e)
+                Log.e("FCM", "Exception sending notification", e)
             }
         }
     }

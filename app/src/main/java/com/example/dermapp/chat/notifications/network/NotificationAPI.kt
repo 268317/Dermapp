@@ -1,7 +1,7 @@
 package com.example.dermapp.chat.notifications.network
 
-import com.example.dermapp.chat.notifications.Constants
-import com.example.dermapp.chat.notifications.entity.PushNotification
+import com.example.dermapp.chat.notifications.AuthManager
+import com.example.dermapp.chat.notifications.entity.PushNotificationRequest
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -9,11 +9,16 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface NotificationAPI {
-    // Interfejs do wysyłania powiadomień przez FCM
-    @Headers("Authorization: key=${Constants.SERVER_KEY}", "Content-Type: ${Constants.CONTENT_TYPE}")
-
-    @POST("fcm/send")
+    @POST("v1/projects/dermapp-18974/messages:send")
     suspend fun postNotification(
-        @Body notification: PushNotification
+        @Body notification: PushNotificationRequest
     ): Response<ResponseBody>
+
 }
+
+
+
+
+
+
+

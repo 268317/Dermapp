@@ -22,5 +22,7 @@
     <string name="e_mail">E-mail</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="recent_chats">Recent Chats</string>
-
+    <string name="user_not_found">User not found in the system.</string>
+    <string name="login_success">You are logged in successfully.</string>
+    <string name="error_fetching_user">An error occurred while fetching user data.</string>
 </resources>

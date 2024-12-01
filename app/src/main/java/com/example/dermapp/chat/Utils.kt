@@ -11,7 +11,7 @@ class Utils {
 
     companion object {
         @SuppressLint("StaticFieldLeak")
-        val context = MyApplication.instance.applicationContext
+        val context = MyApplication.appContext.applicationContext
         @SuppressLint("StaticFieldLeak")
         val firestore = FirebaseFirestore.getInstance()
 
