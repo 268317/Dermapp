@@ -1,19 +1,32 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+admin.initializeApp();
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+// Funkcja wysyłania powiadomień
+export const sendNotification = functions.https.onRequest(async (req, res) => {
+  const { token, title, body } = req.body;
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  if (!token || !title || !body) {
+    res.status(400).send("Missing parameters");
+    return;
+  }
+
+  const message = {
+    token: token,
+    notification: {
+      title: title,
+      body: body,
+    },
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    res.status(200).send(`Notification sent successfully: ${response}`);
+  } catch (error) {
+    // Rzutowanie error na typ Error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error sending notification:", errorMessage);
+    res.status(500).send(`Error sending notification: ${errorMessage}`);
+  }
+});
