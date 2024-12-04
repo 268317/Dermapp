@@ -1,6 +1,9 @@
 package com.example.dermapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,7 +13,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.example.dermapp.chat.notifications.AuthManager
 import com.example.dermapp.startDoctor.StartDocActivity
 import com.example.dermapp.startPatient.StartPatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -36,8 +38,27 @@ class MainActivity : BaseActivity() {
         loginButton = findViewById(R.id.LogInButton)
         signUpButton = findViewById(R.id.SignUpButton)
 
+        // Konfiguracja powiadomień
+        configureNotificationChannel()
+
         loginButton.setOnClickListener { logInRegisteredUser() }
         signUpButton.setOnClickListener { goToSignIn() }
+    }
+
+    private fun configureNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "messages_channel"
+            val channelName = "Messages"
+            val channelDescription = "Notifications for new messages"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = channelDescription
+            }
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     private fun validateLoginDetails(): Boolean {
@@ -82,13 +103,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun generateAndSaveFcmToken(userId: String) {
-        // Usuń istniejący token, aby wymusić wygenerowanie nowego
         FirebaseMessaging.getInstance().deleteToken()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("FCM", "Previous FCM token deleted successfully.")
-
-                    // Teraz wygeneruj nowy token
                     FirebaseMessaging.getInstance().token
                         .addOnCompleteListener { newTask ->
                             if (newTask.isSuccessful) {

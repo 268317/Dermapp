@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.firebase.inappmessaging)
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.firebase.functions.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

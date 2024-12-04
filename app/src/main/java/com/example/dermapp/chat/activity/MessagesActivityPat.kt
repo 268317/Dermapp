@@ -15,16 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.dermapp.R
 import com.example.dermapp.chat.adapter.MessagesAdapter
 import com.example.dermapp.chat.database.Message
-import com.example.dermapp.chat.notifications.entity.MessageContent
-import com.example.dermapp.chat.notifications.entity.NotificationContent
-import com.example.dermapp.chat.notifications.entity.PushNotificationRequest
-import com.example.dermapp.chat.notifications.network.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.functions.FirebaseFunctions
 
 class MessagesActivityPat : AppCompatActivity() {
 
@@ -36,6 +30,7 @@ class MessagesActivityPat : AppCompatActivity() {
 
     private val messageList = mutableListOf<Message>()
     private val firestore by lazy { FirebaseFirestore.getInstance() }
+    private val functions by lazy { FirebaseFunctions.getInstance() }
     private val currentUserId by lazy { FirebaseAuth.getInstance().currentUser?.uid ?: "" }
 
     private var conversationId: String? = null
@@ -163,12 +158,11 @@ class MessagesActivityPat : AppCompatActivity() {
                             "lastMessageTimestamp" to FieldValue.serverTimestamp()
                         )
                     )
-                    .addOnSuccessListener {
-                        fetchFcmTokenAndSendNotification(doctorId!!, "Nowa wiadomość", messageText)
-                    }
                     .addOnFailureListener { e ->
                         Log.e("MessagesActivityPat", "Error updating conversation", e)
                     }
+
+                sendNotificationToReceiver(messageText)
             }
             .addOnFailureListener { e ->
                 Log.e("MessagesActivityPat", "Error sending message", e)
@@ -194,53 +188,288 @@ class MessagesActivityPat : AppCompatActivity() {
             }
     }
 
-    private fun fetchFcmTokenAndSendNotification(userId: String, title: String, message: String) {
+    private fun sendNotificationToReceiver(messageText: String) {
         firestore.collection("users")
-            .document(userId)
+            .document(doctorId!!)
             .get()
             .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val receiverToken = document.getString("fcmToken")
-                    if (!receiverToken.isNullOrEmpty()) {
-                        sendPushNotification(receiverToken, title, message)
-                    } else {
-                        Log.e("MessagesActivityPat", "No FCM token found for user: $userId")
-                    }
+                val deviceToken = document.getString("deviceToken")
+                if (deviceToken != null) {
+                    val notificationData = hashMapOf(
+                        "to" to deviceToken,
+                        "notification" to hashMapOf(
+                            "title" to "Nowa wiadomość",
+                            "body" to messageText
+                        )
+                    )
+
+                    functions.getHttpsCallable("sendNotification")
+                        .call(notificationData)
+                        .addOnSuccessListener {
+                            Log.d("MessagesActivityPat", "Notification sent successfully")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("MessagesActivityPat", "Failed to send notification", e)
+                        }
                 } else {
-                    Log.e("MessagesActivityPat", "User document not found for userId: $userId")
+                    Log.e("MessagesActivityPat", "Device token not found")
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("MessagesActivityPat", "Error fetching user token: ${e.message}")
+                Log.e("MessagesActivityPat", "Failed to fetch user data", e)
             }
-    }
-
-    private fun sendPushNotification(receiverToken: String, title: String, message: String) {
-        val notificationRequest = PushNotificationRequest(
-            message = MessageContent(
-                token = receiverToken,
-                notification = NotificationContent(
-                    title = title,
-                    body = message
-                ),
-                data = mapOf(
-                    "key1" to "value1",
-                    "key2" to "value2"
-                )
-            )
-        )
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = RetrofitInstance.api.postNotification(notificationRequest)
-                if (response.isSuccessful) {
-                    Log.d("FCM", "Notification sent successfully")
-                } else {
-                    Log.e("FCM", "Error sending notification: ${response.errorBody()?.string()}")
-                }
-            } catch (e: Exception) {
-                Log.e("FCM", "Exception sending notification", e)
-            }
-        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//package com.example.dermapp.chat.activity
+//
+//import android.app.NotificationChannel
+//import android.app.NotificationManager
+//import android.app.PendingIntent
+//import android.content.Context
+//import android.content.Intent
+//import android.os.Build
+//import android.os.Bundle
+//import android.util.Log
+//import android.widget.Button
+//import android.widget.EditText
+//import android.widget.ImageView
+//import android.widget.LinearLayout
+//import android.widget.TextView
+//import androidx.appcompat.app.AppCompatActivity
+//import androidx.core.app.NotificationCompat
+//import androidx.recyclerview.widget.LinearLayoutManager
+//import androidx.recyclerview.widget.RecyclerView
+//import com.bumptech.glide.Glide
+//import com.example.dermapp.R
+//import com.example.dermapp.chat.adapter.MessagesAdapter
+//import com.example.dermapp.chat.database.Message
+//import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.firestore.FieldValue
+//import com.google.firebase.firestore.FirebaseFirestore
+//
+//class MessagesActivityPat : AppCompatActivity() {
+//
+//    private lateinit var recyclerView: RecyclerView
+//    private lateinit var messageAdapter: MessagesAdapter
+//    private lateinit var messageInput: EditText
+//    private lateinit var sendButton: Button
+//    private lateinit var backButton: ImageView
+//
+//    private val messageList = mutableListOf<Message>()
+//    private val firestore by lazy { FirebaseFirestore.getInstance() }
+//    private val currentUserId by lazy { FirebaseAuth.getInstance().currentUser?.uid ?: "" }
+//
+//    private var conversationId: String? = null
+//    private var doctorId: String? = null
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.chat_activity_new_message)
+//
+//        val backHeader = findViewById<LinearLayout>(R.id.header_chat)
+//        backButton = backHeader.findViewById(R.id.chatBackBtn)
+//        backButton.setOnClickListener {
+//            val intent = Intent(this, ChatsActivityPat::class.java)
+//            startActivity(intent)
+//        }
+//
+//        conversationId = intent.getStringExtra("conversationId")
+//        doctorId = intent.getStringExtra("doctorId")
+//
+//        recyclerView = findViewById(R.id.messagesRecyclerViewPat)
+//        messageInput = findViewById(R.id.editTextMessagePat)
+//        sendButton = findViewById(R.id.sendBtnPat)
+//
+//        recyclerView.layoutManager = LinearLayoutManager(this)
+//        messageAdapter = MessagesAdapter(this, messageList)
+//        recyclerView.adapter = messageAdapter
+//
+//        val headerName: TextView = findViewById(R.id.chatUserNameDoc)
+//        val headerStatus: TextView = findViewById(R.id.chatUserStatusDoc)
+//        val headerProfileImage: ImageView = findViewById(R.id.chatImageViewUserDoc)
+//
+//        val name = intent.getStringExtra("doctorName")
+//        val status = intent.getStringExtra("doctorStatus")
+//        val profilePhoto = intent.getStringExtra("doctorProfilePhoto")
+//
+//        headerName.text = name ?: "Unknown"
+//        headerStatus.text = status ?: ""
+//        profilePhoto?.let {
+//            Glide.with(this)
+//                .load(it)
+//                .placeholder(R.drawable.black_account_circle)
+//                .error(R.drawable.black_account_circle)
+//                .circleCrop()
+//                .into(headerProfileImage)
+//        }
+//
+//        fetchMessages()
+//
+//        sendButton.setOnClickListener {
+//            checkConversationAndSendMessage()
+//        }
+//
+//        createNotificationChannel()
+//    }
+//
+//    private fun fetchMessages() {
+//        if (conversationId == null) return
+//
+//        firestore.collection("messages")
+//            .whereEqualTo("conversationId", conversationId)
+//            .orderBy("timestamp")
+//            .addSnapshotListener { snapshots, e ->
+//                if (e != null) {
+//                    Log.e("MessagesActivityPat", "Error fetching messages", e)
+//                    return@addSnapshotListener
+//                }
+//
+//                snapshots?.let {
+//                    messageList.clear()
+//                    for (document in snapshots.documents) {
+//                        val message = document.toObject(Message::class.java)
+//                        message?.let { messageList.add(it) }
+//                    }
+//                    messageAdapter.notifyDataSetChanged()
+//                    recyclerView.scrollToPosition(messageList.size - 1)
+//                }
+//            }
+//    }
+//
+//    private fun checkConversationAndSendMessage() {
+//        val messageText = messageInput.text.toString().trim()
+//        if (messageText.isEmpty()) {
+//            Log.e("MessagesActivityPat", "Message text is empty")
+//            return
+//        }
+//
+//        if (conversationId == null || doctorId == null) {
+//            Log.e("MessagesActivityPat", "Conversation ID or Doctor ID is null")
+//            return
+//        }
+//
+//        firestore.collection("conversation")
+//            .document(conversationId!!)
+//            .get()
+//            .addOnSuccessListener { document ->
+//                if (document.exists()) {
+//                    saveMessageAndUpdateConversation(messageText)
+//                } else {
+//                    createConversationAndSaveMessage(messageText)
+//                }
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("MessagesActivityPat", "Error checking conversation existence", e)
+//            }
+//    }
+//
+//    private fun saveMessageAndUpdateConversation(messageText: String) {
+//        val message = hashMapOf(
+//            "messageId" to firestore.collection("messages").document().id,
+//            "conversationId" to conversationId,
+//            "senderId" to currentUserId,
+//            "receiverId" to doctorId,
+//            "messageText" to messageText,
+//            "timestamp" to FieldValue.serverTimestamp(),
+//            "isRead" to false
+//        )
+//
+//        firestore.collection("messages")
+//            .add(message)
+//            .addOnSuccessListener {
+//                messageInput.text.clear()
+//                firestore.collection("conversation")
+//                    .document(conversationId!!)
+//                    .update(
+//                        mapOf(
+//                            "lastMessage" to messageText,
+//                            "lastMessageTimestamp" to FieldValue.serverTimestamp()
+//                        )
+//                    )
+//                    .addOnSuccessListener {
+//                        sendNotificationToReceiver(messageText)
+//                    }
+//                    .addOnFailureListener { e ->
+//                        Log.e("MessagesActivityPat", "Error updating conversation", e)
+//                    }
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("MessagesActivityPat", "Error sending message", e)
+//            }
+//    }
+//
+//    private fun createConversationAndSaveMessage(messageText: String) {
+//        val conversationData = hashMapOf(
+//            "conversationId" to conversationId,
+//            "lastMessage" to messageText,
+//            "lastMessageTimestamp" to FieldValue.serverTimestamp(),
+//            "participants" to listOf(currentUserId, doctorId)
+//        )
+//
+//        firestore.collection("conversation")
+//            .document(conversationId!!)
+//            .set(conversationData)
+//            .addOnSuccessListener {
+//                saveMessageAndUpdateConversation(messageText)
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("MessagesActivityPat", "Error creating conversation", e)
+//            }
+//    }
+//
+//    private fun sendNotificationToReceiver(messageText: String) {
+//        val intent = Intent(this, MessagesActivityPat::class.java)
+//        val pendingIntent = PendingIntent.getActivity(
+//            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//        )
+//
+//        val notification = NotificationCompat.Builder(this, "messages_channel")
+//            .setSmallIcon(R.drawable.logo_foreground)
+//            .setContentTitle("New Message")
+//            .setContentText(messageText)
+//            .setPriority(NotificationCompat.PRIORITY_HIGH)
+//            .setContentIntent(pendingIntent)
+//            .setAutoCancel(true)
+//            .build()
+//
+//        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+//    }
+//
+//    private fun createNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(
+//                "messages_channel",
+//                "Messages",
+//                NotificationManager.IMPORTANCE_HIGH
+//            ).apply {
+//                description = "Notifications for new messages"
+//            }
+//            val manager = getSystemService(NotificationManager::class.java)
+//            manager?.createNotificationChannel(channel)
+//        }
+//    }
+//}
