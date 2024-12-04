@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dermapp.R
 import com.example.dermapp.chat.database.Message
 import com.google.firebase.auth.FirebaseAuth
@@ -14,7 +16,8 @@ import java.util.Locale
 
 class MessagesAdapter(
     private val context: Context,
-    private val messageList: List<Message>
+    private val messageList: List<Message>,
+    private val profilePhotoUrl: String?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val currentUserId: String = FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -44,7 +47,13 @@ class MessagesAdapter(
         if (holder is SentMessageViewHolder) {
             holder.bind(message)
         } else if (holder is ReceivedMessageViewHolder) {
+            holder.bind(message, profilePhotoUrl)
+        }
+
+        if (holder is SentMessageViewHolder) {
             holder.bind(message)
+        } else if (holder is ReceivedMessageViewHolder) {
+            holder.bind(message, profilePhotoUrl)
         }
     }
 
@@ -72,14 +81,22 @@ class MessagesAdapter(
     inner class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
         private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
+        private val profileImage: ImageView = itemView.findViewById(R.id.leftMessageProfileImage)
 
 
-        fun bind(message: Message) {
+        fun bind(message: Message, profilePhotoUrl: String?) {
             messageText.text = message.messageText
             // Format the timestamp
             val date = message.timestamp?.toDate()
             val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
             messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
+
+            // Load profile photo
+            Glide.with(itemView.context)
+                .load(this@MessagesAdapter.profilePhotoUrl)
+                .placeholder(R.drawable.black_account_circle)
+                .circleCrop()
+                .into(profileImage)
         }
     }
 }

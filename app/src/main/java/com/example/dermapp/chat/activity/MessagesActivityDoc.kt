@@ -54,8 +54,6 @@ class MessagesActivityDoc : AppCompatActivity() {
         sendButton = findViewById(R.id.sendBtnPat)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        messageAdapter = MessagesAdapter(this, messageList)
-        recyclerView.adapter = messageAdapter
 
         val headerName: TextView = findViewById(R.id.chatUserNameDoc)
         val headerStatus: TextView = findViewById(R.id.chatUserStatusDoc)
@@ -64,6 +62,8 @@ class MessagesActivityDoc : AppCompatActivity() {
         val name = intent.getStringExtra("patientName")
         val status = intent.getStringExtra("patientStatus")
         val profilePhoto = intent.getStringExtra("patientProfilePhoto")
+        messageAdapter = MessagesAdapter(this, messageList, profilePhoto)
+        recyclerView.adapter = messageAdapter
 
         headerName.text = name ?: "Unknown"
         headerStatus.text = status ?: ""
