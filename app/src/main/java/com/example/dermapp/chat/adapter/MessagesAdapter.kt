@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.R
 import com.example.dermapp.chat.database.Message
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MessagesAdapter(
     private val context: Context,
@@ -50,17 +52,30 @@ class MessagesAdapter(
 
     inner class SentMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
+        private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
+
 
         fun bind(message: Message) {
             messageText.text = message.messageText
+
+            // Format the timestamp
+            val date = message.timestamp?.toDate()
+            val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
         }
     }
 
     inner class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
+        private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
+
 
         fun bind(message: Message) {
             messageText.text = message.messageText
+            // Format the timestamp
+            val date = message.timestamp?.toDate()
+            val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
         }
     }
 }
