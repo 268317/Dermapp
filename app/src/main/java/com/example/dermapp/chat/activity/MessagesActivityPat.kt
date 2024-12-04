@@ -104,7 +104,10 @@ class MessagesActivityPat : AppCompatActivity() {
                     }
                     messageAdapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(messageList.size - 1)
+
+                    markMessagesAsRead()
                 }
+
             }
     }
 
@@ -219,6 +222,27 @@ class MessagesActivityPat : AppCompatActivity() {
                 Log.e("MessagesActivityPat", "Failed to fetch user data", e)
             }
     }
+
+    private fun markMessagesAsRead() {
+        if (conversationId == null) return
+
+        firestore.collection("messages")
+            .whereEqualTo("conversationId", conversationId)
+            .whereEqualTo("receiverId", currentUserId)
+            .whereEqualTo("isRead", false)
+            .get()
+            .addOnSuccessListener { snapshots ->
+                for (document in snapshots.documents) {
+                    firestore.collection("messages")
+                        .document(document.id)
+                        .update("isRead", true)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesActivity", "Error marking messages as read", e)
+            }
+    }
+
 }
 
 

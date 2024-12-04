@@ -61,7 +61,7 @@
             android:name=".chat.activity.MessagesActivityPat"
             android:exported="false" />
         <activity
-            android:name="MessagesActivityDoc"
+            android:name=".chat.activity.MessagesActivityDoc"
             android:exported="false" />
         <activity
             android:name=".chat.activity.ChatsActivityPat"

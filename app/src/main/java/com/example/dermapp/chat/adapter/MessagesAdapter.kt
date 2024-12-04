@@ -53,6 +53,7 @@ class MessagesAdapter(
     inner class SentMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
         private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
+        private val messageSeen: TextView = itemView.findViewById(R.id.messageSeen)
 
 
         fun bind(message: Message) {
@@ -62,6 +63,9 @@ class MessagesAdapter(
             val date = message.timestamp?.toDate()
             val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
             messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
+
+            // Set message status
+            messageSeen.text = if (message.isRead) "Seen" else "Sent"
         }
     }
 

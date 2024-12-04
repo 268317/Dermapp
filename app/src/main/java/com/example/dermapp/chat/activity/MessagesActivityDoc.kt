@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dermapp.R
-import com.example.dermapp.chat.activity.ChatsActivityDoc
 import com.example.dermapp.chat.adapter.MessagesAdapter
 import com.example.dermapp.chat.database.Message
 import com.google.firebase.auth.FirebaseAuth
@@ -104,6 +103,9 @@ class MessagesActivityDoc : AppCompatActivity() {
                     }
                     messageAdapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(messageList.size - 1)
+
+                    markMessagesAsRead()
+
                 }
             }
     }
@@ -220,6 +222,27 @@ class MessagesActivityDoc : AppCompatActivity() {
                 Log.e("MessagesActivityDoc", "Failed to fetch user data", e)
             }
     }
+
+    private fun markMessagesAsRead() {
+        if (conversationId == null) return
+
+        firestore.collection("messages")
+            .whereEqualTo("conversationId", conversationId)
+            .whereEqualTo("receiverId", currentUserId)
+            .whereEqualTo("isRead", false)
+            .get()
+            .addOnSuccessListener { snapshots ->
+                for (document in snapshots.documents) {
+                    firestore.collection("messages")
+                        .document(document.id)
+                        .update("isRead", true)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesActivity", "Error marking messages as read", e)
+            }
+    }
+
 }
 
 
