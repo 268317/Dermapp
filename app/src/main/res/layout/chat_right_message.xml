@@ -18,34 +18,54 @@
         android:textColor="#999999"
         android:textSize="12sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@id/messageText"
-        app:layout_constraintEnd_toStartOf="@id/messageText" />
+        app:layout_constraintBottom_toBottomOf="@id/messageContainer"
+        app:layout_constraintEnd_toStartOf="@id/messageContainer" />
 
-    <!-- Wiadomość -->
-    <TextView
-        android:id="@+id/messageText"
+    <!-- Kontener wiadomości -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messageContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_rectangle_primary"
-        android:padding="12dp"
-        android:text="Hello"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:maxWidth="250dp"
-        android:ellipsize="none"
-        android:singleLine="false"
-        android:scrollHorizontally="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/messageSeen"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Wiadomość tekstowa -->
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_rectangle_primary"
+            android:ellipsize="none"
+            android:maxWidth="250dp"
+            android:padding="12dp"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:text="Hello"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Zdjęcie wiadomości -->
+        <ImageView
+            android:id="@+id/photoImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Czy odczytana -->
     <TextView
         android:id="@+id/messageSeen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="seen"
         android:textColor="#999999"
         android:textSize="12sp"

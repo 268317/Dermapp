@@ -9,9 +9,10 @@ open class Message(
     @get:PropertyName("receiverId") @set:PropertyName("receiverId") open var receiverId: String = "",
     @get:PropertyName("messageText") @set:PropertyName("messageText") open var messageText: String = "",
     @get:PropertyName("timestamp") @set:PropertyName("timestamp") open var timestamp: com.google.firebase.Timestamp? = null,
-    @get:PropertyName("isRead") @set:PropertyName("isRead") open var isRead: Boolean = false
+    @get:PropertyName("isRead") @set:PropertyName("isRead") open var isRead: Boolean = false,
+    @get:PropertyName("photoUrl") @set:PropertyName("photoUrl") open var photoUrl: String? = null,
 ) {
-    constructor() : this("", "", "", "", "", null, false)
+    constructor() : this("", "", "", "", "", null, false, null)
 
     /**
      * Determines if the current user is the sender of the message.

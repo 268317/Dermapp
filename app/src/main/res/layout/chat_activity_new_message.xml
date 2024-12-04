@@ -41,6 +41,15 @@
             android:orientation="horizontal"
             android:elevation="2dp">
 
+            <!-- Przycisk dodawania zdjęcia  -->
+            <Button
+                android:id="@+id/attachPhotoBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/attach_photo"
+                android:layout_marginEnd="8dp"
+                android:elevation="4dp" />
+
             <!-- Pole wprowadzania wiadomości -->
             <EditText
                 android:id="@+id/editTextMessagePat"

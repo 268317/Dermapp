@@ -1,14 +1,18 @@
 package com.example.dermapp.chat.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 
 class MessagesActivityPat : AppCompatActivity() {
 
@@ -36,9 +42,19 @@ class MessagesActivityPat : AppCompatActivity() {
     private var conversationId: String? = null
     private var doctorId: String? = null
 
+    private val REQUEST_GALLERY_PHOTO = 1
+    private val REQUEST_CAMERA_PHOTO = 2
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_new_message)
+
+        val attachPhotoBtn: Button = findViewById(R.id.attachPhotoBtn)
+        attachPhotoBtn.setOnClickListener {
+            showPhotoSourceDialog()
+        }
+
 
         val backHeader = findViewById<LinearLayout>(R.id.header_chat)
         backButton = backHeader.findViewById(R.id.chatBackBtn)
@@ -243,6 +259,96 @@ class MessagesActivityPat : AppCompatActivity() {
                 Log.e("MessagesActivity", "Error marking messages as read", e)
             }
     }
+
+    private fun showPhotoSourceDialog() {
+        val options = arrayOf("Choose from Gallery", "Take a Photo")
+        AlertDialog.Builder(this)
+            .setTitle("Attach Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openGallery()
+                    1 -> openCamera()
+                }
+            }
+            .show()
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+        }
+        startActivityForResult(intent, REQUEST_GALLERY_PHOTO)
+    }
+
+    private lateinit var cameraPhotoUri: Uri
+
+    private fun openCamera() {
+        val photoFile = File.createTempFile("IMG_", ".jpg", externalCacheDir).apply {
+            createNewFile()
+        }
+        cameraPhotoUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoUri)
+        }
+        startActivityForResult(intent, REQUEST_CAMERA_PHOTO)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                REQUEST_GALLERY_PHOTO -> {
+                    val selectedImageUri = data?.data
+                    selectedImageUri?.let { uploadPhotoAndSendMessage(it) }
+                }
+                REQUEST_CAMERA_PHOTO -> {
+                    uploadPhotoAndSendMessage(cameraPhotoUri)
+                }
+            }
+        }
+    }
+
+    private fun uploadPhotoAndSendMessage(photoUri: Uri) {
+        val storageRef = FirebaseStorage.getInstance().reference
+            .child("message_photos/${System.currentTimeMillis()}.jpg")
+
+        storageRef.putFile(photoUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    sendPhotoMessage(uri.toString())
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesActivity", "Failed to upload photo", e)
+            }
+    }
+
+    private fun sendPhotoMessage(photoUrl: String) {
+        val message = hashMapOf(
+            "messageId" to firestore.collection("messages").document().id,
+            "conversationId" to conversationId,
+            "senderId" to currentUserId,
+            "receiverId" to doctorId,
+            "photoUrl" to photoUrl,
+            "timestamp" to FieldValue.serverTimestamp(),
+            "isRead" to false
+        )
+
+        firestore.collection("messages")
+            .add(message)
+            .addOnSuccessListener {
+                Log.d("MessagesActivity", "Photo message sent successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("MessagesActivity", "Failed to send photo message", e)
+            }
+    }
+
+
+
+
 
 }
 

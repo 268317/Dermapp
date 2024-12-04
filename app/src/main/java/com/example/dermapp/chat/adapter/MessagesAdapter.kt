@@ -63,10 +63,22 @@ class MessagesAdapter(
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
         private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
         private val messageSeen: TextView = itemView.findViewById(R.id.messageSeen)
-
+        private val photoImage: ImageView = itemView.findViewById(R.id.photoImage)
 
         fun bind(message: Message) {
-            messageText.text = message.messageText
+            // Display text or photo
+            if (!message.photoUrl.isNullOrEmpty()) {
+                photoImage.visibility = View.VISIBLE
+                messageText.visibility = View.GONE
+                Glide.with(itemView.context)
+                    .load(message.photoUrl)
+                    .placeholder(R.drawable.black_account_circle)
+                    .into(photoImage)
+            } else {
+                photoImage.visibility = View.GONE
+                messageText.visibility = View.VISIBLE
+                messageText.text = message.messageText
+            }
 
             // Format the timestamp
             val date = message.timestamp?.toDate()
@@ -78,14 +90,26 @@ class MessagesAdapter(
         }
     }
 
+
     inner class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val messageText: TextView = itemView.findViewById(R.id.messageText)
         private val messageTimestamp: TextView = itemView.findViewById(R.id.messageTime)
         private val profileImage: ImageView = itemView.findViewById(R.id.leftMessageProfileImage)
-
+        private val photoImage: ImageView = itemView.findViewById(R.id.photoImage)
 
         fun bind(message: Message, profilePhotoUrl: String?) {
             messageText.text = message.messageText
+
+            // Show photo if available
+            if (!message.photoUrl.isNullOrEmpty()) {
+                photoImage.visibility = View.VISIBLE
+                Glide.with(itemView.context)
+                    .load(message.photoUrl)
+                    .into(photoImage)
+            } else {
+                photoImage.visibility = View.GONE
+            }
+
             // Format the timestamp
             val date = message.timestamp?.toDate()
             val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
@@ -93,10 +117,11 @@ class MessagesAdapter(
 
             // Load profile photo
             Glide.with(itemView.context)
-                .load(this@MessagesAdapter.profilePhotoUrl)
+                .load(profilePhotoUrl)
                 .placeholder(R.drawable.black_account_circle)
                 .circleCrop()
                 .into(profileImage)
         }
     }
+
 }

@@ -7,40 +7,57 @@
     android:layout_gravity="left"
     android:padding="8dp">
 
-    <!-- Wiadomość -->
+    <!-- Profil użytkownika -->
     <ImageView
         android:id="@+id/leftMessageProfileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/messageText"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@id/messageContentContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/black_account_circle" />
+        android:src="@drawable/black_account_circle" />
 
-    <!-- Wiadomość -->
-    <TextView
-        android:id="@+id/messageText"
+    <!-- Kontener na tekst lub obraz -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messageContentContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/rounded_rectangle_secondary"
-        android:padding="12dp"
-        android:text="Hello"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:maxWidth="250dp"
-        android:ellipsize="none"
-        android:singleLine="false"
-        android:scrollHorizontally="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/leftMessageProfileImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toEndOf="@id/leftMessageProfileImage"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Wiadomość tekstowa -->
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_rectangle_secondary"
+            android:maxWidth="250dp"
+            android:padding="12dp"
+            android:text="Hello"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
+        <!-- Zdjęcie wiadomości -->
+        <ImageView
+            android:id="@+id/photoImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+             />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Czas wiadomości -->
     <TextView
         android:id="@+id/messageTime"
         android:layout_width="wrap_content"
@@ -51,6 +68,6 @@
         android:textColor="#999999"
         android:textSize="12sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@id/messageText"
-        app:layout_constraintStart_toEndOf="@id/messageText" />
+        app:layout_constraintBottom_toBottomOf="@id/messageContentContainer"
+        app:layout_constraintStart_toEndOf="@id/messageContentContainer" />
 </androidx.constraintlayout.widget.ConstraintLayout>
