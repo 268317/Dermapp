@@ -127,4 +127,18 @@ open class Conversation(
             callback(null)
         }
     }
+
+    /**
+     * Retrieves the last message ID.
+     *
+     * @param callback Callback to return the result asynchronously.
+     */
+    fun getLastMessageId(callback: (String?) -> Unit) {
+        if (lastMessageId.isNotEmpty()) {
+            callback(lastMessageId)
+        } else {
+            callback(null)
+        }
+    }
+
 }

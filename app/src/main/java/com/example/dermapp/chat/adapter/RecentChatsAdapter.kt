@@ -16,6 +16,7 @@ import com.example.dermapp.chat.activity.MessagesActivityDoc
 import com.example.dermapp.chat.activity.MessagesActivityPat
 import com.example.dermapp.chat.database.Conversation
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RecentChatsAdapter(
     private val context: Context,
@@ -32,32 +33,53 @@ class RecentChatsAdapter(
         val chat = chatList[position]
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-        // Pobieranie nazwy użytkownika
+        // Pobieranie ostatniej wiadomości
+        chat.getLastMessageId { lastMessageId ->
+            if (lastMessageId != null) {
+                FirebaseFirestore.getInstance().collection("messages")
+                    .document(lastMessageId)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        val isRead = document.getBoolean("isRead") ?: true
+                        val senderId = document.getString("senderId") ?: ""
+
+                        // Sprawdzenie, czy wiadomość jest DO nas (nie jesteśmy nadawcą)
+                        val isUnreadForUs = !isRead && senderId != currentUserId
+
+                        holder.itemView.setBackgroundResource(
+                            if (isUnreadForUs) R.color.unread_message_background else R.color.read_message_background
+                        )
+                    }
+                    .addOnFailureListener { e ->
+                        e.printStackTrace()
+                    }
+            }
+        }
+
+        // Reszta logiki przypisywania nazw i zdjęć profilowych
         chat.getFriendUsername(currentUserId) { friendName ->
             holder.recentChatsItemName.text = friendName ?: "Unknown"
         }
 
-        // Pobieranie zdjęcia profilowego
         chat.getFriendProfilePhoto(currentUserId) { profilePhoto ->
             Glide.with(context)
                 .load(profilePhoto)
-                .apply(RequestOptions.placeholderOf(R.drawable.black_account_circle)
-                    .error(R.drawable.black_account_circle))
+                .apply(
+                    RequestOptions.placeholderOf(R.drawable.black_account_circle)
+                        .error(R.drawable.black_account_circle)
+                )
                 .circleCrop()
                 .into(holder.recentChatsItemProfileImage)
         }
 
-        // Pobieranie ostatniej wiadomości
         chat.getLastMessageText { lastMessage ->
             holder.recentChatsItemLastMessageText.text = lastMessage ?: ""
         }
 
-        // Pobieranie czasu ostatniej wiadomości
         chat.getLastMessageTimestamp { formattedDate ->
             holder.recentChatsItemLastMessageTime.text = formattedDate ?: ""
         }
 
-        // Nawigacja do aktywności wiadomości
         holder.itemView.setOnClickListener {
             val intent = if (isDoctor) {
                 Intent(context, MessagesActivityDoc::class.java)
@@ -69,6 +91,8 @@ class RecentChatsAdapter(
             context.startActivity(intent)
         }
     }
+
+
 
 
     override fun getItemCount(): Int = chatList.size

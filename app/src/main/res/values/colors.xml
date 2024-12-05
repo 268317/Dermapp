@@ -22,6 +22,8 @@
 
     <color name="onlineColor">#00FF00</color>
     <color name="offlineColor">#FF0000</color>
+    <color name="unread_message_background">#F3E3CD</color>
+    <color name="read_message_background">#FFFFFF</color>
 
 
 </resources>
