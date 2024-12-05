@@ -15,12 +15,18 @@ open class Message(
     constructor() : this("", "", "", "", "", null, false, null)
 
     /**
-     * Determines if the current user is the sender of the message.
+     * Checks if the message is sent by the current user.
      *
      * @param currentUserId The ID of the current user.
      * @return True if the current user is the sender, false otherwise.
      */
-    fun isSender(currentUserId: String): Boolean {
-        return senderId == currentUserId
-    }
+    fun isSender(currentUserId: String): Boolean = senderId == currentUserId
+
+    /**
+     * Checks if the message is unread for the current user.
+     *
+     * @param currentUserId The ID of the current user.
+     * @return True if the message is unread and was sent to the current user.
+     */
+    fun isUnreadForCurrentUser(currentUserId: String): Boolean = !isRead && receiverId == currentUserId
 }

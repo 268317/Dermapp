@@ -82,7 +82,7 @@ class ChatsActivityDoc : AppCompatActivity() {
 
     private fun fetchChats() {
         firestore.collection("conversation")
-            .whereEqualTo("doctorId", currentUserId)
+            .whereArrayContains("participants", currentUserId)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 chatList.clear()
@@ -93,6 +93,7 @@ class ChatsActivityDoc : AppCompatActivity() {
                 Log.e("ChatsActivityDoc", "Error fetching chats", e)
             }
     }
+
 
     private fun setupSearchView() {
         searchView = findViewById(R.id.searchViewPatientsDoc)

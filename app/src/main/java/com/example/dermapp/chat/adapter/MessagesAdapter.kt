@@ -49,13 +49,8 @@ class MessagesAdapter(
         } else if (holder is ReceivedMessageViewHolder) {
             holder.bind(message, profilePhotoUrl)
         }
-
-        if (holder is SentMessageViewHolder) {
-            holder.bind(message)
-        } else if (holder is ReceivedMessageViewHolder) {
-            holder.bind(message, profilePhotoUrl)
-        }
     }
+
 
     override fun getItemCount(): Int = messageList.size
 
@@ -66,7 +61,6 @@ class MessagesAdapter(
         private val photoImage: ImageView = itemView.findViewById(R.id.photoImage)
 
         fun bind(message: Message) {
-            // Display text or photo
             if (!message.photoUrl.isNullOrEmpty()) {
                 photoImage.visibility = View.VISIBLE
                 messageText.visibility = View.GONE
@@ -80,14 +74,12 @@ class MessagesAdapter(
                 messageText.text = message.messageText
             }
 
-            // Format the timestamp
             val date = message.timestamp?.toDate()
             val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
             messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
-
-            // Set message status
             messageSeen.text = if (message.isRead) "Seen" else "Sent"
         }
+
     }
 
 
@@ -99,8 +91,6 @@ class MessagesAdapter(
 
         fun bind(message: Message, profilePhotoUrl: String?) {
             messageText.text = message.messageText
-
-            // Show photo if available
             if (!message.photoUrl.isNullOrEmpty()) {
                 photoImage.visibility = View.VISIBLE
                 Glide.with(itemView.context)
@@ -110,18 +100,17 @@ class MessagesAdapter(
                 photoImage.visibility = View.GONE
             }
 
-            // Format the timestamp
             val date = message.timestamp?.toDate()
             val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
             messageTimestamp.text = date?.let { formatter.format(it) } ?: ""
 
-            // Load profile photo
             Glide.with(itemView.context)
                 .load(profilePhotoUrl)
                 .placeholder(R.drawable.black_account_circle)
                 .circleCrop()
                 .into(profileImage)
         }
+
     }
 
 }

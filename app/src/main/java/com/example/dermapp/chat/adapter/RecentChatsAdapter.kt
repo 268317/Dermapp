@@ -15,6 +15,7 @@ import com.example.dermapp.R
 import com.example.dermapp.chat.activity.MessagesActivityDoc
 import com.example.dermapp.chat.activity.MessagesActivityPat
 import com.example.dermapp.chat.database.Conversation
+import com.google.firebase.auth.FirebaseAuth
 
 class RecentChatsAdapter(
     private val context: Context,
@@ -29,16 +30,29 @@ class RecentChatsAdapter(
 
     override fun onBindViewHolder(holder: RecentChatViewHolder, position: Int) {
         val chat = chatList[position]
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-        // Bind data to the view holder
-        holder.recentChatsItemName.text = chat.name ?: "Unknown"
-        Glide.with(context)
-            .load(chat.friendsImage)
-            .apply(RequestOptions.placeholderOf(R.drawable.black_account_circle)
-                .error(R.drawable.black_account_circle))
-            .into(holder.recentChatsItemProfileImage)
+        // Pobieranie nazwy użytkownika
+        chat.getFriendUsername(currentUserId) { friendName ->
+            holder.recentChatsItemName.text = friendName ?: "Unknown"
+        }
 
-        // Navigate to the appropriate chat activity
+        // Pobieranie zdjęcia profilowego
+        chat.getFriendProfilePhoto(currentUserId) { profilePhoto ->
+            Glide.with(context)
+                .load(profilePhoto)
+                .apply(RequestOptions.placeholderOf(R.drawable.black_account_circle)
+                    .error(R.drawable.black_account_circle))
+                .circleCrop()
+                .into(holder.recentChatsItemProfileImage)
+        }
+
+        // Pobieranie ostatniej wiadomości
+        chat.getLastMessageText { lastMessage ->
+            holder.recentChatsItemLastMessageText.text = lastMessage ?: ""
+        }
+
+        // Nawigacja do aktywności wiadomości
         holder.itemView.setOnClickListener {
             val intent = if (isDoctor) {
                 Intent(context, MessagesActivityDoc::class.java)
@@ -46,10 +60,11 @@ class RecentChatsAdapter(
                 Intent(context, MessagesActivityPat::class.java)
             }
             intent.putExtra("conversationId", chat.conversationId)
-            intent.putExtra("friendId", chat.friendId)
+            intent.putExtra("friendId", chat.getFriendId(currentUserId))
             context.startActivity(intent)
         }
     }
+
 
     override fun getItemCount(): Int = chatList.size
 
@@ -65,6 +80,8 @@ class RecentChatsAdapter(
     inner class RecentChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val recentChatsItemName: TextView = itemView.findViewById(R.id.recentChatsItemName)
         val recentChatsItemProfileImage: ImageView = itemView.findViewById(R.id.recentChatsItemProfileImage)
+        val recentChatsItemLastMessageText: TextView = itemView.findViewById(R.id.recentChatsItemLastMessage)
+        val recentChatsItemLastMessageTime: TextView = itemView.findViewById(R.id.recentChatsItemTime)
     }
 
     /**

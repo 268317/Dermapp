@@ -124,9 +124,9 @@ class MessagesActivityPat : AppCompatActivity() {
 
                     markMessagesAsRead()
                 }
-
             }
     }
+
 
     private fun checkConversationAndSendMessage() {
         val messageText = messageInput.text.toString().trim()
@@ -156,8 +156,9 @@ class MessagesActivityPat : AppCompatActivity() {
     }
 
     private fun saveMessageAndUpdateConversation(messageText: String) {
+        val messageId = firestore.collection("messages").document().id
         val message = hashMapOf(
-            "messageId" to firestore.collection("messages").document().id,
+            "messageId" to messageId,
             "conversationId" to conversationId,
             "senderId" to currentUserId,
             "receiverId" to doctorId,
@@ -167,15 +168,15 @@ class MessagesActivityPat : AppCompatActivity() {
         )
 
         firestore.collection("messages")
-            .add(message)
+            .document(messageId)
+            .set(message)
             .addOnSuccessListener {
                 messageInput.text.clear()
                 firestore.collection("conversation")
                     .document(conversationId!!)
                     .update(
                         mapOf(
-                            "lastMessage" to messageText,
-                            "lastMessageTimestamp" to FieldValue.serverTimestamp()
+                            "lastMessageId" to messageId
                         )
                     )
                     .addOnFailureListener { e ->
@@ -188,6 +189,7 @@ class MessagesActivityPat : AppCompatActivity() {
                 Log.e("MessagesActivityPat", "Error sending message", e)
             }
     }
+
 
     private fun createConversationAndSaveMessage(messageText: String) {
         val conversationData = hashMapOf(

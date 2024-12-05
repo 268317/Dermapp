@@ -1,70 +1,121 @@
 package com.example.dermapp.chat.database
 
-import android.os.Parcel
-import android.os.Parcelable
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.PropertyName
 
-data class Conversation(val conversationId : String? ="",
-                        val friendId : String? ="",
-                        val friendsImage: String? = "",
-                        val lastMessageTime : String? = "",
-                        val name: String? ="",
-                        val senderId: String? = "",
-                        val lastMessageText : String? = "",
-                        val person: String? = "",
-                        val status: String? ="",
+open class Conversation(
+    @get:PropertyName("conversationId") @set:PropertyName("conversationId") open var conversationId: String = "",
+    @get:PropertyName("lastMessageId") @set:PropertyName("lastMessageId") open var lastMessageId: String = "",
+    @get:PropertyName("participants") @set:PropertyName("participants") open var participants: List<String> = listOf()
+) {
+    constructor() : this("", "", listOf())
 
-                       ) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()
-    )
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(conversationId)
-        parcel.writeString(friendId)
-        parcel.writeString(friendsImage)
-        parcel.writeString(lastMessageTime)
-        parcel.writeString(name)
-        parcel.writeString(senderId)
-        parcel.writeString(lastMessageText)
-        parcel.writeString(person)
-        parcel.writeString(status)
-
+    /**
+     * Retrieves the ID of the friend (other participant) in the conversation.
+     *
+     * @param currentUserId The ID of the current user.
+     * @return The ID of the friend.
+     */
+    fun getFriendId(currentUserId: String): String? {
+        return participants.find { it != currentUserId }
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Conversation> {
-        override fun createFromParcel(parcel: Parcel): Conversation {
-            return Conversation(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Conversation?> {
-            return arrayOfNulls(size)
+    /**
+     * Retrieves the profile photo of the friend (requires a Firestore query).
+     *
+     * @param currentUserId The ID of the current user.
+     * @param callback Callback to return the result asynchronously.
+     */
+    fun getFriendProfilePhoto(currentUserId: String, callback: (String?) -> Unit) {
+        val friendId = getFriendId(currentUserId)
+        if (friendId != null) {
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(friendId)
+                .get()
+                .addOnSuccessListener { document ->
+                    callback(document.getString("profilePhoto"))
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    callback(null)
+                }
+        } else {
+            callback(null)
         }
     }
 
+    /**
+     * Retrieves the username of the friend (requires a Firestore query).
+     *
+     * @param currentUserId The ID of the current user.
+     * @param callback Callback to return the result asynchronously.
+     */
+    fun getFriendUsername(currentUserId: String, callback: (String?) -> Unit) {
+        val friendId = getFriendId(currentUserId)
+        if (friendId != null) {
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(friendId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val firstName = document.getString("firstName") ?: ""
+                    val lastName = document.getString("lastName") ?: ""
+                    callback("$firstName $lastName".trim())
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    callback(null)
+                }
+        } else {
+            callback(null)
+        }
+    }
 
+    /**
+     * Retrieves the timestamp of the last message (requires a Firestore query).
+     *
+     * @param callback Callback to return the result asynchronously.
+     */
+    fun getLastMessageTimestamp(callback: (Timestamp?) -> Unit) {
+        if (lastMessageId.isNotEmpty()) {
+            FirebaseFirestore.getInstance()
+                .collection("messages")
+                .document(lastMessageId)
+                .get()
+                .addOnSuccessListener { document ->
+                    callback(document.getTimestamp("timestamp"))
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    callback(null)
+                }
+        } else {
+            callback(null)
+        }
+    }
+
+    /**
+     * Retrieves the text of the last message (requires a Firestore query).
+     *
+     * @param callback Callback to return the result asynchronously.
+     */
+    fun getLastMessageText(callback: (String?) -> Unit) {
+        if (lastMessageId.isNotEmpty()) {
+            FirebaseFirestore.getInstance()
+                .collection("messages")
+                .document(lastMessageId)
+                .get()
+                .addOnSuccessListener { document ->
+                    callback(document.getString("messageText"))
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    callback(null)
+                }
+        } else {
+            callback(null)
+        }
+    }
 }
-
-//import com.google.firebase.firestore.PropertyName
-//
-//open class Conversation(
-//    @get:PropertyName("conversationId") @set:PropertyName("conversationId") var conversationId: String = "",
-//    @get:PropertyName("friendId") @set:PropertyName("friendId") var friendId: String = "",
-//    @get:PropertyName("patientId") @set:PropertyName("patientId") var patientId: String = "",
-//    @get:PropertyName("lastMessage") @set:PropertyName("lastMessage") var lastMessage: String = "",
-//    @get:PropertyName("lastMessageTimestamp") @set:PropertyName("lastMessageTimestamp") var lastMessageTimestamp: com.google.firebase.Timestamp? = null,
-//    @get:PropertyName("hasNewMessage") @set:PropertyName("hasNewMessage") var hasNewMessage: Boolean = false,
-//) {
-//    constructor() : this("", "", "", "", null, false)
-//}
-
-
