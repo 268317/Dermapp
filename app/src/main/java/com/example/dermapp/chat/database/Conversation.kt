@@ -3,6 +3,8 @@ package com.example.dermapp.chat.database
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.PropertyName
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 open class Conversation(
     @get:PropertyName("conversationId") @set:PropertyName("conversationId") open var conversationId: String = "",
@@ -74,18 +76,25 @@ open class Conversation(
     }
 
     /**
-     * Retrieves the timestamp of the last message (requires a Firestore query).
+     * Retrieves the timestamp of the last message in the desired format (e.g., Nov 16, 15:15).
      *
-     * @param callback Callback to return the result asynchronously.
+     * @param callback Callback to return the formatted date string asynchronously.
      */
-    fun getLastMessageTimestamp(callback: (Timestamp?) -> Unit) {
+    fun getLastMessageTimestamp(callback: (String?) -> Unit) {
         if (lastMessageId.isNotEmpty()) {
             FirebaseFirestore.getInstance()
                 .collection("messages")
                 .document(lastMessageId)
                 .get()
                 .addOnSuccessListener { document ->
-                    callback(document.getTimestamp("timestamp"))
+                    val timestamp = document.getTimestamp("timestamp")
+                    if (timestamp != null) {
+                        val date = timestamp.toDate()
+                        val formatter = SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH)
+                        callback(formatter.format(date))
+                    } else {
+                        callback(null)
+                    }
                 }
                 .addOnFailureListener { e ->
                     e.printStackTrace()

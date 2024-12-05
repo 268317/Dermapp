@@ -52,6 +52,11 @@ class RecentChatsAdapter(
             holder.recentChatsItemLastMessageText.text = lastMessage ?: ""
         }
 
+        // Pobieranie czasu ostatniej wiadomości
+        chat.getLastMessageTimestamp { formattedDate ->
+            holder.recentChatsItemLastMessageTime.text = formattedDate ?: ""
+        }
+
         // Nawigacja do aktywności wiadomości
         holder.itemView.setOnClickListener {
             val intent = if (isDoctor) {
