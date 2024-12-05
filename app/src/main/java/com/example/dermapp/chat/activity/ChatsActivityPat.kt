@@ -15,6 +15,9 @@ import com.example.dermapp.chat.adapter.DoctorsListAdapter
 import com.example.dermapp.chat.database.Conversation
 import com.example.dermapp.database.Doctor
 import com.example.dermapp.startPatient.StartPatActivity
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -95,11 +98,38 @@ class ChatsActivityPat : AppCompatActivity() {
             .get()
             .addOnSuccessListener { querySnapshot ->
                 chatList.clear()
-                chatList.addAll(querySnapshot.toObjects(Conversation::class.java))
-                recentChatAdapter.notifyDataSetChanged()
+                val conversations = querySnapshot.toObjects(Conversation::class.java)
+                val timestampTasks = mutableListOf<Task<Pair<Conversation, Timestamp?>>>()
+
+                // Fetch timestamps for each conversation
+                for (conversation in conversations) {
+                    val lastMessageId = conversation.lastMessageId
+                    val task = firestore.collection("messages")
+                        .document(lastMessageId)
+                        .get()
+                        .continueWith { task ->
+                            val document = task.result
+                            val timestamp = document?.getTimestamp("timestamp")
+                            conversation to timestamp
+                        }
+                    timestampTasks.add(task)
+                }
+
+                // Wait for all tasks to complete
+                Tasks.whenAllComplete(timestampTasks).addOnSuccessListener {
+                    val sortedConversations = timestampTasks.mapNotNull { task ->
+                        if (task.isSuccessful) task.result else null
+                    }.sortedByDescending { it.second }
+
+                    // Update chatList and notify adapter
+                    chatList.addAll(sortedConversations.map { it.first })
+                    recentChatAdapter.notifyDataSetChanged()
+                }.addOnFailureListener { e ->
+                    Log.e("ChatsActivityDoc", "Error fetching timestamps", e)
+                }
             }
             .addOnFailureListener { e ->
-                Log.e("ChatsActivityPat", "Error fetching chats", e)
+                Log.e("ChatsActivityDoc", "Error fetching chats", e)
             }
     }
 
