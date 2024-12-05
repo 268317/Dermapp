@@ -67,16 +67,24 @@ class ChatsActivityPat : AppCompatActivity() {
 
     private fun fetchDoctors() {
         firestore.collection("doctors")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                doctorsList.clear()
-                doctorsList.addAll(querySnapshot.toObjects(Doctor::class.java))
-                doctorsAdapter.notifyDataSetChanged()
+            .addSnapshotListener { querySnapshot, error ->
+                if (error != null) {
+                    Log.e("ChatsActivityPat", "Error fetching doctors", error)
+                    return@addSnapshotListener
+                }
+
+                if (querySnapshot != null) {
+                    Log.d("ChatsActivityPat", "Doctors updated: ${querySnapshot.documents.size}")
+                    doctorsList.clear()
+                    doctorsList.addAll(querySnapshot.toObjects(Doctor::class.java))
+                    doctorsAdapter.notifyDataSetChanged()
+                }
             }
-            .addOnFailureListener { e ->
-                Log.e("ChatsActivityPat", "Error fetching doctors", e)
-            }
+        doctorsAdapter.notifyDataSetChanged()
+
     }
+
+
 
     private fun fetchChats() {
         firestore.collection("conversation")

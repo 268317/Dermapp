@@ -1,6 +1,7 @@
 package com.example.dermapp.chat.holder
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,6 +23,11 @@ class DoctorsListHolder(
     private val statusIndicator: View = itemView.findViewById(R.id.doctorsListItemStatus)
 
     fun bind(doctor: Doctor) {
+
+        // Debugging log
+        Log.d("DoctorsListHolder", "Doctor: ${doctor.firstName} ${doctor.lastName}, isOnline: ${doctor.isOnline}")
+
+
         // Ustawianie imienia i nazwiska
         firstName.text = doctor.firstName
         lastName.text = doctor.lastName
