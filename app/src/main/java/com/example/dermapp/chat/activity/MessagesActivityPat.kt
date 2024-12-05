@@ -55,7 +55,6 @@ class MessagesActivityPat : AppCompatActivity() {
             showPhotoSourceDialog()
         }
 
-
         val backHeader = findViewById<LinearLayout>(R.id.header_chat)
         backButton = backHeader.findViewById(R.id.chatBackBtn)
         backButton.setOnClickListener {
@@ -64,10 +63,9 @@ class MessagesActivityPat : AppCompatActivity() {
         }
 
         conversationId = intent.getStringExtra("conversationId")
-        doctorId = intent.getStringExtra("doctorId")
+        doctorId = intent.getStringExtra("friendId") // Przyjmujemy friendId jako doctorId
         Log.d("MessagesActivityPat", "Received conversationId: $conversationId")
         Log.d("MessagesActivityPat", "Received doctorId: $doctorId")
-
 
         recyclerView = findViewById(R.id.messagesRecyclerViewPat)
         messageInput = findViewById(R.id.editTextMessagePat)
@@ -75,24 +73,20 @@ class MessagesActivityPat : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-
         val headerName: TextView = findViewById(R.id.chatUserNameDoc)
-        val headerStatus: TextView = findViewById(R.id.chatUserStatusDoc)
         val headerProfileImage: ImageView = findViewById(R.id.chatImageViewUserDoc)
 
-        val name = intent.getStringExtra("doctorName")
-        val status = intent.getStringExtra("doctorStatus")
-        val profilePhoto = intent.getStringExtra("doctorProfilePhoto")
-        Log.d("MessagesActivityPat", "Received doctorName: $name")
-        Log.d("MessagesActivityPat", "Received doctorStatus: $status")
-        Log.d("MessagesActivityPat", "Received doctorProfilePhoto: $profilePhoto")
+        // Pobieranie danych przekazanych z RecentChatsAdapter
+        val name = intent.getStringExtra("friendName")
+        val profilePhoto = intent.getStringExtra("friendProfilePhoto")
+        Log.d("MessagesActivityPat", "Received friendName: $name")
+        Log.d("MessagesActivityPat", "Received friendProfilePhoto: $profilePhoto")
 
-
+        // Ustawianie UI
         messageAdapter = MessagesAdapter(this, messageList, profilePhoto)
         recyclerView.adapter = messageAdapter
 
         headerName.text = name ?: "Unknown"
-        headerStatus.text = status ?: ""
         profilePhoto?.let {
             Glide.with(this)
                 .load(it)
@@ -108,6 +102,8 @@ class MessagesActivityPat : AppCompatActivity() {
             checkConversationAndSendMessage()
         }
     }
+
+
 
     private fun fetchMessages() {
         if (conversationId == null) {

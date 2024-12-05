@@ -2,6 +2,7 @@ package com.example.dermapp.chat.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,18 +82,37 @@ class RecentChatsAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val intent = if (isDoctor) {
-                Intent(context, MessagesActivityDoc::class.java)
-            } else {
-                Intent(context, MessagesActivityPat::class.java)
-            }
-            intent.putExtra("conversationId", chat.conversationId)
-            intent.putExtra("friendId", chat.getFriendId(currentUserId))
-            context.startActivity(intent)
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            val friendId = chat.getFriendId(currentUserId) ?: return@setOnClickListener
+
+            // Pobierz dane użytkownika (lekarza/pacjenta)
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(friendId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val friendName = "${document.getString("firstName")} ${document.getString("lastName")}"
+                    val friendProfilePhoto = document.getString("profilePhoto")
+
+                    val intent = if (isDoctor) {
+                        Intent(context, MessagesActivityDoc::class.java)
+                    } else {
+                        Intent(context, MessagesActivityPat::class.java)
+                    }
+
+                    intent.putExtra("conversationId", chat.conversationId)
+                    intent.putExtra("friendId", friendId)
+                    intent.putExtra("friendName", friendName)
+                    intent.putExtra("friendProfilePhoto", friendProfilePhoto)
+
+                    context.startActivity(intent)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("RecentChatsAdapter", "Error fetching friend data", e)
+                }
         }
+
     }
-
-
 
 
     override fun getItemCount(): Int = chatList.size

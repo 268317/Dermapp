@@ -55,7 +55,6 @@ class MessagesActivityDoc : AppCompatActivity() {
             showPhotoSourceDialog()
         }
 
-
         val backHeader = findViewById<LinearLayout>(R.id.header_chat)
         backButton = backHeader.findViewById(R.id.chatBackBtn)
         backButton.setOnClickListener {
@@ -64,7 +63,7 @@ class MessagesActivityDoc : AppCompatActivity() {
         }
 
         conversationId = intent.getStringExtra("conversationId")
-        patientId = intent.getStringExtra("patientId")
+        patientId = intent.getStringExtra("friendId") // Przyjmujemy friendId jako patientId
 
         recyclerView = findViewById(R.id.messagesRecyclerViewPat)
         messageInput = findViewById(R.id.editTextMessagePat)
@@ -76,14 +75,16 @@ class MessagesActivityDoc : AppCompatActivity() {
         val headerStatus: TextView = findViewById(R.id.chatUserStatusDoc)
         val headerProfileImage: ImageView = findViewById(R.id.chatImageViewUserDoc)
 
-        val name = intent.getStringExtra("patientName")
-        val status = intent.getStringExtra("patientStatus")
-        val profilePhoto = intent.getStringExtra("patientProfilePhoto")
+        // Pobieranie danych przekazanych z RecentChatsAdapter
+        val name = intent.getStringExtra("friendName")
+        val profilePhoto = intent.getStringExtra("friendProfilePhoto")
+
+        // Ustawianie UI
         messageAdapter = MessagesAdapter(this, messageList, profilePhoto)
         recyclerView.adapter = messageAdapter
 
         headerName.text = name ?: "Unknown"
-        headerStatus.text = status ?: ""
+        headerStatus.text = "" // Można dostosować, jeśli status jest wymagany
         profilePhoto?.let {
             Glide.with(this)
                 .load(it)
@@ -99,6 +100,7 @@ class MessagesActivityDoc : AppCompatActivity() {
             checkConversationAndSendMessage()
         }
     }
+
 
     private fun fetchMessages() {
         if (conversationId == null) return
