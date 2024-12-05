@@ -76,13 +76,16 @@ class ChatsActivityPat : AppCompatActivity() {
                 if (querySnapshot != null) {
                     Log.d("ChatsActivityPat", "Doctors updated: ${querySnapshot.documents.size}")
                     doctorsList.clear()
-                    doctorsList.addAll(querySnapshot.toObjects(Doctor::class.java))
+                    for (document in querySnapshot.documents) {
+                        val doctor = document.toObject(Doctor::class.java)
+                        Log.d("ChatsActivityPat", "Doctor fetched: ${doctor?.appUserId}")
+                        doctor?.let { doctorsList.add(it) }
+                    }
                     doctorsAdapter.notifyDataSetChanged()
                 }
             }
-        doctorsAdapter.notifyDataSetChanged()
-
     }
+
 
 
 
@@ -129,6 +132,8 @@ class ChatsActivityPat : AppCompatActivity() {
         intent.putExtra("doctorName", "${doctor.firstName} ${doctor.lastName}")
         intent.putExtra("doctorProfilePhoto", doctor.profilePhoto)
         intent.putExtra("conversationId", conversationId)
+        Log.d("ChatsActivityPat", "Doctor ID: ${doctor.appUserId}")
+        Log.d("ChatsActivityPat", "Conversation ID: $conversationId")
         startActivity(intent)
     }
 

@@ -65,6 +65,9 @@ class MessagesActivityPat : AppCompatActivity() {
 
         conversationId = intent.getStringExtra("conversationId")
         doctorId = intent.getStringExtra("doctorId")
+        Log.d("MessagesActivityPat", "Received conversationId: $conversationId")
+        Log.d("MessagesActivityPat", "Received doctorId: $doctorId")
+
 
         recyclerView = findViewById(R.id.messagesRecyclerViewPat)
         messageInput = findViewById(R.id.editTextMessagePat)
@@ -80,6 +83,11 @@ class MessagesActivityPat : AppCompatActivity() {
         val name = intent.getStringExtra("doctorName")
         val status = intent.getStringExtra("doctorStatus")
         val profilePhoto = intent.getStringExtra("doctorProfilePhoto")
+        Log.d("MessagesActivityPat", "Received doctorName: $name")
+        Log.d("MessagesActivityPat", "Received doctorStatus: $status")
+        Log.d("MessagesActivityPat", "Received doctorProfilePhoto: $profilePhoto")
+
+
         messageAdapter = MessagesAdapter(this, messageList, profilePhoto)
         recyclerView.adapter = messageAdapter
 
@@ -102,7 +110,10 @@ class MessagesActivityPat : AppCompatActivity() {
     }
 
     private fun fetchMessages() {
-        if (conversationId == null) return
+        if (conversationId == null) {
+            Log.e("MessagesActivityPat", "Conversation ID is null, cannot fetch messages")
+            return
+        }
 
         firestore.collection("messages")
             .whereEqualTo("conversationId", conversationId)
@@ -119,6 +130,7 @@ class MessagesActivityPat : AppCompatActivity() {
                         val message = document.toObject(Message::class.java)
                         message?.let { messageList.add(it) }
                     }
+                    Log.d("MessagesActivityPat", "Fetched ${messageList.size} messages")
                     messageAdapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(messageList.size - 1)
 
@@ -156,6 +168,7 @@ class MessagesActivityPat : AppCompatActivity() {
     }
 
     private fun saveMessageAndUpdateConversation(messageText: String) {
+        Log.d("MessagesActivityPat", "Saving message to conversationId: $conversationId")
         val messageId = firestore.collection("messages").document().id
         val message = hashMapOf(
             "messageId" to messageId,
@@ -171,6 +184,7 @@ class MessagesActivityPat : AppCompatActivity() {
             .document(messageId)
             .set(message)
             .addOnSuccessListener {
+                Log.d("MessagesActivityPat", "Message sent successfully")
                 messageInput.text.clear()
                 firestore.collection("conversation")
                     .document(conversationId!!)
@@ -192,6 +206,7 @@ class MessagesActivityPat : AppCompatActivity() {
 
 
     private fun createConversationAndSaveMessage(messageText: String) {
+        Log.d("MessagesActivityPat", "Creating new conversation for conversationId: $conversationId")
         val conversationData = hashMapOf(
             "conversationId" to conversationId,
             "lastMessage" to messageText,

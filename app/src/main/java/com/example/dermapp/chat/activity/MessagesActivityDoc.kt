@@ -31,7 +31,7 @@ class MessagesActivityDoc : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageAdapter: MessagesAdapter
     private lateinit var messageInput: EditText
-    private lateinit var sendButton: android.widget.Button
+    private lateinit var sendButton: Button
     private lateinit var backButton: ImageView
 
     private val messageList = mutableListOf<Message>()
