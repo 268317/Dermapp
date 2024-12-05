@@ -28,6 +28,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Activity for editing a patient's profile details, including name, password, and profile image.
+ * Handles profile image upload from gallery or camera, and updating the patient details in Firestore.
+ */
 class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.ConfirmationDialogListener {
 
     private lateinit var backButton: ImageButton
@@ -40,17 +44,22 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         private const val REQUEST_IMAGE_CAPTURE = CAMERA_REQUEST_CODE
     }
 
+    /**
+     * Initializes the activity and sets up listeners for buttons and image selection.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_edit_profile_pat)
 
+        // Set window padding based on system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Set up back button to navigate to the profile page
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -58,6 +67,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             startActivity(intent)
         }
 
+        // Set up update profile button to show confirmation dialog
         updateProfileButton = findViewById(R.id.buttonUpdateProfilePat)
         updateProfileButton.setOnClickListener {
             if (validateRegisterDetails()) {
@@ -66,6 +76,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             }
         }
 
+        // Fetch and display current user profile details from Firestore
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val userRef = FirebaseFirestore.getInstance().collection("patients").document(currentUserUid!!)
         userRef.get().addOnSuccessListener { documentSnapshot ->
@@ -83,6 +94,7 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             }
         }
 
+        // Set up profile image button to allow changing the profile picture
         imageButtonProfile = findViewById(R.id.editProfileImagePat)
         imageButtonProfile.setOnClickListener {
             val options = arrayOf("Open gallery", "New photo")
@@ -106,6 +118,9 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
 
     private lateinit var photoFile: File
 
+    /**
+     * Opens the camera to take a new photo for the profile image.
+     */
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(packageManager) != null) {
@@ -120,6 +135,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Creates a temporary image file for storing the photo taken from the camera.
+     * @return The created image file.
+     */
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
@@ -133,6 +152,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Loads the profile image from the provided URL using Glide.
+     * @param profilePhotoUrl The URL of the profile photo.
+     */
     private fun loadProfileImage(profilePhotoUrl: String?) {
         if (!profilePhotoUrl.isNullOrEmpty()) {
             Glide.with(this)
@@ -142,6 +165,12 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Handles the result from gallery or camera image selection.
+     * @param requestCode The request code to differentiate between gallery and camera.
+     * @param resultCode The result code indicating success or failure.
+     * @param data The data containing the selected image.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -168,6 +197,11 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Handles the confirmation dialog when updating the profile.
+     * @param password The password entered by the user for re-authentication.
+     * @param dialog The confirmation dialog fragment.
+     */
     override fun onConfirmButtonClicked(password: String, dialog: DialogFragment) {
         dialog.dismiss()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -185,6 +219,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Validates the registration details entered by the user for profile update.
+     * @return true if the details are valid, false otherwise.
+     */
     private fun validateRegisterDetails(): Boolean {
         val namePattern = "[a-zA-Z]+"
 
@@ -227,6 +265,9 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
         }
     }
 
+    /**
+     * Updates the patient's details in Firestore.
+     */
     private fun updateUser() {
         val firstNameText: EditText = findViewById(R.id.editNamePat)
         val lastNameText: EditText = findViewById(R.id.editLastNamePat)
@@ -263,6 +304,10 @@ class EditProfilePatActivity : BaseActivity(), ConfirmationDialogFragment.Confir
             }
     }
 
+    /**
+     * Uploads the profile image to Firestore storage.
+     * @param imageUri The URI of the selected or captured image.
+     */
     private fun uploadImageToFirestore(imageUri: Uri) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val storageRef = FirebaseStorage.getInstance().reference.child("profile_images/$currentUserUid.jpg")

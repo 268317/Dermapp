@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dermapp.AppointmentDetailsPatActivity
 import com.example.dermapp.R
 import com.example.dermapp.database.Appointment
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -40,9 +39,12 @@ class MyAdapterStartPatAppointment(
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
-
     /**
      * Creates and returns a new ViewHolder for appointment items.
+     *
+     * @param parent The parent ViewGroup into which the new View will be added after it is bound.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder instance for displaying appointments.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatAppointment {
         val view = LayoutInflater.from(parent.context)
@@ -52,6 +54,9 @@ class MyAdapterStartPatAppointment(
 
     /**
      * Binds data to the ViewHolder.
+     *
+     * @param holder The ViewHolder to bind data to.
+     * @param position The position of the item within the dataset.
      */
     override fun onBindViewHolder(holder: MyViewHolderStartPatAppointment, position: Int) {
         val appointment = appointmentsList[position]
@@ -67,7 +72,6 @@ class MyAdapterStartPatAppointment(
                 if (!querySnapshot.isEmpty) {
                     val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
                     val name = "${doctorDocument.getString("firstName") ?: ""} ${doctorDocument.getString("lastName") ?: ""}".trim()
-
 
                     // Update ViewHolder with doctor's name
                     holder.firstNameDoc.text = name
@@ -106,6 +110,8 @@ class MyAdapterStartPatAppointment(
 
     /**
      * Returns the total number of appointments in the list.
+     *
+     * @return The size of the appointments list.
      */
     override fun getItemCount(): Int {
         return appointmentsList.size
@@ -114,7 +120,7 @@ class MyAdapterStartPatAppointment(
     /**
      * Updates the adapter with new appointment data.
      *
-     * @param newAppointments New list of appointments to display
+     * @param newAppointments New list of appointments to display.
      */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
@@ -123,7 +129,9 @@ class MyAdapterStartPatAppointment(
     }
 
     /**
-     * Function to show delete confirmation dialog.
+     * Shows a confirmation dialog for deleting an appointment.
+     *
+     * @param appointment The appointment to delete.
      */
     private fun showDeleteConfirmationDialog(appointment: Appointment) {
         AlertDialog.Builder(context)
@@ -140,38 +148,38 @@ class MyAdapterStartPatAppointment(
     }
 
     /**
-     * Function to delete appointment from Firestore.
+     * Deletes an appointment from Firestore and updates the RecyclerView.
+     *
+     * @param appointment The appointment to delete.
      */
     private fun deleteAppointment(appointment: Appointment) {
-
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 Log.d("delete appointment", appointment.datetime.toString())
 
-                val startRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) - 1000) // 1 sekunda wcześniej
-                val endRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) + 1000)   // 1 sekunda później
+                val startRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) - 1000) // 1 second earlier
+                val endRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) + 1000)   // 1 second later
 
                 val querySnapshot = firestore.collection("availableDates")
                     .whereGreaterThanOrEqualTo("datetime", startRange)
                     .whereLessThanOrEqualTo("datetime", endRange)
                     .whereEqualTo("doctorId", appointment.doctorId)
-                    //.whereEqualTo("patientId", appointment.patientId)
                     .get()
                     .await()
 
                 if (!querySnapshot.isEmpty) {
-                    Log.d("delete appointment", "OKKKKK")
+                    Log.d("delete appointment", "OK")
                     val availableDataDoc = querySnapshot.documents[0]
                     val availableDataDocId = availableDataDoc.id
 
-                    // Update isAvailable field to true in availableData
+                    // Update isAvailable field to true in availableDates
                     firestore.collection("availableDates")
                         .document(availableDataDocId)
                         .update("isAvailable", true)
                         .await()
                 }
 
-                // Delete appointment document from appointment collection
+                // Delete appointment document from the appointment collection
                 firestore.collection("appointment")
                     .document(appointment.appointmentId)
                     .delete()
@@ -186,3 +194,4 @@ class MyAdapterStartPatAppointment(
         }
     }
 }
+

@@ -23,8 +23,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 /**
  * Activity to create and send a new medical report.
+ * The user can select symptoms, upload photos, and associate the report with a doctor.
  */
 class CreateNewReportActivity : AppCompatActivity() {
 
@@ -64,7 +66,7 @@ class CreateNewReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_report)
 
-        // Ustawienie strefy czasowej dla aktywności
+        // Set time zone for the activity
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Initialize UI elements and perform other setup operations
@@ -76,7 +78,6 @@ class CreateNewReportActivity : AppCompatActivity() {
             // Upload selected photo to Firebase Storage
             uploadPhotoToFirebaseStorage()
         }
-
 
         // Handle click on ImageView to add a photo
         addPhotoImageView.setOnClickListener {
@@ -154,7 +155,6 @@ class CreateNewReportActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
-
     /**
      * Handles the result of selecting an image from the gallery.
      * Updates the UI with the selected image.
@@ -167,16 +167,19 @@ class CreateNewReportActivity : AppCompatActivity() {
                 addPhotoImageView.setImageURI(photoUri)
             }
             requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK -> {
-                // Użytkownik zrobił zdjęcie
-                val savedPhotoUri = Uri.fromFile(photoFile) // Użyj photoFile z createImageFile
+                // User took a photo
+                val savedPhotoUri = Uri.fromFile(photoFile) // Use photoFile from createImageFile
                 addPhotoImageView.setImageURI(savedPhotoUri)
-                photoUri = savedPhotoUri // Zapisz URI dla przesyłania do Firebase
+                photoUri = savedPhotoUri // Save URI for uploading to Firebase
             }
         }
     }
 
     private val REQUEST_IMAGE_CAPTURE = 2
 
+    /**
+     * Opens the camera to take a new photo for the profile image.
+     */
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(packageManager) != null) {
@@ -189,6 +192,10 @@ class CreateNewReportActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Creates a temporary image file for storing the photo taken from the camera.
+     * @return The created image file.
+     */
     private fun createImageFile(): File? {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -198,7 +205,7 @@ class CreateNewReportActivity : AppCompatActivity() {
             ".jpg",
             storageDir
         ).apply {
-            photoUri = Uri.fromFile(this) // Ustaw URI dla zapisanego zdjęcia
+            photoUri = Uri.fromFile(this) // Set URI for the saved photo
         }
     }
 
@@ -338,7 +345,6 @@ class CreateNewReportActivity : AppCompatActivity() {
         builder.setItems(options) { dialog, which ->
             when (which) {
                 0 -> {
-
                     openCamera()
                 }
                 1 -> {

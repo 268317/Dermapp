@@ -6,13 +6,16 @@ import java.util.Date
 /**
  * Data class representing an appointment in the dermatology application.
  *
- * @property appointmentId Unique identifier for the appointment.
- * @property doctorId Unique identifier for the doctor associated with the appointment.
- * @property patientId Unique identifier for the patient associated with the appointment.
- * @property datetime Date and time of the appointment.
- * @property localization Location where the appointment will take place.
- * @property diagnosis Diagnosis given during the appointment.
- * @property recommendations Recommendations provided during the appointment.
+ * This class is used to store and manage data related to dermatology appointments,
+ * including information about the doctor, patient, date, location, and other relevant details.
+ *
+ * @property appointmentId Unique identifier for the appointment. This ID is used to distinguish appointments in the database.
+ * @property doctorId Unique identifier for the doctor associated with the appointment. Links the appointment to a specific doctor.
+ * @property patientId Unique identifier for the patient associated with the appointment. Links the appointment to a specific patient.
+ * @property datetime Date and time of the appointment. This indicates when the appointment is scheduled to occur.
+ * @property localization Location where the appointment will take place. Can represent a clinic or hospital address.
+ * @property diagnosis Diagnosis provided during the appointment. Stores any medical conclusions drawn by the doctor.
+ * @property recommendations Recommendations provided during the appointment. Includes any advice or next steps for the patient.
  */
 data class Appointment(
     @get:PropertyName("appointmentId") @set:PropertyName("appointmentId") var appointmentId: String = "",

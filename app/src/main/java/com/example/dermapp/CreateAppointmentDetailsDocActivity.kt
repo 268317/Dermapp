@@ -20,10 +20,11 @@ import java.util.TimeZone
 
 /**
  * Activity for displaying and editing appointment details for doctors.
+ * Enables doctors to view, edit, and update details such as diagnosis and recommendations for an appointment.
  */
 class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
 
-    // UI elements declaration
+    // Declare UI elements for the activity
     private lateinit var textViewAppointmentDateDoc: TextView
     private lateinit var textViewDateAppointmentDoc: TextView
     private lateinit var textViewPatientAppointmentDoc: TextView
@@ -35,24 +36,26 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var editButton: Button
 
-    // Firestore instance
+    // Instance of Firestore for database operations
     private val firestore = FirebaseFirestore.getInstance()
 
-    // Appointment ID received from intent
+    // Appointment ID passed from the intent
     private var appointmentId: String? = null
 
     /**
      * Called when the activity is starting.
-     * Initializes UI elements, sets click listeners, and fetches appointment details.
+     * Sets up the UI, initializes listeners, and fetches appointment details from Firestore.
+     *
+     * @param savedInstanceState Contains the data it most recently supplied in `onSaveInstanceState`.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_appointment_details_doc)
 
-        // Ustawienie strefy czasowej dla aktywności
+        // Set the timezone for consistent time handling
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
-        // Initialize UI elements
+        // Initialize UI elements by linking them to their respective IDs
         textViewAppointmentDateDoc = findViewById(R.id.textViewAppointmentDateDoc)
         textViewDateAppointmentDoc = findViewById(R.id.textViewDateAppointmentDoc)
         textViewPatientAppointmentDoc = findViewById(R.id.textViewPatientAppointmentDoc)
@@ -63,7 +66,7 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
         editTextMultiLineRecommendationsAppointmentDoc = findViewById(R.id.editTextTextMultiLineRecommendationsAppointmentDoc)
         editButton = findViewById(R.id.bookButton)
 
-        // Initialize back button and its click listener
+        // Initialize the back button and set a click listener for navigation
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -71,10 +74,10 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Get appointmentId from Intent
+        // Retrieve the appointment ID from the Intent
         appointmentId = intent.getStringExtra("appointmentId")
 
-        // Fetch appointment details using coroutine
+        // Fetch and display appointment details using a coroutine
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val appointmentDocument = firestore.collection("appointment")
@@ -88,16 +91,16 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                     val diagnosis = appointmentDocument.getString("diagnosis") ?: ""
                     val recommendations = appointmentDocument.getString("recommendations") ?: ""
 
-                    // Format date
+                    // Format the date for display
                     val formattedDate = SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault())
                         .format(datetime)
 
-                    // Update UI with fetched data
+                    // Update UI elements with the fetched appointment details
                     textViewDateAppointmentDoc.text = formattedDate
                     editTextMultiLineDiagnosisAppointmentDoc.setText(diagnosis)
                     editTextMultiLineRecommendationsAppointmentDoc.setText(recommendations)
 
-                    // Fetch patient details
+                    // Fetch and display patient details
                     val patientDocument = firestore.collection("patients")
                         .document(patientId)
                         .get()
@@ -108,26 +111,24 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                         val lastName = patientDocument.getString("lastName") ?: ""
                         val pesel = patientDocument.getString("pesel") ?: ""
 
-                        // Update UI with patient details
                         textViewFirstNameAppointmentDoc.text = firstName
                         textViewLastNameAppointmentDoc.text = lastName
                         textViewPeselAppointmentDoc.text = pesel
                     } else {
-                        // Handle case where patient details are missing
+                        // Handle the case where patient details are missing
                         textViewFirstNameAppointmentDoc.text = "Unknown"
                         textViewLastNameAppointmentDoc.text = "Patient"
                         textViewPeselAppointmentDoc.text = "Unknown"
                     }
-
                 } else {
-                    // Handle case where appointment details are missing
+                    // Handle the case where appointment details are missing
                     textViewDateAppointmentDoc.text = "Unknown"
                     textViewFirstNameAppointmentDoc.text = "Unknown"
                     textViewLastNameAppointmentDoc.text = "Patient"
                     textViewPeselAppointmentDoc.text = "Unknown"
                 }
             } catch (e: Exception) {
-                // Handle exceptions during fetching data
+                // Handle any exceptions during data fetching
                 textViewDateAppointmentDoc.text = "Unknown"
                 textViewFirstNameAppointmentDoc.text = "Unknown"
                 textViewLastNameAppointmentDoc.text = "Patient"
@@ -135,12 +136,12 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
             }
         }
 
-        // Set click listener for editButton to update appointment details
+        // Set a click listener for the edit button to update appointment details
         editButton.setOnClickListener {
             val diagnosis = editTextMultiLineDiagnosisAppointmentDoc.text.toString()
             val recommendations = editTextMultiLineRecommendationsAppointmentDoc.text.toString()
 
-            // Update Firestore document with new diagnosis and recommendations
+            // Update Firestore document with the edited diagnosis and recommendations
             appointmentId?.let { appointmentId ->
                 firestore.collection("appointment")
                     .document(appointmentId)
@@ -149,13 +150,13 @@ class CreateAppointmentDetailsDocActivity : AppCompatActivity() {
                         "recommendations" to recommendations
                     ))
                     .addOnSuccessListener {
-                        // Navigate back to AppointmentDetailsDocActivity after successful update
+                        // Navigate back to the appointment details activity after successful update
                         val intent = Intent(this, AppointmentDetailsDocActivity::class.java)
                         intent.putExtra("appointmentId", appointmentId)
                         startActivity(intent)
                     }
                     .addOnFailureListener { e ->
-                        // Handle failure to update appointment details
+                        // Handle any errors during the update process
                     }
             }
         }

@@ -25,4 +25,7 @@
     <string name="user_not_found">User not found in the system.</string>
     <string name="login_success">You are logged in successfully.</string>
     <string name="error_fetching_user">An error occurred while fetching user data.</string>
+    <string name="chat_no_message">\"No message found\"\n</string>
+    <string name="chat_user_unknown">\"Unknown chat user\"</string>
+    <string name="no_message">No message found.</string>
 </resources>

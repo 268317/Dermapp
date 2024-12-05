@@ -29,36 +29,37 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Activity allowing a doctor to schedule appointments with patients.
+ * Activity that allows a doctor to schedule appointments with patients.
+ * The doctor can select a patient, a location, a time, and book an appointment.
  */
 class MakeAppointmentDocActivity : AppCompatActivity() {
 
-    // UI elements
+    // UI elements for user interaction
     private lateinit var backButton: ImageButton
     private lateinit var autoDateTime: AutoCompleteTextView
     private lateinit var autoPat: AutoCompleteTextView
     private lateinit var autoLoc: AutoCompleteTextView
     private lateinit var bookButton: Button
 
-    // Selected IDs
+    // Selected IDs for patient, location, and datetime
     private var selectedDateTimeId: String? = null
     private var selectedPatientId: String? = null
     private var selectedLocationId: String? = null
 
-    // Firebase
+    // Firebase Firestore instance for database operations
     private val firestore = FirebaseFirestore.getInstance()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var currentDocId = FirebaseAuth.getInstance().currentUser?.uid
 
     /**
      * Called when the activity is starting.
-     * Initializes UI elements and sets up necessary listeners.
+     * Initializes UI elements, sets up listeners, and loads data from Firestore.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_make_appointment_doc)
 
-        // Ustawienie strefy czasowej dla aktywności
+        // Set time zone to Europe/Warsaw for date/time operations
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Initialize UI elements
@@ -67,7 +68,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
 
-        // Set up back button click listener
+        // Set up back button to navigate to the previous screen
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -83,15 +84,15 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
             }
         }
 
-        // Set up auto-complete text views
+        // Set up auto-complete text views for patient and location selection
         setupAutoCompleteTextView(autoPat)
         setupAutoCompleteTextView(autoLoc)
 
-        // Load initial data
+        // Load initial doctor data
         loadCurrentDoctorId()
         loadPatients()
 
-        // Set listener for booking button
+        // Set listener for booking the appointment
         bookButton.setOnClickListener {
             bookAppointment()
         }
@@ -99,6 +100,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
     /**
      * Sets up the auto-complete text view configuration.
+     * @param autoCompleteTextView The AutoCompleteTextView to configure.
      */
     private fun setupAutoCompleteTextView(autoCompleteTextView: AutoCompleteTextView) {
         autoCompleteTextView.inputType = 0
@@ -111,6 +113,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
     /**
      * Loads the current doctor's ID from Firestore.
+     * This ID is used to fetch data related to the doctor (e.g., locations, available dates).
      */
     private fun loadCurrentDoctorId() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -131,6 +134,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
     /**
      * Loads the list of patients from Firestore and sets up the auto-complete adapter.
+     * Patients are displayed in the AutoCompleteTextView for the doctor to select.
      */
     private fun loadPatients() {
         val patientsCollection = firestore.collection("patients")
@@ -177,13 +181,12 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
     }
 
     /**
-     * Loads the available date/time slots for the given doctor and location from Firestore and sets up the auto-complete adapter.
+     * Loads the available date/time slots for the given doctor and location from Firestore.
+     * The available dates are displayed in the AutoCompleteTextView for the doctor to select.
      * @param doctorId The ID of the doctor.
      * @param locationId The ID of the location.
      */
     private fun loadDoctorAvailableDatetime(doctorId: String, locationId: String) {
-
-
         coroutineScope.launch {
             try {
                 val availableDatesCollection = firestore.collection("availableDates")
@@ -197,7 +200,6 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
                 dateFormat.timeZone = TimeZone.getTimeZone("Europe/Warsaw")
-
 
                 val dateTimes = availableDates.map { availableDate ->
                     dateFormat.format(availableDate.datetime)
@@ -222,6 +224,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
 
     /**
      * Attempts to book an appointment based on user selections.
+     * If valid, it will save the appointment to Firestore and update the availability status.
      */
     private fun bookAppointment() {
         val doctorId = currentDocId ?: return
@@ -308,7 +311,7 @@ class MakeAppointmentDocActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets a reminder for the appointment using AlarmManager.
+     * Sets a reminder for the appointment using AlarmManager, 24 hours before the appointment.
      * @param appointmentId The ID of the appointment.
      * @param appointmentTimeInMillis The time of the appointment in milliseconds.
      * @param location The location of the appointment.

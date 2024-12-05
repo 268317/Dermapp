@@ -35,6 +35,10 @@ class MyAdapterStartPatPrescription(
 
     /**
      * Creates and returns a new ViewHolder for prescription items.
+     *
+     * @param parent The parent ViewGroup into which the new View will be added after it is bound.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder instance for displaying prescriptions.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatPrescription {
         val view = LayoutInflater.from(parent.context)
@@ -44,6 +48,9 @@ class MyAdapterStartPatPrescription(
 
     /**
      * Binds data to the ViewHolder.
+     *
+     * @param holder The ViewHolder to bind data to.
+     * @param position The position of the item within the dataset.
      */
     override fun onBindViewHolder(holder: MyViewHolderStartPatPrescription, position: Int) {
         val prescription = prescriptionsList[position]
@@ -94,6 +101,8 @@ class MyAdapterStartPatPrescription(
 
     /**
      * Returns the total number of prescriptions in the list.
+     *
+     * @return The size of the prescriptions list.
      */
     override fun getItemCount(): Int {
         return prescriptionsList.size
@@ -102,7 +111,7 @@ class MyAdapterStartPatPrescription(
     /**
      * Updates the adapter with new prescription data.
      *
-     * @param newPrescriptions New list of prescriptions to display
+     * @param newPrescriptions New list of prescriptions to display.
      */
     fun updatePrescriptions(newPrescriptions: List<Prescription>) {
         prescriptionsList.clear()
@@ -111,9 +120,9 @@ class MyAdapterStartPatPrescription(
     }
 
     /**
-     * Function to show delete confirmation dialog.
+     * Shows a confirmation dialog for deleting a prescription.
      *
-     * @param prescription Prescription object to delete
+     * @param prescription Prescription object to delete.
      */
     private fun showDeleteConfirmationDialog(prescription: Prescription) {
         AlertDialog.Builder(context)
@@ -130,22 +139,22 @@ class MyAdapterStartPatPrescription(
     }
 
     /**
-     * Function to delete prescription from Firestore.
+     * Deletes a prescription from Firestore and updates the RecyclerView.
      *
-     * @param prescription Prescription object to delete
+     * @param prescription Prescription object to delete.
      */
     private fun deletePrescription(prescription: Prescription) {
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                // Sprawdź czy prescriptionId nie jest puste
+                // Check if prescriptionId is not empty
                 if (prescription.prescriptionId.isNotEmpty()) {
-                    // Usuń dokument z kolekcji "prescription" używając pełnej ścieżki
+                    // Delete the document from the "prescription" collection using the full path
                     firestore.collection("prescription")
                         .document(prescription.prescriptionId)
                         .delete()
                         .await()
 
-                    // Usuń receptę z lokalnej listy i zaktualizuj RecyclerView
+                    // Remove the prescription from the local list and update the RecyclerView
                     prescriptionsList.remove(prescription)
                     notifyDataSetChanged()
 
@@ -159,7 +168,4 @@ class MyAdapterStartPatPrescription(
             }
         }
     }
-
-
-
 }

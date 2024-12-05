@@ -19,32 +19,47 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 
+/**
+ * Main Activity for user login functionality.
+ * Handles login process for both patients and doctors and manages user session state.
+ */
 class MainActivity : BaseActivity() {
 
+    // UI elements for login and signup
     private lateinit var inputEmail: EditText
     private lateinit var inputPassword: EditText
     private lateinit var loginButton: Button
     private lateinit var signUpButton: Button
 
+    // Firebase instances for authentication and Firestore database
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
+    /**
+     * Initializes the activity, UI elements, and sets up listeners for login and sign up buttons.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Initialize UI elements
         inputEmail = findViewById(R.id.editTextEmailAddress)
         inputPassword = findViewById(R.id.editTextPassword)
         loginButton = findViewById(R.id.LogInButton)
         signUpButton = findViewById(R.id.SignUpButton)
 
-        // Konfiguracja powiadomień
+        // Configure notifications
         configureNotificationChannel()
 
+        // Set up button listeners
         loginButton.setOnClickListener { logInRegisteredUser() }
         signUpButton.setOnClickListener { goToSignIn() }
     }
 
+    /**
+     * Configures the notification channel for the app.
+     * Only necessary for devices running Android O and above.
+     */
     private fun configureNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "messages_channel"
@@ -61,6 +76,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Validates the user's email and password input.
+     * @return true if the inputs are valid, false otherwise.
+     */
     private fun validateLoginDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         return when {
@@ -80,6 +99,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Attempts to log in the registered user with the provided email and password.
+     * If successful, generates and saves the FCM token and updates the user's online state.
+     */
     private fun logInRegisteredUser() {
         if (validateLoginDetails()) {
             val email = inputEmail.text.toString().trim()
@@ -102,6 +125,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Generates a new FCM token and saves it to Firestore.
+     * The token is used for push notifications.
+     * @param userId The ID of the current user.
+     */
     private fun generateAndSaveFcmToken(userId: String) {
         FirebaseMessaging.getInstance().deleteToken()
             .addOnCompleteListener { task ->
@@ -122,6 +150,11 @@ class MainActivity : BaseActivity() {
             }
     }
 
+    /**
+     * Saves the generated FCM token to Firestore for the current user.
+     * @param userId The ID of the current user.
+     * @param fcmToken The generated FCM token.
+     */
     private fun saveFcmTokenToFirestore(userId: String, fcmToken: String) {
         firestore.collection("users").document(userId)
             .update("fcmToken", fcmToken)
@@ -133,6 +166,9 @@ class MainActivity : BaseActivity() {
             }
     }
 
+    /**
+     * Navigates to the appropriate next activity based on the user type (patient or doctor).
+     */
     private fun goToNextActivity() {
         val user = auth.currentUser
         val uid = user?.uid ?: ""
@@ -165,6 +201,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Sets the user's online state in Firestore.
+     * @param userId The ID of the user.
+     * @param isOnline The online status to be set.
+     */
     private fun setUserOnlineState(userId: String, isOnline: Boolean) {
         firestore.collection("users").document(userId)
             .update("isOnline", isOnline)
@@ -173,10 +214,16 @@ class MainActivity : BaseActivity() {
             }
     }
 
+    /**
+     * Navigates to the sign-up screen.
+     */
     private fun goToSignIn() {
         startActivity(Intent(this, SignUpActivity::class.java))
     }
 
+    /**
+     * Lifecycle observer to manage user's online state based on app backgrounding/foregrounding.
+     */
     inner class AppLifecycleObserver(private val userId: String) : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         fun onAppBackgrounded() {

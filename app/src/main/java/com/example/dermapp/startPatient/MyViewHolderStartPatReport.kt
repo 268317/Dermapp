@@ -8,11 +8,23 @@ import com.example.dermapp.R
 
 /**
  * ViewHolder for displaying medical reports in a RecyclerView.
+ *
+ * @param itemView The view representing a single medical report item in the RecyclerView.
  */
 class MyViewHolderStartPatReport(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val firstNameDoc : TextView
-    val reportDate : TextView
+
+    // TextView displaying the doctor's first name
+    val firstNameDoc: TextView
+
+    // TextView displaying the report date
+    val reportDate: TextView
+
+    // Button for viewing full details of the medical report
     val seeDetailsButton: Button
+
+    /**
+     * Initializes the ViewHolder by finding and assigning views by their IDs.
+     */
     init {
         firstNameDoc = itemView.findViewById(R.id.textViewDoctorStartPatReports)
         reportDate = itemView.findViewById(R.id.textViewDateStartPatReports)

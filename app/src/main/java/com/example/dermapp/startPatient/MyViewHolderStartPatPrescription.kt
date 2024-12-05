@@ -8,13 +8,29 @@ import com.example.dermapp.R
 
 /**
  * ViewHolder for displaying prescriptions in a RecyclerView.
+ *
+ * @param itemView The view representing a single prescription item in the RecyclerView.
  */
 class MyViewHolderStartPatPrescription(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val firstNameDoc : TextView
-    val lastNameDoc : TextView
-    val prescriptionDate : TextView
-    val prescriptionText : TextView
+
+    // TextView displaying the doctor's first name
+    val firstNameDoc: TextView
+
+    // TextView displaying the doctor's last name
+    val lastNameDoc: TextView
+
+    // TextView displaying the prescription date
+    val prescriptionDate: TextView
+
+    // TextView displaying the prescription text or description
+    val prescriptionText: TextView
+
+    // Button for deleting the prescription
     val deleteButton: Button
+
+    /**
+     * Initializes the ViewHolder by finding and assigning views by their IDs.
+     */
     init {
         firstNameDoc = itemView.findViewById(R.id.textViewDoctorStartPatPrescription2)
         lastNameDoc = itemView.findViewById(R.id.textViewSurnameStartPatPrescription2)

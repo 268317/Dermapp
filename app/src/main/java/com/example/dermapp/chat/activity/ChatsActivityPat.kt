@@ -21,6 +21,11 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * ChatsActivityPat is responsible for displaying recent chats and a list of doctors
+ * for a patient. It also handles navigation to the messaging screen and fetching
+ * data from Firebase Firestore.
+ */
 class ChatsActivityPat : AppCompatActivity() {
 
     private lateinit var recentChatAdapter: RecentChatsAdapter
@@ -29,16 +34,23 @@ class ChatsActivityPat : AppCompatActivity() {
 
     private lateinit var backButton: ImageButton
 
+    // Instance of Firebase Firestore for database operations
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val chatList = mutableListOf<Conversation>()
     private val doctorsList = mutableListOf<Doctor>()
+
+    // Current logged-in user's ID
     private val currentUserId by lazy { FirebaseAuth.getInstance().currentUser?.uid ?: "" }
 
+    /**
+     * Called when the activity is first created.
+     * Sets up the UI, RecyclerViews, and data fetching methods.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_messages_pat)
 
-        // Obsługa przycisku powrotu
+        // Handles the back button click in the header
         val backHeader = findViewById<LinearLayout>(R.id.backHeaderPat)
         backButton = backHeader.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -52,6 +64,9 @@ class ChatsActivityPat : AppCompatActivity() {
         setupSearchView()
     }
 
+    /**
+     * Sets up RecyclerViews for displaying recent chats and the list of doctors.
+     */
     private fun setupRecyclerViews() {
         recentChatAdapter = RecentChatsAdapter(this, chatList, isDoctor = false)
         findViewById<RecyclerView>(R.id.recyclerViewRecentChats).apply {
@@ -68,6 +83,9 @@ class ChatsActivityPat : AppCompatActivity() {
         }
     }
 
+    /**
+     * Fetches the list of doctors from Firestore and updates the RecyclerView.
+     */
     private fun fetchDoctors() {
         firestore.collection("doctors")
             .addSnapshotListener { querySnapshot, error ->
@@ -89,9 +107,9 @@ class ChatsActivityPat : AppCompatActivity() {
             }
     }
 
-
-
-
+    /**
+     * Fetches the list of recent chats for the current user and updates the RecyclerView.
+     */
     private fun fetchChats() {
         firestore.collection("conversation")
             .whereArrayContains("participants", currentUserId)
@@ -133,7 +151,9 @@ class ChatsActivityPat : AppCompatActivity() {
             }
     }
 
-
+    /**
+     * Sets up the search functionality for filtering the doctor list.
+     */
     private fun setupSearchView() {
         searchView = findViewById(R.id.searchViewDoctorsPat)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -150,6 +170,11 @@ class ChatsActivityPat : AppCompatActivity() {
         })
     }
 
+    /**
+     * Navigates to the messaging screen for a specific doctor.
+     *
+     * @param doctor The selected doctor object.
+     */
     private fun navigateToMessages(doctor: Doctor) {
         val conversationId = if (doctor.appUserId > currentUserId) {
             "${doctor.appUserId}_${currentUserId}"
@@ -166,6 +191,4 @@ class ChatsActivityPat : AppCompatActivity() {
         Log.d("ChatsActivityPat", "Conversation ID: $conversationId")
         startActivity(intent)
     }
-
-
 }

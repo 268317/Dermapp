@@ -11,6 +11,13 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.dermapp.R
 import com.example.dermapp.database.Doctor
 
+/**
+ * ViewHolder for displaying a single doctor's item in the RecyclerView.
+ *
+ * @param itemView The view of the individual item.
+ * @param context The context where the ViewHolder is used.
+ * @param onDoctorClick A callback function invoked when the doctor item is clicked.
+ */
 class DoctorsListHolder(
     itemView: View,
     private val context: Context,
@@ -22,17 +29,21 @@ class DoctorsListHolder(
     private val lastName: TextView = itemView.findViewById(R.id.doctorsListItemLastName)
     private val statusIndicator: View = itemView.findViewById(R.id.doctorsListItemStatus)
 
+    /**
+     * Binds the doctor data to the ViewHolder and sets up UI components.
+     *
+     * @param doctor The doctor object containing data to display.
+     */
     fun bind(doctor: Doctor) {
 
-        // Debugging log
+        // Debugging log to track the binding process
         Log.d("DoctorsListHolder", "Doctor: ${doctor.firstName} ${doctor.lastName}, isOnline: ${doctor.isOnline}")
 
-
-        // Ustawianie imienia i nazwiska
+        // Setting the first name and last name
         firstName.text = doctor.firstName
         lastName.text = doctor.lastName
 
-        // Ładowanie zdjęcia profilowego za pomocą Glide
+        // Loading the profile image using Glide with a placeholder and circular crop
         Glide.with(context)
             .load(doctor.profilePhoto)
             .placeholder(R.drawable.black_account_circle)
@@ -40,7 +51,7 @@ class DoctorsListHolder(
             .transform(CircleCrop())
             .into(profileImage)
 
-        // Ustawianie wskaźnika statusu
+        // Setting the status indicator based on the doctor's online status
         val statusDrawable = if (doctor.isOnline) {
             R.drawable.status_indicator_background_online
         } else {
@@ -48,7 +59,7 @@ class DoctorsListHolder(
         }
         statusIndicator.setBackgroundResource(statusDrawable)
 
-        // Obsługa kliknięcia
+        // Setting up a click listener for the doctor item
         itemView.setOnClickListener { onDoctorClick(doctor) }
     }
 }

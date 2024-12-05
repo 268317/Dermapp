@@ -4,13 +4,18 @@ import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 
 /**
- * Determines whether manifest parsing is enabled.
- *
- * @return false to disable automatic manifest parsing.
+ * Custom Glide module for configuring Glide settings.
+ * This disables automatic manifest parsing for Glide.
  */
 @GlideModule
 class AppGlideModule : AppGlideModule() {
+
+    /**
+     * Disables automatic manifest parsing to improve initialization performance.
+     *
+     * @return false to disable manifest parsing.
+     */
     override fun isManifestParsingEnabled(): Boolean {
-        return false // Disables automatic manifest parsing
+        return false
     }
 }

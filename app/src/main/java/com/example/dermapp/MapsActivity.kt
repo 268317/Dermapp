@@ -51,19 +51,47 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 
+
+/**
+ * This activity provides functionality for displaying a map with various interactive features.
+ * Users can view their current location, search for places, find nearby pharmacies, and get directions.
+ */
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    // Google Map object to interact with the map view
     private lateinit var mMap: GoogleMap
+
+    // Client to fetch the user's location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    // Destination address passed from the previous activity
     private var destinationAddress: String? = null
+
+    // Latitude and longitude of the doctor's location
     private var doctorLocation: LatLng? = null
+
+    // Reference to the currently drawn polyline on the map
     private var currentPolyline: Polyline? = null
+
+    // Button to navigate back to the previous activity
     private lateinit var backButton: ImageButton
+
+    // User-selected marker location
     private var selectedLocation: LatLng? = null
+
+    // Selected distance for pharmacy search, in meters
     private var selectedDistance: Int = 1000
+
+    // Google Places client for place-related functionality
     private lateinit var placesClient: PlacesClient
+
+    // Session token for autocomplete requests in Google Places API
     private lateinit var autocompleteSessionToken: AutocompleteSessionToken
 
+    /**
+     * Called when the activity is first created. Initializes the map and UI elements.
+     * @param savedInstanceState Contains the data most recently supplied if the activity is being reinitialized.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -165,6 +193,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    /**
+     * Called when the map is ready for use. Configures map settings and features.
+     * @param googleMap The GoogleMap object representing the map.
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -196,6 +228,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    /**
+     * Retrieves the user's current location and displays a route to the destination on the map.
+     */
     private fun getCurrentLocationAndDrawRoute() {
         mMap.uiSettings.isMapToolbarEnabled = true
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -217,6 +252,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
+    /**
+     * Geocodes the provided address and sets the doctor's location on the map.
+     * @param address The address of the doctor.
+     */
     private fun getDoctorLocation(address: String) {
         val geocoder = Geocoder(this, Locale.getDefault())
         Thread {
@@ -242,6 +281,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }.start()
     }
 
+    /**
+     * Draws a route from the user's current location to the specified destination.
+     * @param destination The destination LatLng object.
+     */
     private fun drawRoute(destination: LatLng) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -261,6 +304,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Retrieves the Google API key from the application's metadata.
+     * @return The Google API key.
+     */
     fun getApiKey(): String {
         try {
             val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
@@ -271,6 +318,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Finds nearby pharmacies within the selected radius of the doctor's location.
+     */
     private fun findNearbyPharmacies() {
         doctorLocation?.let { location ->
             val url = getNearbyPharmaciesUrl(location)
@@ -278,12 +328,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } ?: Toast.makeText(this, "Unable to get appointment location.", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Builds the URL for searching nearby pharmacies using the Google Places API.
+     * @param location The location to search around.
+     * @return The URL for the API request.
+     */
     private fun getNearbyPharmaciesUrl(location: LatLng): String {
         val apiKey: String = getApiKey()
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=${selectedDistance}&type=pharmacy&key=$apiKey"
     }
 
+    /**
+     * AsyncTask to fetch pharmacy data in the background.
+     */
     private inner class FetchPharmacies : AsyncTask<String, Void, String>() {
+
+        /**
+         * Downloads the data from the provided URL.
+         * @param url The URL to fetch the data from.
+         * @return The downloaded JSON string.
+         */
         override fun doInBackground(vararg url: String?): String {
             var data = ""
             try {
@@ -302,12 +366,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             return data
         }
 
+        /**
+         * Handles the result after fetching pharmacy data.
+         * @param result The JSON result from the API request.
+         */
         override fun onPostExecute(result: String) {
             super.onPostExecute(result)
             parsePharmaciesResult(result)
         }
     }
 
+    /**
+     * Generates the pharmacy icon to be used for markers on the map.
+     * @return A BitmapDescriptor representing the pharmacy icon.
+     */
     private fun getPharmacyIcon(): BitmapDescriptor {
         val vectorDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_pharmacies) ?: return BitmapDescriptorFactory.defaultMarker()
 
@@ -323,6 +395,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
+    /**
+     * Parses the pharmacy data and displays markers for pharmacies on the map.
+     * @param jsonData The JSON response from the Google Places API.
+     */
     private fun parsePharmaciesResult(jsonData: String) {
         try {
             val jsonObject = JSONObject(jsonData)
@@ -352,12 +428,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Builds the URL for directions between two locations using the Google Directions API.
+     * @param origin The origin location as a LatLng.
+     * @param destination The destination location as a LatLng.
+     * @return The URL for the API request.
+     */
     private fun getDirectionsUrl(origin: LatLng, destination: LatLng): String {
         val apiKey: String = getApiKey()
         return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$apiKey"
     }
 
+    /**
+     * AsyncTask to fetch route data from the Directions API.
+     */
     private inner class FetchUrl : AsyncTask<String, Void, String>() {
+
+        /**
+         * Downloads the directions data from the provided URL.
+         * @param url The URL to fetch the directions from.
+         * @return The downloaded JSON string.
+         */
         override fun doInBackground(vararg url: String?): String {
             var data = ""
             try {
@@ -376,12 +467,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             return data
         }
 
+        /**
+         * Handles the result after fetching route data.
+         * @param result The JSON result from the Directions API.
+         */
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             drawPolyline(result) // Draw the polyline on the map
         }
     }
 
+    /**
+     * Draws a polyline on the map based on the decoded route data.
+     * @param jsonData The JSON data representing the route.
+     */
     private fun drawPolyline(jsonData: String?) {
         try {
             val jsonObject = JSONObject(jsonData)
@@ -413,6 +512,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Decodes a polyline encoded string into a list of LatLng points.
+     * @param encoded The encoded polyline string.
+     * @return A list of LatLng points.
+     */
     private fun decodePoly(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
         var index = 0
@@ -457,6 +561,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return poly
     }
 
+    /**
+     * Sets up the search bar for place autocomplete functionality.
+     */
     private fun setupSearchBar() {
         val searchBar: EditText = findViewById(R.id.searchBar)
 
@@ -468,7 +575,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
+    /**
+     * Fetches details of a place by its place ID and adds it as a marker on the map.
+     * @param placeId The place ID to fetch details for.
+     */
     private fun searchForPlace(placeId: String) {
         val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.NAME)
         val request = FetchPlaceRequest.builder(placeId, placeFields).build()
@@ -493,6 +603,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
+    /**
+     * Fetches autocomplete suggestions for a given query using the Google Places API.
+     * @param query The search query string.
+     */
     private fun fetchAutocompleteSuggestions(query: String) {
         val listView: ListView = findViewById(R.id.searchResultsListView)
         val request = FindAutocompletePredictionsRequest.builder()

@@ -4,6 +4,7 @@ package com.example.dermapp.chat.database
  * Interface for handling Firestore operations related to conversations between doctors and patients.
  */
 interface ConversationFirestoreInterface {
+
     /**
      * Adds a new conversation to Firestore.
      *
@@ -34,6 +35,11 @@ interface ConversationFirestoreInterface {
      */
     suspend fun getConversation(conversationId: String): Conversation?
 
+    /**
+     * Retrieves all conversations for a specific user from Firestore.
+     *
+     * @param userId The unique identifier of the user whose conversations are to be retrieved.
+     * @return A list of conversations associated with the user.
+     */
     suspend fun getUserConversations(userId: String): List<Conversation>
-
 }

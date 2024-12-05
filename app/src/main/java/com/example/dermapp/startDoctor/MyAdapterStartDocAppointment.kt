@@ -21,9 +21,14 @@ import java.util.Locale
 import java.util.TimeZone
 
 /**
- * RecyclerView Adapter for displaying upcoming appointments in StartDocActivity.
- * @param appointmentsList List of Appointment objects to display.
- * @param context Context of the activity or fragment using this adapter.
+ * RecyclerView Adapter for displaying upcoming appointments in the doctor's dashboard.
+ *
+ * This adapter is used to populate a list of upcoming appointments in a RecyclerView.
+ * It provides functionalities for viewing details, deleting appointments, and updating
+ * the displayed list dynamically.
+ *
+ * @property appointmentsList A mutable list of [Appointment] objects to be displayed in the RecyclerView.
+ * @property context The context of the activity or fragment that uses this adapter.
  */
 class MyAdapterStartDocAppointment(
     private var appointmentsList: MutableList<Appointment>,
@@ -32,13 +37,17 @@ class MyAdapterStartDocAppointment(
 
     private val firestore = FirebaseFirestore.getInstance()
 
-    // SimpleDateFormat configured for date and time in Warsaw timezone
+    // Formatter for displaying date and time in the "dd.MM.yyyy HH:mm" format, localized to Warsaw timezone
     private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
     /**
-     * Creates a new ViewHolder by inflating the layout defined in R.layout.activity_start_doc_upcoming_appointment_view.
+     * Inflates the layout for a single appointment item and creates a ViewHolder.
+     *
+     * @param parent The parent ViewGroup into which the new View will be added.
+     * @param viewType The type of the new View (not used in this implementation).
+     * @return A new [MyViewHolderStartDocAppointment] instance.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartDocAppointment {
         val view = LayoutInflater.from(parent.context)
@@ -47,12 +56,15 @@ class MyAdapterStartDocAppointment(
     }
 
     /**
-     * Binds data to the ViewHolder at the specified position.
+     * Binds data from an appointment to a ViewHolder for display.
+     *
+     * @param holder The ViewHolder to which the data will be bound.
+     * @param position The position of the appointment in the list.
      */
     override fun onBindViewHolder(holder: MyViewHolderStartDocAppointment, position: Int) {
         val appointment = appointmentsList[position]
 
-        // Fetch patient details using coroutine
+        // Retrieve patient details using Firestore and populate the holder
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val querySnapshot = firestore.collection("patients")
@@ -61,9 +73,9 @@ class MyAdapterStartDocAppointment(
                     .await()
 
                 if (!querySnapshot.isEmpty) {
-                    val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
-                    val firstName = doctorDocument.getString("firstName") ?: ""
-                    val lastName = doctorDocument.getString("lastName") ?: ""
+                    val patientDocument = querySnapshot.documents[0]
+                    val firstName = patientDocument.getString("firstName") ?: ""
+                    val lastName = patientDocument.getString("lastName") ?: ""
 
                     holder.firstNamePat.text = "${firstName} ${lastName}"
                 } else {
@@ -74,39 +86,43 @@ class MyAdapterStartDocAppointment(
             }
         }
 
-        // Handle see details button click to view appointment details
+        // Set up the button for viewing appointment details
         holder.seeDetailsButton.setOnClickListener {
             val intent = Intent(context, AppointmentDetailsDocActivity::class.java)
             intent.putExtra("appointmentId", appointment.appointmentId)
             context.startActivity(intent)
         }
 
-        // Set appointment date and time
+        // Display formatted appointment date and time
         appointment.datetime?.let { appointmentDate ->
             val formattedDateTime = dateTimeFormatter.format(appointmentDate)
             holder.appointmentDate.text = formattedDateTime
         }
 
+        // Display the appointment location
         appointment.localization.let { appointmentLocalization ->
             holder.appointmentLoc.text = appointmentLocalization
         }
 
-        // Handle delete button click
+        // Set up the delete button to show a confirmation dialog
         holder.deleteButton.setOnClickListener {
             showDeleteConfirmationDialog(appointment)
         }
     }
 
     /**
-     * Returns the number of items in the appointmentsList.
+     * Returns the total number of appointments in the list.
+     *
+     * @return The number of items in [appointmentsList].
      */
     override fun getItemCount(): Int {
         return appointmentsList.size
     }
 
     /**
-     * Updates the adapter with new data.
-     * @param newAppointments List of updated Appointment objects.
+     * Updates the adapter with a new list of appointments.
+     *
+     * @param newAppointments The updated list of [Appointment] objects to display.
      */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
@@ -115,8 +131,9 @@ class MyAdapterStartDocAppointment(
     }
 
     /**
-     * Function to show delete confirmation dialog.
-     * @param appointment The appointment to delete.
+     * Displays a confirmation dialog before deleting an appointment.
+     *
+     * @param appointment The appointment to be deleted.
      */
     private fun showDeleteConfirmationDialog(appointment: Appointment) {
         AlertDialog.Builder(context)
@@ -132,46 +149,50 @@ class MyAdapterStartDocAppointment(
             .show()
     }
 
+    /**
+     * Deletes an appointment from Firestore and updates the UI.
+     *
+     * This method removes the appointment from Firestore and updates the RecyclerView.
+     *
+     * @param appointment The [Appointment] object to be deleted.
+     */
     private fun deleteAppointment(appointment: Appointment) {
-
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 Log.d("delete appointment", appointment.datetime.toString())
 
-                val startRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) - 1000) // 1 sekunda wcześniej
-                val endRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) + 1000)   // 1 sekunda później
+                val startRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) - 1000) // 1 second earlier
+                val endRange = Date((appointment.datetime?.time ?: System.currentTimeMillis()) + 1000)   // 1 second later
 
                 val querySnapshot = firestore.collection("availableDates")
                     .whereGreaterThanOrEqualTo("datetime", startRange)
                     .whereLessThanOrEqualTo("datetime", endRange)
                     .whereEqualTo("doctorId", appointment.doctorId)
-                    //.whereEqualTo("patientId", appointment.patientId)
                     .get()
                     .await()
 
                 if (!querySnapshot.isEmpty) {
-                    Log.d("delete appointment", "OKKKKK")
-                    val availableDataDoc = querySnapshot.documents[0]
-                    val availableDataDocId = availableDataDoc.id
+                    val availableDateDoc = querySnapshot.documents[0]
+                    val availableDateDocId = availableDateDoc.id
 
-                    // Update isAvailable field to true in availableData
+                    // Update the isAvailable field to true
                     firestore.collection("availableDates")
-                        .document(availableDataDocId)
+                        .document(availableDateDocId)
                         .update("isAvailable", true)
                         .await()
                 }
 
-                // Delete appointment document from appointment collection
+                // Remove the appointment from the Firestore collection
                 firestore.collection("appointment")
                     .document(appointment.appointmentId)
                     .delete()
                     .await()
 
-                // Update RecyclerView immediately after deletion
+                // Refresh the list of appointments in the RecyclerView
                 updateAppointments(appointmentsList.filter { it.appointmentId != appointment.appointmentId })
 
             } catch (e: Exception) {
-                // Handle error while deleting appointment
+                // Handle errors during deletion
             }
         }
     }

@@ -15,8 +15,12 @@ import java.util.Calendar
 
 /**
  * Activity for user sign-up process.
+ * This class handles the user registration workflow, including validating user inputs,
+ * creating a new account in Firebase Authentication, and saving user details to Firestore.
  */
 class SignUpActivity : BaseActivity() {
+
+    // UI elements for the sign-up screen
     private lateinit var signUpTextView: TextView
     private lateinit var buttonSignUp: Button
     private lateinit var radioButtonPatient: RadioButton
@@ -51,11 +55,12 @@ class SignUpActivity : BaseActivity() {
         doctorIdEditText = findViewById(R.id.textDoctorId)
         peselEditText = findViewById(R.id.textPesel)
 
-        // Set click listeners
+        // Set click listeners for buttons and input fields
         buttonSignUp.setOnClickListener { registerUser() }
         logInTextButton.setOnClickListener { goToLogin() }
         editTextDateOfBirth.setOnClickListener { openCalendar() }
 
+        // Handle radio button selection changes
         radioButtonPatient.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 peselEditText.visibility = View.VISIBLE
@@ -72,7 +77,10 @@ class SignUpActivity : BaseActivity() {
     }
 
     /**
-     * Validates user input during registration.
+     * Validates the user inputs provided during registration.
+     * Ensures all mandatory fields are filled and meet the required format.
+     *
+     * @return True if all inputs are valid, false otherwise.
      */
     private fun validateRegisterDetails(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
@@ -125,7 +133,8 @@ class SignUpActivity : BaseActivity() {
     }
 
     /**
-     * Registers the user in Firebase authentication and Firestore database.
+     * Handles user registration by creating an account in Firebase and saving user details in Firestore.
+     * Retrieves an FCM token for notification services.
      */
     private fun registerUser() {
         if (validateRegisterDetails()) {
@@ -178,7 +187,8 @@ class SignUpActivity : BaseActivity() {
     }
 
     /**
-     * Opens a calendar dialog to select the date of birth.
+     * Opens a calendar dialog for selecting the date of birth.
+     * Ensures users can only select a date at least 18 years in the past.
      */
     @SuppressLint("SetTextI18n")
     private fun openCalendar() {
@@ -201,7 +211,8 @@ class SignUpActivity : BaseActivity() {
     }
 
     /**
-     * Navigates to the login screen.
+     * Navigates the user to the login screen.
+     * Ends the current activity after starting the login activity.
      */
     private fun goToLogin() {
         val intent = Intent(this, MainActivity::class.java)

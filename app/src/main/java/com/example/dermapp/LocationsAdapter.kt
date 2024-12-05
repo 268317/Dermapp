@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dermapp.database.Location
 
 /**
  * Adapter class for displaying a list of locations in a RecyclerView.

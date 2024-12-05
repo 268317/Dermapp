@@ -19,9 +19,13 @@ import com.example.dermapp.startDoctor.StartDocActivity
 import android.Manifest
 
 /**
- * Activity to display medical reports for doctors.
+ * Activity for displaying medical reports to doctors.
+ * This class allows doctors to view detailed medical reports of their patients,
+ * including symptoms, additional information, and attached images.
  */
 class ReportDocActivity : AppCompatActivity() {
+
+    // UI components for displaying medical report details
     private lateinit var textViewPatient: TextView
     private lateinit var checkBoxItching: CheckBox
     private lateinit var checkBoxMoleChanges: CheckBox
@@ -40,37 +44,42 @@ class ReportDocActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private var photoUri: Uri? = null
 
-    private lateinit var medicalReportId: String // Property to store medicalReportId
+    // Stores the medical report ID passed from the previous activity
+    private lateinit var medicalReportId: String
 
     companion object {
         const val MEDICAL_REPORT_ID_EXTRA = "medicalReportId"
         const val REQUEST_CODE_READ_EXTERNAL_STORAGE = 1
     }
 
+    /**
+     * Called when the activity is first created.
+     * Initializes UI components, sets up permissions, and fetches the medical report data.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_doc)
 
-        // Initialize views and setup permissions for image loading
+        // Initialize UI components and set up permissions for image loading
         initializeViews()
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
-        // Handle back button click to return to previous activity
+        // Handle back button click to navigate to the previous screen
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
-        // Retrieve medical report ID passed from previous activity
+        // Retrieve the medical report ID passed from the previous activity
         medicalReportId = intent.getStringExtra(MEDICAL_REPORT_ID_EXTRA) ?: ""
 
-        // Fetch medical report data from Firestore based on the ID
+        // Fetch the medical report data from Firestore
         fetchMedicalReportFromFirestore(medicalReportId)
     }
 
     /**
-     * Initializes all UI views from XML layout and checks permissions for image loading.
+     * Initializes UI components and checks for storage permissions.
      */
     private fun initializeViews() {
         textViewPatient = findViewById(R.id.TextViewPatient)
@@ -89,7 +98,7 @@ class ReportDocActivity : AppCompatActivity() {
         enterOtherInfoEditText = findViewById(R.id.enterOtherInfoCreateNewReport)
         addPhotoImageView = findViewById(R.id.imageAddPhotoCreateNewReport)
 
-        // Request permission to read external storage if not granted
+        // Request permission to access external storage if not already granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -98,17 +107,15 @@ class ReportDocActivity : AppCompatActivity() {
                 REQUEST_CODE_READ_EXTERNAL_STORAGE
             )
         } else {
-            // Load image if permission is already granted
             loadImage()
         }
     }
 
     /**
-     * Loads an image from external storage using its URI and displays it in an ImageView.
+     * Loads an image from external storage and displays it in the ImageView.
      */
     private fun loadImage() {
         try {
-            // Example URI to be replaced with actual URI from Firestore or other source
             val imageUri = Uri.parse("content://media/external/images/media/1000035185")
             val inputStream = contentResolver.openInputStream(imageUri)
             if (inputStream != null) {
@@ -126,12 +133,13 @@ class ReportDocActivity : AppCompatActivity() {
     }
 
     /**
-     * Fetches the medical report details from Firestore based on the provided medicalReportId.
+     * Fetches the medical report data from Firestore.
+     * Displays the report's details and loads any associated images.
      * @param medicalReportId The ID of the medical report to fetch.
      */
     private fun fetchMedicalReportFromFirestore(medicalReportId: String) {
         val db = FirebaseFirestore.getInstance()
-        Log.d(TAG, "medicalReportId: ${medicalReportId}")
+        Log.d(TAG, "medicalReportId: $medicalReportId")
         val reportRef = db.collection("report").document(medicalReportId)
 
         reportRef.get()
@@ -142,64 +150,16 @@ class ReportDocActivity : AppCompatActivity() {
                     medicalReport?.let { report ->
                         Log.d(TAG, "Medical report fetched: $report")
 
-                        // Fetch patient details based on PESEL from Firestore
+                        // Fetch patient details using the patient's PESEL
                         val pesel = report.patientPesel
-                        if (pesel != null && pesel.isNotEmpty()) {
-                            val db = FirebaseFirestore.getInstance()
-                            val doctorsRef = db.collection("patients")
-                                .whereEqualTo("pesel", pesel)
-                                .limit(1)
-
-                            doctorsRef.get()
-                                .addOnSuccessListener { querySnapshot ->
-                                    if (!querySnapshot.isEmpty) {
-                                        val doctorDocument = querySnapshot.documents[0]
-                                        val doctor = doctorDocument.toObject(Doctor::class.java)
-
-                                        doctor?.let {
-                                            // Display patient's full name in TextView
-                                            textViewPatient.text = "${doctor.firstName} ${doctor.lastName}"
-                                        } ?: run {
-                                            Log.e(TAG, "Patient object is null")
-                                        }
-                                    } else {
-                                        Log.e(TAG, "Patient document does not exist")
-                                    }
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.e(TAG, "Error getting documents: ", exception)
-                                }
+                        if (!pesel.isNullOrEmpty()) {
+                            fetchPatientDetails(pesel)
                         }
 
-                        // Display medical report details in checkboxes and text fields
-                        checkBoxItching.isChecked = report.itching
-                        checkBoxItching.isEnabled = false
-                        checkBoxMoleChanges.isChecked = report.moleChanges
-                        checkBoxMoleChanges.isEnabled = false
-                        checkBoxRash.isChecked = report.rash
-                        checkBoxRash.isEnabled = false
-                        checkBoxDryness.isChecked = report.dryness
-                        checkBoxDryness.isEnabled = false
-                        checkBoxPimples.isChecked = report.pimples
-                        checkBoxPimples.isEnabled = false
-                        checkBoxSevereAcne.isChecked = report.severeAcne
-                        checkBoxSevereAcne.isEnabled = false
-                        checkBoxBlackheads.isChecked = report.blackheads
-                        checkBoxBlackheads.isEnabled = false
-                        checkBoxWarts.isChecked = report.warts
-                        checkBoxWarts.isEnabled = false
-                        checkBoxRedness.isChecked = report.redness
-                        checkBoxRedness.isEnabled = false
-                        checkBoxDiscoloration.isChecked = report.discoloration
-                        checkBoxDiscoloration.isEnabled = false
-                        checkBoxSeborrhoea.isChecked = report.seborrhoea
-                        checkBoxSeborrhoea.isEnabled = false
-                        checkBoxNewMole.isChecked = report.newMole
-                        checkBoxNewMole.isEnabled = false
-                        enterOtherInfoEditText.setText(report.otherInfo)
-                        enterOtherInfoEditText.isEnabled = false
+                        // Populate UI components with the report's data
+                        populateReportDetails(report)
 
-                        // Fetch and display image attachment from Firebase Storage
+                        // Load the report's image attachment
                         try {
                             fetchImageFromFirebaseStorage(report.attachmentUrl)
                         } catch (e: SecurityException) {
@@ -208,21 +168,78 @@ class ReportDocActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    // Handle case where medical report document does not exist
-                    Toast.makeText(this@ReportDocActivity, "Document not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Document not found", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Medical report document not found")
                 }
             }
             .addOnFailureListener { exception ->
-                // Handle failure to fetch medical report document
-                Toast.makeText(this@ReportDocActivity, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to fetch document: $exception", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Failed to fetch medical report document: $exception")
             }
     }
 
     /**
-     * Fetches an image from Firebase Storage using the provided imageUrl and displays it in ImageView.
-     * @param imageUrl The URL of the image stored in Firebase Storage.
+     * Fetches patient details using their PESEL from Firestore.
+     * @param pesel The PESEL of the patient to fetch details for.
+     */
+    private fun fetchPatientDetails(pesel: String) {
+        val db = FirebaseFirestore.getInstance()
+        val patientRef = db.collection("patients").whereEqualTo("pesel", pesel).limit(1)
+
+        patientRef.get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val patientDocument = querySnapshot.documents[0]
+                    val patient = patientDocument.toObject(Doctor::class.java)
+
+                    patient?.let {
+                        textViewPatient.text = "${patient.firstName} ${patient.lastName}"
+                    } ?: Log.e(TAG, "Patient object is null")
+                } else {
+                    Log.e(TAG, "Patient document does not exist")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Error fetching patient details: ", exception)
+            }
+    }
+
+    /**
+     * Populates the UI components with the details from the medical report.
+     * @param report The medical report to display.
+     */
+    private fun populateReportDetails(report: MedicalReport) {
+        checkBoxItching.isChecked = report.itching
+        checkBoxItching.isEnabled = false
+        checkBoxMoleChanges.isChecked = report.moleChanges
+        checkBoxMoleChanges.isEnabled = false
+        checkBoxRash.isChecked = report.rash
+        checkBoxRash.isEnabled = false
+        checkBoxDryness.isChecked = report.dryness
+        checkBoxDryness.isEnabled = false
+        checkBoxPimples.isChecked = report.pimples
+        checkBoxPimples.isEnabled = false
+        checkBoxSevereAcne.isChecked = report.severeAcne
+        checkBoxSevereAcne.isEnabled = false
+        checkBoxBlackheads.isChecked = report.blackheads
+        checkBoxBlackheads.isEnabled = false
+        checkBoxWarts.isChecked = report.warts
+        checkBoxWarts.isEnabled = false
+        checkBoxRedness.isChecked = report.redness
+        checkBoxRedness.isEnabled = false
+        checkBoxDiscoloration.isChecked = report.discoloration
+        checkBoxDiscoloration.isEnabled = false
+        checkBoxSeborrhoea.isChecked = report.seborrhoea
+        checkBoxSeborrhoea.isEnabled = false
+        checkBoxNewMole.isChecked = report.newMole
+        checkBoxNewMole.isEnabled = false
+        enterOtherInfoEditText.setText(report.otherInfo)
+        enterOtherInfoEditText.isEnabled = false
+    }
+
+    /**
+     * Fetches an image from Firebase Storage using the provided URL.
+     * @param imageUrl The URL of the image to fetch.
      */
     private fun fetchImageFromFirebaseStorage(imageUrl: String) {
         Glide.with(this)

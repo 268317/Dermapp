@@ -4,6 +4,7 @@ package com.example.dermapp.chat.database
  * Interface defining Firestore operations for managing messages.
  */
 interface MessageFirestoreInterface {
+
     /**
      * Adds a new message to Firestore.
      *
@@ -33,7 +34,4 @@ interface MessageFirestoreInterface {
      * @return The retrieved message object, or null if not found.
      */
     suspend fun getMessage(messageId: String): Message?
-
-    suspend fun getMessagesForConversation(conversationId: String): List<Message>
-
-}
+    }

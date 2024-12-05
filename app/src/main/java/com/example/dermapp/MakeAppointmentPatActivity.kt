@@ -31,35 +31,36 @@ import java.util.Locale
 import java.util.TimeZone
 
 /**
- * Activity allowing a patient to schedule appointments with doctors.
+ * Activity that allows a patient to schedule an appointment with a doctor.
+ * It handles doctor selection, location selection, date/time selection, and appointment booking.
  */
 class MakeAppointmentPatActivity : AppCompatActivity() {
 
-    // UI elements
+    // UI elements for user interaction
     private lateinit var backButton: ImageButton
     private lateinit var autoDateTime: AutoCompleteTextView
     private lateinit var autoDoc: AutoCompleteTextView
     private lateinit var autoLoc: AutoCompleteTextView
     private lateinit var bookButton: Button
 
-    // Selected IDs
+    // Selected IDs for doctor, location, and datetime
     private var selectedDateTimeId: String? = null
     private var selectedDoctorId: String? = null
     private var selectedLocationId: String? = null
 
-    // Firebase
+    // Firebase Firestore instance for database operations
     private val firestore = FirebaseFirestore.getInstance()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     /**
      * Called when the activity is starting.
-     * Initializes UI elements and sets up necessary listeners.
+     * Initializes UI elements, sets up listeners, and loads data from Firestore.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_make_appointment_pat)
 
-        // Ustawienie strefy czasowej dla aktywności
+        // Set time zone to Europe/Warsaw for date/time operations
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
         // Initialize UI elements
@@ -68,7 +69,7 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         autoLoc = findViewById(R.id.autoCompleteTextViewLocalization)
         bookButton = findViewById(R.id.bookButton)
 
-        // Set up back button click listener
+        // Set up back button to navigate to the previous screen
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -88,14 +89,14 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
             }
         }
 
-        // Set up auto-complete text views
+        // Set up auto-complete text views for doctor and location selection
         setupAutoCompleteTextView(autoDoc)
         setupAutoCompleteTextView(autoLoc)
 
-        // Load initial data
+        // Load initial doctor data
         loadDoctors()
 
-        // Set listener for booking button
+        // Set listener for booking the appointment
         bookButton.setOnClickListener {
             bookAppointment()
         }
@@ -143,7 +144,6 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
                     // Load locations based on selected doctor
                     loadDoctorLocations(selectedDoctorId!!)
                 }
-
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
@@ -243,6 +243,9 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Books the appointment by saving it to Firestore.
+     */
     private fun bookAppointment() {
         val doctorId = selectedDoctorId ?: return
         val locationId = selectedLocationId ?: return
@@ -362,7 +365,12 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
         alert.show()
     }
 
-
+    /**
+     * Sets a reminder for the scheduled appointment 24 hours in advance.
+     * @param appointmentId The ID of the appointment.
+     * @param appointmentTimeInMillis The time of the appointment in milliseconds.
+     * @param location The location of the appointment.
+     */
     private fun setAppointmentReminder(appointmentId: String, appointmentTimeInMillis: Long, location: String) {
         val intent = Intent(this, ReminderBroadcast::class.java)
 
@@ -380,5 +388,4 @@ class MakeAppointmentPatActivity : AppCompatActivity() {
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, currentTime + tenSecondsMillis, pendingIntent)
     }
-
 }

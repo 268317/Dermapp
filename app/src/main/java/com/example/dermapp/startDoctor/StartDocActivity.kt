@@ -53,12 +53,10 @@ class StartDocActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewAppointments: RecyclerView
     private lateinit var recyclerViewReports: RecyclerView
-//    private lateinit var recyclerViewPrescriptions: RecyclerView
     private lateinit var recyclerViewArchivalAppointments: RecyclerView
 
     private lateinit var appointmentsAdapter: MyAdapterStartDocAppointment
     private lateinit var reportsAdapter: MyAdapterStartDocReport
-//    private lateinit var prescriptionsAdapter: MyAdapterStartDocPrescription
     private lateinit var archivalAdapter: MyAdapterStartDocArchivalAppointment
 
     /**
@@ -123,13 +121,6 @@ class StartDocActivity : AppCompatActivity() {
             val intent = Intent(this, AppointmentsDocActivity::class.java)
             startActivity(intent)
         }
-
-//        // Apply window insets
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.RVstartDocPrescription)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
 
         // Initialize header and menu button
         val header = findViewById<RelativeLayout>(R.id.includeHeaderDoc)
@@ -279,7 +270,6 @@ class StartDocActivity : AppCompatActivity() {
                     }
                     val sortedAppointments = appointments.sortedBy { it.datetime }
                     appointmentsAdapter.updateAppointments(sortedAppointments)
-                    //appointmentsAdapter.updateAppointments(appointments)
                 }
                 .addOnFailureListener { exception ->
                     Log.e(TAG, "Error fetching appointments", exception)
@@ -309,7 +299,6 @@ class StartDocActivity : AppCompatActivity() {
                     val sortedAppointments = appointments.sortedByDescending { it.datetime }
 
                     archivalAdapter.updateAppointments(sortedAppointments)
-                    //appointmentsAdapter.updateAppointments(appointments)
                 }
         }
     }
@@ -335,32 +324,7 @@ class StartDocActivity : AppCompatActivity() {
                     }
 
                     reportsAdapter.updateReports(sortedReports)
-                    //reportsAdapter.updateReports(reports)
                 }
         }
     }
-
-//    /**
-//     * Fetches prescriptions issued by the current doctor from Firestore.
-//     */
-//    private fun fetchPrescriptions() {
-//        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
-//
-//        currentDocId?.let { uid ->
-//            prescriptionsCollection
-//                .whereEqualTo("doctorId", uid)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    val prescriptions = mutableListOf<Prescription>()
-//                    for (document in documents) {
-//                        val prescription = document.toObject(Prescription::class.java)
-//                        prescriptions.add(prescription)
-//                    }
-//                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
-//
-//                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
-//                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
-//                }
-//        }
-//    }
 }

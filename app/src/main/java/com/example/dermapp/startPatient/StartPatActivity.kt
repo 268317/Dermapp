@@ -168,7 +168,6 @@ class StartPatActivity : AppCompatActivity() {
         // Fetch data for appointments, reports, prescriptions, and archival appointments
         fetchAppointments()
         fetchReports()
-//        fetchPrescriptions()
         fetchArchivalAppointments()
 
 
@@ -212,7 +211,6 @@ class StartPatActivity : AppCompatActivity() {
                     val sortedAppointments = appointments.sortedBy { it.datetime }
 
                     appointmentsAdapter.updateAppointments(sortedAppointments)
-                    //appointmentsAdapter.updateAppointments(appointments)
                 }
         }
     }
@@ -240,7 +238,6 @@ class StartPatActivity : AppCompatActivity() {
                     val sortedAppointments = appointments.sortedBy { it.datetime }
 
                     archivalAdapter.updateAppointments(sortedAppointments)
-                    //appointmentsAdapter.updateAppointments(appointments)
                 }
         }
     }
@@ -275,36 +272,10 @@ class StartPatActivity : AppCompatActivity() {
                             }
 
                             reportsAdapter.updateReports(sortedReports)
-                                //reportsAdapter.updateReports(reports)
                         }
                 } ?: run {
                 }
             }
         }
     }
-
-//    /**
-//     * Fetches prescriptions for the current patient from Firestore.
-//     */
-//    private fun fetchPrescriptions() {
-//        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-//        val prescriptionsCollection = FirebaseFirestore.getInstance().collection("prescription")
-//
-//        currentUserUid?.let { uid ->
-//            prescriptionsCollection
-//                .whereEqualTo("patientId", uid)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//                    val prescriptions = mutableListOf<Prescription>()
-//                    for (document in documents) {
-//                        val prescription = document.toObject(Prescription::class.java)
-//                        prescriptions.add(prescription)
-//                    }
-//                    val sortedPrescriptions = prescriptions.sortedByDescending { it.date }
-//
-////                    prescriptionsAdapter.updatePrescriptions(sortedPrescriptions)
-//                    //prescriptionsAdapter.updatePrescriptions(prescriptions)
-//                }
-//        }
-//    }
 }

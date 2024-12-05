@@ -21,6 +21,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Timestamp
 
+/**
+ * ChatsActivityDoc is responsible for displaying recent chats and patient lists
+ * for a doctor. It also handles navigation to the messaging screen and fetching
+ * data from Firebase Firestore.
+ */
 class ChatsActivityDoc : AppCompatActivity() {
 
     private lateinit var recentChatAdapter: RecentChatsAdapter
@@ -29,16 +34,23 @@ class ChatsActivityDoc : AppCompatActivity() {
 
     private lateinit var backButton: ImageButton
 
+    // Instance of Firebase Firestore for database operations
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val chatList = mutableListOf<Conversation>()
     private val patientsList = mutableListOf<Patient>()
+
+    // Current logged-in user's ID
     private val currentUserId by lazy { FirebaseAuth.getInstance().currentUser?.uid ?: "" }
 
+    /**
+     * Called when the activity is first created.
+     * Sets up the UI, RecyclerViews, and data fetching methods.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity_messages_doc)
 
-        // Obsługa przycisku powrotu
+        // Handles the back button click in the header
         val backHeader = findViewById<LinearLayout>(R.id.backHeaderDoc)
         backButton = backHeader.findViewById(R.id.arrowButton)
         backButton.setOnClickListener {
@@ -52,6 +64,9 @@ class ChatsActivityDoc : AppCompatActivity() {
         setupSearchView()
     }
 
+    /**
+     * Sets up RecyclerViews for displaying recent chats and the list of patients.
+     */
     private fun setupRecyclerViews() {
         // Recent Chats RecyclerView
         recentChatAdapter = RecentChatsAdapter(this, chatList, isDoctor = true)
@@ -70,6 +85,9 @@ class ChatsActivityDoc : AppCompatActivity() {
         }
     }
 
+    /**
+     * Fetches the list of patients from Firestore and updates the RecyclerView.
+     */
     private fun fetchPatients() {
         firestore.collection("patients")
             .addSnapshotListener { querySnapshot, error ->
@@ -86,11 +104,11 @@ class ChatsActivityDoc : AppCompatActivity() {
                 }
             }
         patientsAdapter.notifyDataSetChanged()
-
     }
 
-
-
+    /**
+     * Fetches the list of recent chats for the current user and updates the RecyclerView.
+     */
     private fun fetchChats() {
         firestore.collection("conversation")
             .whereArrayContains("participants", currentUserId)
@@ -132,6 +150,9 @@ class ChatsActivityDoc : AppCompatActivity() {
             }
     }
 
+    /**
+     * Sets up the search functionality for filtering the patient list.
+     */
     private fun setupSearchView() {
         searchView = findViewById(R.id.searchViewPatientsDoc)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -148,6 +169,11 @@ class ChatsActivityDoc : AppCompatActivity() {
         })
     }
 
+    /**
+     * Navigates to the messaging screen for a specific patient.
+     *
+     * @param patient The selected patient object.
+     */
     private fun navigateToMessages(patient: Patient) {
         val conversationId = if (patient.appUserId > currentUserId) {
             "${patient.appUserId}_${currentUserId}"
@@ -162,6 +188,4 @@ class ChatsActivityDoc : AppCompatActivity() {
         intent.putExtra("conversationId", conversationId)
         startActivity(intent)
     }
-
-
 }

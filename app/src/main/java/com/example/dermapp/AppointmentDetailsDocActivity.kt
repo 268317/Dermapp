@@ -20,10 +20,12 @@ import java.util.TimeZone
 
 /**
  * Activity to display the details of an appointment for doctors.
+ * Fetches and displays data such as patient details, appointment location,
+ * date, diagnosis, and recommendations from the Firebase Firestore database.
  */
 class AppointmentDetailsDocActivity : AppCompatActivity() {
 
-    // Declare UI elements
+    // Declare UI elements for displaying appointment details
     private lateinit var appointmentDate: TextView
     private lateinit var appointmentPatFirstName: TextView
     private lateinit var appointmentPatLastName: TextView
@@ -34,26 +36,28 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
     private lateinit var textRecommendations: TextView
     private lateinit var textDiagnosis: TextView
 
-    // Instance of Firebase Firestore
+    // Instance of Firebase Firestore used for database operations
     private val firestore = FirebaseFirestore.getInstance()
 
-    // SimpleDateFormat configured for date and time in Warsaw timezone
+    // Formatter for date and time, configured for Warsaw timezone
     private val dateTimeFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("Europe/Warsaw")
     }
 
     /**
      * Called when the activity is starting.
-     * Sets up UI elements, initializes listeners, and retrieves necessary data.
+     * Sets up the UI, initializes listeners, and retrieves appointment data from Firestore.
+     *
+     * @param savedInstanceState Contains the data it most recently supplied in `onSaveInstanceState`.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details_doc)
 
-        // Ustawienie strefy czasowej dla aktywności
+        // Set the timezone to Warsaw for this activity
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"))
 
-        // Initialize UI elements with error checking
+        // Initialize UI elements by linking them with their IDs in the layout
         appointmentDate = findViewById(R.id.textViewDateAppointmentDoc)
         appointmentPatFirstName = findViewById(R.id.textViewPatNameAppointmentDoc)
         appointmentPatLastName = findViewById(R.id.textViewPatLastNameAppointmentDoc)
@@ -66,36 +70,41 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
         val header = findViewById<LinearLayout>(R.id.backHeader)
         backButton = header.findViewById(R.id.arrowButton)
 
+        // Set a click listener on the back button to navigate back to the start screen
         backButton.setOnClickListener {
             val intent = Intent(this, StartDocActivity::class.java)
             startActivity(intent)
         }
 
-        // Get UID of the currently logged in user
+        // Retrieve the UID of the currently logged-in user
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Get appointmentId from Intent
+        // Get the appointment ID passed through the Intent
         val appointmentId = intent.getStringExtra("appointmentId")
 
-        // Fetch appointment details using coroutine
+        // Fetch appointment details from Firestore using a coroutine
         lifecycleScope.launch(Dispatchers.Main) {
             try {
+                // Retrieve the appointment document from Firestore
                 val appointmentDocument = firestore.collection("appointment")
                     .document(appointmentId!!)
                     .get()
                     .await()
 
                 if (appointmentDocument.exists()) {
+                    // Extract details from the appointment document
                     val patientId = appointmentDocument.getString("patientId") ?: ""
                     val datetime = appointmentDocument.getDate("datetime")
                     val localization = appointmentDocument.getString("localization") ?: ""
                     val recommendation = appointmentDocument.getString("recommendations") ?: ""
                     val diagnosis = appointmentDocument.getString("diagnosis") ?: ""
 
+                    // Format and display the appointment date and time
                     appointmentDate.text = if (datetime != null) dateTimeFormatter.format(datetime) else "Unknown"
                     textRecommendations.text = recommendation
                     textDiagnosis.text = diagnosis
 
+                    // Split the localization string into address parts for display
                     val addressParts = localization.split(",")
                     if (addressParts.size >= 2) {
                         val streetAndNumber = addressParts[0].trim()
@@ -108,14 +117,14 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
                         appointmentLoc2.text = ""
                     }
 
-                    // Fetch patient details
+                    // Fetch and display patient details based on patient ID
                     val querySnapshot = firestore.collection("patients")
                         .whereEqualTo("userId", patientId)
                         .get()
                         .await()
 
                     if (!querySnapshot.isEmpty) {
-                        val doctorDocument = querySnapshot.documents[0] // Assuming there's only one matching document
+                        val doctorDocument = querySnapshot.documents[0] // Assuming one matching document
                         val firstName = doctorDocument.getString("firstName") ?: ""
                         val lastName = doctorDocument.getString("lastName") ?: ""
                         val pesel = doctorDocument.getString("pesel")
@@ -127,8 +136,8 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
                         appointmentPatLastName.text = "Patient"
                         appointmentPatPesel.text = "patient pesel"
                     }
-
                 } else {
+                    // Set default values if the document does not exist
                     appointmentDate.text = "Unknown"
                     appointmentPatPesel.text = "patient pesel"
                     appointmentLoc.text = "localization"
@@ -136,6 +145,7 @@ class AppointmentDetailsDocActivity : AppCompatActivity() {
                     appointmentPatLastName.text = "Patient"
                 }
             } catch (e: Exception) {
+                // Log and handle errors during Firestore operations
                 Log.e("AppointmentDetailsPat", "Error fetching appointment details", e)
                 appointmentDate.text = "Unknown"
                 appointmentPatPesel.text = "patient pesel"

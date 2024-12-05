@@ -38,6 +38,10 @@ class MyAdapterStartPatArchivalAppointment(
 
     /**
      * Creates and returns a new ViewHolder for appointment items.
+     *
+     * @param parent The parent ViewGroup into which the new View will be added after it is bound.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder instance for displaying archival appointments.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderStartPatArchivalAppointment {
         val view = LayoutInflater.from(parent.context)
@@ -47,6 +51,9 @@ class MyAdapterStartPatArchivalAppointment(
 
     /**
      * Binds data to the ViewHolder.
+     *
+     * @param holder The ViewHolder to bind data to.
+     * @param position The position of the item within the dataset.
      */
     override fun onBindViewHolder(holder: MyViewHolderStartPatArchivalAppointment, position: Int) {
         val appointment = appointmentsList[position]
@@ -88,16 +95,17 @@ class MyAdapterStartPatArchivalAppointment(
             holder.appointmentDate.text = formattedDateTime
         }
 
+        // Set appointment location
         appointment.localization.let { appointmentLocalization ->
             holder.appointmentLoc.text = appointmentLocalization
         }
-
     }
 
     /**
      * Returns the total number of appointments in the list.
+     *
+     * @return The size of the appointments list.
      */
-
     override fun getItemCount(): Int {
         return appointmentsList.size
     }
@@ -105,12 +113,12 @@ class MyAdapterStartPatArchivalAppointment(
     /**
      * Updates the adapter with new appointment data.
      *
-     * @param newAppointments New list of appointments to display
+     * @param newAppointments New list of appointments to display.
      */
     fun updateAppointments(newAppointments: List<Appointment>) {
         appointmentsList.clear()
         appointmentsList.addAll(newAppointments)
         notifyDataSetChanged()
     }
-
 }
+

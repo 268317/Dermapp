@@ -1,11 +1,17 @@
 package com.example.dermapp.chat.database
 
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.PropertyName
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Represents a conversation in the chat system.
+ *
+ * @property conversationId The unique ID of the conversation.
+ * @property lastMessageId The ID of the last message in the conversation.
+ * @property participants The list of participants in the conversation.
+ */
 open class Conversation(
     @get:PropertyName("conversationId") @set:PropertyName("conversationId") open var conversationId: String = "",
     @get:PropertyName("lastMessageId") @set:PropertyName("lastMessageId") open var lastMessageId: String = "",
@@ -140,5 +146,4 @@ open class Conversation(
             callback(null)
         }
     }
-
 }

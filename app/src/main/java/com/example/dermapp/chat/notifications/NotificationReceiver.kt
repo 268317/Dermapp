@@ -1,4 +1,4 @@
-package com.example.dermapp.chat.NOTIFICATION2
+package com.example.dermapp.chat.notifications
 
 import com.example.dermapp.R
 import android.Manifest
@@ -13,7 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 
 /**
  * NotificationReceiver is a BroadcastReceiver that handles the display of notifications.
- * It is triggered by a broadcast intent and shows a notification to the user.
+ * It is triggered by a broadcast intent and displays a notification to the user.
  */
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -25,27 +25,27 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param intent The Intent received by the receiver.
      */
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("NotificationReceiver", "Próba wyświetlenia powiadomienia") // Dodanie logowania
+        Log.d("NotificationReceiver", "Attempting to display a notification")
 
-        // Sprawdzenie uprawnienia do wysyłania powiadomień
+        // Check for POST_NOTIFICATIONS permission
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.e("NotificationReceiver", "Brak uprawnienia POST_NOTIFICATIONS")
-            return // Wyjście z metody, jeśli brak uprawnienia
+            Log.e("NotificationReceiver", "Missing POST_NOTIFICATIONS permission")
+            return // Exit if permission is not granted
         }
 
-        // Tworzenie i wysyłanie powiadomienia
+        // Build and display the notification
         val builder = NotificationCompat.Builder(context, "reminderChannel")
-            .setSmallIcon(R.drawable.logo_foreground) // Ustaw ikonę powiadomienia
-            .setContentTitle("Przypomnienie o raporcie")
-            .setContentText("Dodaj raport z badania.")
+            .setSmallIcon(R.drawable.logo_foreground) // Set the notification icon
+            .setContentTitle("Reminder: Submit Your Report")
+            .setContentText("Please add a report from the examination.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(200, builder.build()) // Wyślij powiadomienie
-        Log.d("NotificationReceiver", "Powiadomienie zostało wyświetlone") // Potwierdzenie wysyłki powiadomienia
+        notificationManager.notify(200, builder.build()) // Send the notification
+        Log.d("NotificationReceiver", "Notification displayed successfully")
     }
 }

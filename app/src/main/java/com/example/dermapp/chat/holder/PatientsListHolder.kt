@@ -11,6 +11,13 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.dermapp.R
 import com.example.dermapp.database.Patient
 
+/**
+ * ViewHolder for displaying a single patient's item in the RecyclerView.
+ *
+ * @param itemView The view of the individual item.
+ * @param context The context where the ViewHolder is used.
+ * @param onPatientClick A callback function invoked when the patient item is clicked.
+ */
 class PatientsListHolder(
     itemView: View,
     private val context: Context,
@@ -22,17 +29,21 @@ class PatientsListHolder(
     private val lastName: TextView = itemView.findViewById(R.id.patientsListItemLastName)
     private val statusIndicator: View = itemView.findViewById(R.id.patientsListItemStatus)
 
+    /**
+     * Binds the patient data to the ViewHolder and sets up UI components.
+     *
+     * @param patient The patient object containing data to display.
+     */
     fun bind(patient: Patient) {
 
-        // Debugging log
-        Log.d("PatientsListHolder", "Doctor: ${patient.firstName} ${patient.lastName}, isOnline: ${patient.isOnline}")
+        // Debugging log to track the binding process
+        Log.d("PatientsListHolder", "Patient: ${patient.firstName} ${patient.lastName}, isOnline: ${patient.isOnline}")
 
-
-        // Ustawianie imienia i nazwiska
+        // Setting the first name and last name
         firstName.text = patient.firstName
         lastName.text = patient.lastName
 
-        // Ładowanie zdjęcia profilowego za pomocą Glide
+        // Loading the profile image using Glide with a placeholder and circular crop
         Glide.with(context)
             .load(patient.profilePhoto)
             .placeholder(R.drawable.black_account_circle)
@@ -40,7 +51,7 @@ class PatientsListHolder(
             .transform(CircleCrop())
             .into(profileImage)
 
-        // Ustawianie wskaźnika statusu
+        // Setting the status indicator based on the patient's online status
         val statusDrawable = if (patient.isOnline) {
             R.drawable.status_indicator_background_online
         } else {
@@ -48,7 +59,7 @@ class PatientsListHolder(
         }
         statusIndicator.setBackgroundResource(statusDrawable)
 
-        // Obsługa kliknięcia
+        // Setting up a click listener for the patient item
         itemView.setOnClickListener { onPatientClick(patient) }
     }
 }

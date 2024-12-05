@@ -1,4 +1,4 @@
-package com.example.dermapp.chat.NOTIFICATION2
+package com.example.dermapp.chat.notifications
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -20,38 +20,37 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 /**
- * This service handles incoming Firebase Cloud Messaging (FCM) messages.
- * It processes received messages and displays notifications to the user.
+ * A Firebase Messaging Service that handles incoming FCM messages and token updates.
+ * It processes incoming notifications and manages the FCM device token in Firestore.
  */
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     /**
-     * Called when an FCM message is received.
-     * Logs the received data, extracts the sender's name and message content,
-     * and triggers a notification display.
+     * Handles the receipt of an FCM message.
+     * Logs the received data and displays a notification based on the message content.
      *
-     * @param remoteMessage The message received from FCM, containing data and notification payloads.
+     * @param remoteMessage The incoming FCM message containing data and notification payloads.
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        Log.d("FCM", "Otrzymano wiadomość: ${remoteMessage.data}")
+        Log.d("FCM", "Message received: ${remoteMessage.data}")
 
         createNotificationChannel()
 
-        val senderName = remoteMessage.data["senderName"] ?: "Nieznany użytkownik"
-        val message = remoteMessage.data["message"] ?: "Nowa wiadomość"
+        val senderName = remoteMessage.data["senderName"] ?: "Unknown User"
+        val message = remoteMessage.data["message"] ?: "New message"
 
-        Log.d("FCM", "Nadawca: $senderName, Wiadomość: $message")
+        Log.d("FCM", "Sender: $senderName, Message: $message")
 
-        showNotification(senderName, "$senderName wysłał(a) ci wiadomość")
+        showNotification(senderName, "$senderName sent you a message")
     }
 
     /**
-     * Called when the FCM token is generated or updated.
-     * Logs the new token and saves it to Firestore.
+     * Called when a new FCM token is generated.
+     * Logs the new token and updates it in Firestore for the current user.
      *
-     * @param token The new FCM token.
+     * @param token The newly generated FCM token.
      */
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -81,6 +80,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
+    /**
+     * Creates a notification channel for displaying message notifications.
+     * This is required for devices running Android Oreo (API level 26) or higher.
+     */
     private fun createNotificationChannel() {
         val channelId = "messages_channel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -97,15 +100,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     /**
-     * Displays a notification to the user.
-     * Constructs and sends a notification with the given title and body.
-     * Checks for notification permissions before displaying the notification.
+     * Displays a notification to the user based on the provided title and body.
+     * Ensures proper permissions are checked before showing the notification.
      *
      * @param title The title of the notification.
-     * @param body The content text of the notification.
+     * @param body The content of the notification.
      */
     private fun showNotification(title: String, body: String) {
-        Log.d("FCM", "Wyświetlanie powiadomienia: Tytuł=$title, Treść=$body")
+        Log.d("FCM", "Displaying notification: Title=$title, Body=$body")
         val notificationId = System.currentTimeMillis().toInt()
         val channelId = "messages_channel"
 
@@ -131,9 +133,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             notificationManager.notify(notificationId, notificationBuilder.build())
-            Log.d("FCM", "Powiadomienie wysłane")
+            Log.d("FCM", "Notification sent successfully")
         } else {
-            Log.e("FCM", "Brak uprawnień do wyświetlenia powiadomienia")
+            Log.e("FCM", "Notification permission not granted")
         }
     }
 }
